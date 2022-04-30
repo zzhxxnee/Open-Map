@@ -6,8 +6,10 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var sequelize = require('./models').sequelize; // mysql 시퀄라이즈 모델
 
 var app = express();
+sequelize.sync(); // 서버가 실행될 때 시퀄라이저의 스키마를 db에 적용 
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -27,6 +29,7 @@ app.use(function(req, res, next) {
   next(createError(404));
 });
 
+
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
@@ -39,3 +42,5 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
+
+
