@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING(10),
         primaryKey: true,
         allowNull: false,
+        unique : true,
         comment: "아이디",
       },
       name: {
