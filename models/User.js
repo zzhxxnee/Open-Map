@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
         comment: "이름",
       },
       password: {
-        type: DataTypes.STRING(20),
+        type: DataTypes.STRING(60),
         allowNull: false,
         comment: "비밀번호",
       },
@@ -22,6 +22,7 @@ module.exports = (sequelize, DataTypes) => {
         validate: {
           isEmail: true,
         },
+        unique : true,
         allowNull: false,
         comment: "이메일",
       },
