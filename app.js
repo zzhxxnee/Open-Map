@@ -6,10 +6,9 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var sequelize = require('./models').sequelize; // mysql 시퀄라이즈 모델
 
 var app = express();
-sequelize.sync(); // 서버가 실행될 때 시퀄라이저의 스키마를 db에 적용 
+const port = 3000;
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -26,7 +25,7 @@ app.use('/users', usersRouter);
 
 const { sequelize } = require('./models');
 
-sequelize.sync({ force: false })
+sequelize.sync({ alter: true })
 .then(() => {
     console.log('데이터베이스 연결 성공');
 })
@@ -39,17 +38,6 @@ app.use(function(req, res, next) {
   next(createError(404));
 });
 
-//서버를 실행하는 파일
-const { sequelize } = require('./models');
-
-sequelize.sync({ force: false })
-.then(() => {
-    console.log('데이터베이스 연결 성공');
-})
-.catch((err) => {
-    console.error(err);
-});
-
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
@@ -60,6 +48,10 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
+})
 
 module.exports = app;
 
