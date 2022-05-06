@@ -5,13 +5,14 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
             unique: true,
             allowNull: false,
+            autoIncrement: true,
             comment: "업체 번호",
         },
 
-        userId: {
-            type: DataTypes.STRING(100),
-            comment: "업주 아이디"
-        },
+        // userId: {
+        //     type: DataTypes.STRING(100),
+        //     comment: "업주 아이디"
+        // },
 
         image: {
             type: DataTypes.BLOB,
@@ -133,6 +134,35 @@ module.exports = (sequelize, DataTypes) => {
         timestamps: true, // createAt & updateAt 활성화
         paranoid: true, // timestamps 가 활성화 되어야 사용 가능 > deleteAt 옵션 on
     });
+
+    Company.associate = function(models) {
+        models.Company.belongsTo(models.Users, {
+            foreignKey: 'userId',
+            onDelete: 'cascade',
+            
+        });
+
+        models.Company.hasMany(models.Menu,{
+            foreignKey: 'compId',
+            onDelete: 'cascade',
+        });
+        
+        models.Company.hasMany(models.Restaurant,{
+            foreignKey: 'compId',
+            onDelete: 'cascade',
+        });
+
+        models.Company.hasMany(models.Hospital,{
+            foreignKey: 'compId',
+            onDelete: 'cascade',
+        });
+
+        models.Company.hasMany(models.Cafe,{
+            foreignKey: 'compId',
+            onDelete: 'cascade',
+        });
+        
+    };
 
     return Company;
 };

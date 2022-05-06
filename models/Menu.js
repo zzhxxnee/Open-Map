@@ -1,22 +1,24 @@
+const Company = require("./Company");
+
 module.exports = (sequelize, DataTypes) => {
     const Menu = sequelize.define(
         "Menu",
         {
-            compId: {
-                type: DataTypes.INTEGER,
-                primaryKey: true,
-                unique: true,
-                allowNull: false,
-                comment: "업체 번호",
-            },
+            // compId: {
+            //     type: DataTypes.INTEGER,
+            //     primaryKey: true,
+            //     unique: true,
+            //     allowNull: false,
+            //     comment: "업체 번호",
+            // },
 
-            menuId: {
-                type: DataTypes.STRING(100),
-                primaryKey: true,
-                unique: true,
-                allowNull: false,
-                comment: "메뉴 번호",
-            },
+            // menuId: {
+            //     type: DataTypes.STRING(100),
+            //     primaryKey: true,
+            //     unique: true,
+            //     allowNull: false,
+            //     comment: "메뉴 번호",
+            // },
 
             price:{
                 type: DataTypes.INTEGER,

@@ -44,6 +44,13 @@ module.exports = (sequelize, DataTypes) => {
       timestamps: true, // createAt & updateAt 활성화
       paranoid: true, // timestamps 가 활성화 되어야 사용 가능 > deleteAt 옵션 on
     });
-  
+
+    // Users.associate = function(models) {
+    //     models.Users.hasMany(models.Company, {
+    //         foreignKey: 'userId',
+    //         onDelete: 'cascade'
+    //     });
+    // };
+    
     return Users;
   };
