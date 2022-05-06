@@ -11,11 +11,9 @@ module.exports = (sequelize, DataTypes) => {
             //     allowNull: false,
             //     comment: "업체 번호",
             // },
-
+            
             // menuId: {
-            //     type: DataTypes.STRING(100),
-            //     primaryKey: true,
-            //     unique: true,
+            //     type: DataTypes.INTEGER,
             //     allowNull: false,
             //     comment: "메뉴 번호",
             // },
@@ -26,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
             },
 
             menuName: {
-                type: DataTypes.STRING(10),
+                type: DataTypes.STRING(20),
                 allowNull: false,
                 comment: "메뉴이름",
             },
