@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>openMap</title>
+  <link rel="stylesheet" href="/stylesheets/style.css" />
+</head>
+
+<body>
+  <div class="registContainer">
+    <form action="/compRegist" method="post">
+      <label for="name">대표자명</label>
+      <input type="text" name="name" id="name" placeholder="사업자등록증에 적힌 성명을 입력해주세요." />
+      <br />
+      <label for="compNum">사업자 등록번호</label>
+      <input type="text" name="compNum" id="compNum" placeholder="- 없이 10자리 숫자만 입력해주세요." />
+      <br />
+      <label for="openDate">개업일자</label>
+      <input type="number" name="openDate" id="openDate" placeholder="YYYYMMDD 형식으로 입력해주세요. (예: 20220514)" />
+      <br />
+      <input class="button" type="submit" value="사업자 등록정보 확인" onclick="checkCompany" />
+      <label for="compName">업체이름 (필수)</label>
+      <input name="compName" id="compName" type="text" placeholder="오픈맵에 표시할 업체의 이름을 입력해주세요" />
+    </form>
+  </div>
+
+  <div>
+    <form name="addressForm" method="post">
+      <!-- <input name="roadAddrPart1" type="text" placeholder="도로명주소" />
+        <input name="addrDetail" type="text" placeholder="고객입력 상세주소" />
+        <input name="zipNo" type="text" placeholder="우편번호" /> -->
+      <label for="address">도로명 주소 (필수)</label>
+      <input name="address" id="address" type="text" placeholder="도로명주소" />
+      <input type="button" value="주소검색" onclick="goPopup()" />
+    </form>
+  </div>
+  <script language="javascript">
+    function goPopup() {
+      var pop = window.open(
+        "/users/myPage/compRegist/popup/jusoPopup",
+        "pop",
+        "width=570,height=420, scrollbars=yes, resizable=yes"
+      );
+    }
+    function jusoCallBack(
+      roadFullAddr,
+      roadAddrPart1,
+      addrDetail,
+      roadAddrPart2,
+      engAddr,
+      jibunAddr,
+      zipNo,
+      admCd,
+      rnMgtSn,
+      bdMgtSn,
+      detBdNmList,
+      bdNm,
+      bdKdcd,
+      siNm,
+      sggNm,
+      emdNm,
+      liNm,
+      rn,
+      udrtYn,
+      buldMnnm,
+      buldSlno,
+      mtYn,
+      lnbrMnnm,
+      lnbrSlno,
+      emdNo
+    ) {
+      // 팝업페이지에서 주소입력한 정보를 받아서, 현 페이지에 정보를 등록합니다
+      //document.form.roadAddrPart1.value = roadAddrPart1;
+      //document.form.addrDetail.value = addrDetail;
+      //document.form.zipNo.value = zipNo;
+      document.form.address.value = roadAddrPart1 + ", " + addrDetail;
+    }
+  </script>
+  <form>
+    <label for="telNum">전화번호</label>
+    <input name="telNum" id="telNum" type="tel" />
+    <label for="picture">업체사진</label>
+    <input name="picture" id="picture" type="file" accept="image/png, image/jpeg" />
+    <label for="name">정기휴무</label>
+  </form>
+
+</body>
+
+</html>
