@@ -25,21 +25,19 @@
   </div>
 
   <div>
-    <form name="addressForm" method="post">
-      <!-- <input name="roadAddrPart1" type="text" placeholder="도로명주소" />
-        <input name="addrDetail" type="text" placeholder="고객입력 상세주소" />
-        <input name="zipNo" type="text" placeholder="우편번호" /> -->
-      <label for="address">도로명 주소 (필수)</label>
-      <input name="address" id="address" type="text" placeholder="도로명주소" />
+    <form name="form">
+      <input name="addr" type="text" placeholder="도로명주소" />
+      <!-- <input name="addrDetail" type="text" placeholder="고객입력 상세주소" />
+      <input name="zipNo" type="text" placeholder="우편번호" /> -->
       <input type="button" value="주소검색" onclick="goPopup()" />
     </form>
   </div>
   <script language="javascript">
     function goPopup() {
       var pop = window.open(
-        "/users/myPage/compRegist/popup/jusoPopup",
-        "pop",
-        "width=570,height=420, scrollbars=yes, resizable=yes"
+        'compRegist/popup/jusoPopup',
+        'pop',
+        'width=570,height=420, scrollbars=yes, resizable=yes'
       );
     }
     function jusoCallBack(
@@ -73,7 +71,8 @@
       //document.form.roadAddrPart1.value = roadAddrPart1;
       //document.form.addrDetail.value = addrDetail;
       //document.form.zipNo.value = zipNo;
-      document.form.address.value = roadAddrPart1 + ", " + addrDetail;
+      
+      document.form.addr.value=roadAddrPart1+", "+addrDetail;
     }
   </script>
   <form>
