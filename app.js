@@ -3,12 +3,14 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var session = require('express-session');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var sequelize = require('./models').sequelize; // mysql 시퀄라이즈 모델
 
 var app = express();
+const port = 3000;
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -39,13 +41,17 @@ app.use(function(req, res, next) {
   next(createError(404));
 });
 
-var session = require('express-session');
 
 app.use(session({
-  secret : 'keyboard-cat',
+  key : 'sid',
+  secret : 'secret',
   resave:false,
-  saveUninitialized : true
-}))
+  saveUninitialized : true,
+  cookie:{
+    maxAge : 24000 * 60 * 60
+  }
+}));
+
 
 sequelize.sync({ force: false })
 .then(() => {
