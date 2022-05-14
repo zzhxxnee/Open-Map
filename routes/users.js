@@ -17,6 +17,7 @@ router.get('/myPage/compRegist/popup/jusoPopup', (req, res)=>{
 
 router.post('/myPage/compRegist/popup/jusoPopup', (req, res) => {
   res.locals = req.body;
+  res.locals.islogin = req.user;
   res.render('jusoPopup');
 });
 
