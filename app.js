@@ -37,14 +37,6 @@ app.use('/users', usersRouter);
 
 //const { sequelize } = require('./models');
 
-sequelize.sync({ force: false })
-.then(() => {
-    console.log('데이터베이스 연결 성공');
-})
-.catch((err) => {
-    console.error(err);
-});
-
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
@@ -62,7 +54,7 @@ app.use(session({
 }));
 
 
-sequelize.sync({ force: false })
+sequelize.sync({ alter: true })
 .then(() => {
     console.log('데이터베이스 연결 성공');
 })
@@ -80,6 +72,10 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
+})
 
 module.exports = app;
 
