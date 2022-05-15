@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
         comment: "이름",
       },
       password: {
-        type: DataTypes.STRING(60),
+        type: DataTypes.STRING,
         allowNull: false,
         comment: "비밀번호",
       },
@@ -27,6 +27,9 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         comment: "이메일",
       },
+      salt:{
+        type: DataTypes.STRING,
+      },
       isOwner: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
@@ -36,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
         comment: "활성화 여부",
-      }
+      },
     }, {
       charset: "utf8", // 한국어 설정
       collate: "utf8_general_ci", // 한국어 설정
