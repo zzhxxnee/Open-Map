@@ -1,3 +1,4 @@
+require('dotenv').config()
 var express = require('express');
 const req = require('express/lib/request');
 const res = require('express/lib/response');
@@ -6,7 +7,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  res.render('index', { title: 'OpenMap', apikey : process.env.KAKAO_JS_KEY });
 });
 
 router.get('/signup', function(req, res, next) {
