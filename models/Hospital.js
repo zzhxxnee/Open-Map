@@ -9,6 +9,10 @@ module.exports = (sequelize, DataTypes) => {
             //     allowNull: false,
             //     comment: "업체 번호",
             // },
+            HospType: {
+                type: DataTypes.STRING(10),
+                comment: "병원분류명",
+            },
 
             HospOpenMon: {
                 type: DataTypes.INTEGER,
@@ -91,7 +95,7 @@ module.exports = (sequelize, DataTypes) => {
             },
             
             content:{
-                type: DataTypes.STRING(50),
+                type: DataTypes.STRING(70),
                 comment: "비고",
             },
             
