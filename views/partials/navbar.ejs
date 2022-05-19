@@ -2,7 +2,7 @@
 
 <% if(!islogin) { %>
 <!----- Navigation Bar for NON-AUTHENTICATED CLIENT----->
-<button type="button" class="navbar__togglebtn active"><span class="material-icons md-36">sort</span></button>
+<button type="button" class="navbar__togglebtn active" onclick="openNav()"><span class="material-icons md-36">sort</span></button>
 <nav class="navbar">
     <ul class="navbar__top">
         <li class="map"><a href="/"><span class="material-icons md-24">map</span></a></li>
@@ -18,7 +18,7 @@
 
 <% } else { %>
 <!----- Navigation Bar for AUTHENTICATED CLIENT----->
-<button type="button" class="navbar__togglebtn active"><span class="material-icons md-36">sort</span></button>
+<button type="button" class="navbar__togglebtn active" onclick="openNav()"><span class="material-icons md-36">sort</span></button>
 <nav class="navbar">
     <ul class="navbar__top">
         <li class="map"><a href="/"><span class="material-icons md-24">map</span></a></li>

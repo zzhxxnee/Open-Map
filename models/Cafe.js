@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
                 comment: "마감시각",
             },
             cafeType:{
-                type: DataTypes.STRING(10),
+                type: DataTypes.STRING,
                 allowNull: false,
                 comment: "업종종류"
             },
