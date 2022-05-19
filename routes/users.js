@@ -2,6 +2,9 @@ var express = require('express');
 const req = require('express/lib/request');
 const res = require('express/lib/response');
 const { response } = require('../app');
+const models = require('./../models');
+const crypto = require('crypto');
+let session = require('express-session');
 var router = express.Router();
 /* GET users listing. */
 router.get('/', function (req, res, next) {
@@ -31,10 +34,6 @@ router.post('/compRegist/popup/jusoPopup', (req, res) => {
   res.locals.islogin = req.user;
   res.render('jusoPopup');
 });
-
-const models = require('./../models');
-const crypto = require('crypto');
-let session = require('express-session');
 
 router.get('/sign_up', function(req, res, next) {
   res.render("signup.ejs");
