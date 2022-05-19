@@ -1,15 +1,27 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/main.css" />
   </head>
   <body>
-    <div>
-      <h1><%= title %></h1>
-      <p>Welcome to <%= title %></p>
+    <div id="main">
+      <div id="map" style="width: 100%; height: 100%; position: fixed;"></div>
+      <div id="slideNav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <div class="option">
+            <div>
+                <form onsubmit="searchPlaces(); return false;">
+                  검색어를 입력하세요
+                  <input type="text" id="keyword" size="15"> 
+                  <button type="submit">검색하기</button> 
+                </form>
+            </div>
+        </div>
+        <hr>
+      </div>
     </div>
-    <div id="map" style="width: 100%; height: 100%; position: fixed;"></div>
   </body>
-  <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=<%=apikey%>"></script>
+  <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=<%=apikey%>&libraries=services,clusterer,drawing"></script>
   <script src="/javascripts/mapLoader.js"></script>
+  <script src="/javascripts/slideNav.js"></script>
 </html>

@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
             //     comment: "업체 번호",
             // },
             HospType: {
-                type: DataTypes.STRING(10),
+                type: DataTypes.STRING,
                 comment: "병원분류명",
             },
 
@@ -95,7 +95,7 @@ module.exports = (sequelize, DataTypes) => {
             },
             
             content:{
-                type: DataTypes.STRING(70),
+                type: DataTypes.STRING,
                 comment: "비고",
             },
             
