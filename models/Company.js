@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
         },
 
         compName: {
-            type: DataTypes.STRING(20),
+            type: DataTypes.STRING,
             allowNull: false,
             comment: "업체명"
         },
@@ -36,13 +36,13 @@ module.exports = (sequelize, DataTypes) => {
         },
 
         address: {
-            type: DataTypes.STRING(30),
+            type: DataTypes.STRING,
             allowNull: false,
             comment: "주소"
         },
 
         tel:{
-            type: DataTypes.STRING(10),
+            type: DataTypes.STRING,
             comment:"전화번호"
         },
 
@@ -68,13 +68,13 @@ module.exports = (sequelize, DataTypes) => {
         },
 
         latitude:{
-            type: DataTypes.DECIMAL,
+            type: DataTypes.DECIMAL(15,10),
             allowNull: false,
             comment: "위도"
         },
 
         longitude:{
-            type: DataTypes.DECIMAL,
+            type: DataTypes.DECIMAL(15,10),
             allowNull: false,
             comment: "경도"
         },
