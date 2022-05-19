@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
             },
 
             menuName: {
-                type: DataTypes.STRING(20),
+                type: DataTypes.STRING,
                 allowNull: false,
                 comment: "메뉴이름",
             },

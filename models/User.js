@@ -2,14 +2,14 @@ module.exports = (sequelize, DataTypes) => {
 
     const Users = sequelize.define("Users", {
       id: {
-        type: DataTypes.STRING(10),
+        type: DataTypes.STRING,
         primaryKey: true,
         allowNull: false,
         unique : true,
         comment: "아이디",
       },
       name: {
-        type: DataTypes.STRING(10),
+        type: DataTypes.STRING,
         allowNull: false,
         comment: "이름",
       },
@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
         comment: "비밀번호",
       },
       email: {
-        type: DataTypes.STRING(20),
+        type: DataTypes.STRING,
         validate: {
           isEmail: true,
         },
