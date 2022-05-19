@@ -4,9 +4,11 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const expressLayouts = require('express-ejs-layouts');
+var session = require('express-session');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var sequelize = require('./models').sequelize; // mysql 시퀄라이즈 모델
 
 var app = express();
 const port = 3000;
@@ -16,6 +18,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.set('layout', 'layout');
 app.set("layout extractScripts", true);
+
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -36,7 +39,24 @@ app.use(function (req, res, next) {
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-const { sequelize } = require('./models');
+//const { sequelize } = require('./models');
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  next(createError(404));
+});
+
+
+app.use(session({
+  key : 'sid',
+  secret : 'secret',
+  resave:false,
+  saveUninitialized : true,
+  cookie:{
+    maxAge : 24000 * 60 * 60
+  }
+}));
+
 
 sequelize.sync({ alter: true })
 .then(() => {
@@ -44,11 +64,6 @@ sequelize.sync({ alter: true })
 })
 .catch((err) => {
     console.error(err);
-});
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
 });
 
 // error handler

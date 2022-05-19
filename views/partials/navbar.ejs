@@ -2,7 +2,7 @@
 
 <% if(!islogin) { %>
 <!----- Navigation Bar for NON-AUTHENTICATED CLIENT----->
-<button type="button" class="navbar__togglebtn active"><span class="material-icons md-36">sort</span></button>
+<button type="button" class="navbar__togglebtn active" onclick="openNav()"><span class="material-icons md-36">sort</span></button>
 <nav class="navbar">
     <ul class="navbar__top">
         <li class="map"><a href="/"><span class="material-icons md-24">map</span></a></li>
@@ -11,14 +11,14 @@
     </ul>
 
     <ul class="navbar__bottom">
-        <li class="login"><a href="/login"><i class="fa-solid fa-arrow-right-to-bracket"></i></a></li>
-        <li class="signup"><a href="#"><span class="material-icons md-24">person_add_alt_1</span></a></li>
+        <li class="login"><a href="/users/login"><i class="fa-solid fa-arrow-right-to-bracket"></i></a></li>
+        <li class="signup"><a href="/users/sign_up"><span class="material-icons md-24">person_add_alt_1</span></a></li>
     </ul>
 </nav>
 
 <% } else { %>
 <!----- Navigation Bar for AUTHENTICATED CLIENT----->
-<button type="button" class="navbar__togglebtn active"><span class="material-icons md-36">sort</span></button>
+<button type="button" class="navbar__togglebtn active" onclick="openNav()"><span class="material-icons md-36">sort</span></button>
 <nav class="navbar">
     <ul class="navbar__top">
         <li class="map"><a href="/"><span class="material-icons md-24">map</span></a></li>
@@ -27,7 +27,7 @@
     </ul>
 
     <ul class="navbar__bottom">
-        <li class="logout"><a href="/logout"><i class="fa-solid fa-arrow-right-from-bracket"></i></a></li>
+        <li class="logout"><a href="/users/logout"><i class="fa-solid fa-arrow-right-from-bracket"></i></a></li>
     </ul>
 </nav>
 <% } %>

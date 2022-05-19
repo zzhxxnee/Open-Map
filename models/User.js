@@ -2,30 +2,33 @@ module.exports = (sequelize, DataTypes) => {
 
     const Users = sequelize.define("Users", {
       id: {
-        type: DataTypes.STRING(10),
+        type: DataTypes.STRING,
         primaryKey: true,
         allowNull: false,
         unique : true,
         comment: "아이디",
       },
       name: {
-        type: DataTypes.STRING(10),
+        type: DataTypes.STRING,
         allowNull: false,
         comment: "이름",
       },
       password: {
-        type: DataTypes.STRING(60),
+        type: DataTypes.STRING,
         allowNull: false,
         comment: "비밀번호",
       },
       email: {
-        type: DataTypes.STRING(20),
+        type: DataTypes.STRING,
         validate: {
           isEmail: true,
         },
         unique : true,
         allowNull: false,
         comment: "이메일",
+      },
+      salt:{
+        type: DataTypes.STRING,
       },
       isOwner: {
         type: DataTypes.BOOLEAN,
@@ -36,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
         comment: "활성화 여부",
-      }
+      },
     }, {
       charset: "utf8", // 한국어 설정
       collate: "utf8_general_ci", // 한국어 설정
