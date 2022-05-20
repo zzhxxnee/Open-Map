@@ -2,7 +2,9 @@ require('dotenv').config();
 const req = require('express/lib/request');
 const res = require('express/lib/response');
 const db = require("../models/index.js")
-const Company = db.company;
+const Sequelize = require('sequelize');
+const models = require("../models");
+const Company = db[models.Company];
 
 exports.getAllPositions = async (req, res) => {
     try{
