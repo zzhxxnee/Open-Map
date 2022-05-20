@@ -139,7 +139,6 @@ module.exports = (sequelize, DataTypes) => {
         models.Company.belongsTo(models.Users, {
             foreignKey: 'userId',
             onDelete: 'cascade',
-            
         });
 
         models.Company.hasMany(models.Menu,{
@@ -161,7 +160,6 @@ module.exports = (sequelize, DataTypes) => {
             foreignKey: 'compId',
             onDelete: 'cascade',
         });
-        
     };
 
     return Company;
