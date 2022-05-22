@@ -36,5 +36,5 @@ function goPopup() {
     //document.form.roadAddrPart1.value = roadAddrPart1;
     //document.form.addrDetail.value = addrDetail;
     //document.form.zipNo.value = zipNo;
-    document.form.addr.value = roadAddrPart1 + ", " + addrDetail;
+    document.getElementById("addr").value = roadAddrPart1 + ", " + addrDetail;
   }

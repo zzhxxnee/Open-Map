@@ -42,7 +42,6 @@ function nextFunction(valid) {
         target1.disabled = true;
         target2.disabled = true;
         target3.disabled = true;
-        //location.href="/users/compRegist";
     } else if (valid == "02") {
         alert("사업자등록정보가 일치하지 않습니다.");
     }
