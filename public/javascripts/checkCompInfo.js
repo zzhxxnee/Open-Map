@@ -36,6 +36,12 @@ function gocheckComp() {
 function nextFunction(valid) {
     if (valid == "01") {
         alert("사업자등록정보가 인증되었습니다.");
+        const target1 = document.getElementById('name');
+        const target2 = document.getElementById('compNum');
+        const target3 = document.getElementById('openDate');
+        target1.disabled = true;
+        target2.disabled = true;
+        target3.disabled = true;
         //location.href="/users/compRegist";
     } else if (valid == "02") {
         alert("사업자등록정보가 일치하지 않습니다.");
