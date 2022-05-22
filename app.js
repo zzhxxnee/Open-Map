@@ -8,6 +8,7 @@ var session = require('express-session');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+const compRouter = require('./routes/compRegist');
 var sequelize = require('./models').sequelize; // mysql 시퀄라이즈 모델
 
 var app = express();
@@ -38,6 +39,7 @@ app.use(function (req, res, next) {
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/compRegist', compRouter);
 
 //const { sequelize } = require('./models');
 

@@ -23,6 +23,32 @@
         </form>
         <script language="javascript" src="/javascripts/checkCompInfo.js"></script>
     </div>
+    <div>
+        <form name="form">
+          <label for="compName">업체이름 (필수)</label>
+          <input
+            name="compName"
+            id="compName"
+            type="text"
+            placeholder="오픈맵에 표시할 업체의 이름을 입력해주세요"
+          />
+          <input name="addr" type="text" placeholder="도로명주소" />
+          <!-- <input name="addrDetail" type="text" placeholder="고객입력 상세주소" />
+        <input name="zipNo" type="text" placeholder="우편번호" /> -->
+          <input type="button" value="주소검색" onclick="goPopup()" />
+        </form>
+      </div>
+      <script language="javascript" src="/javascripts/address.js"></script>
+      <form>
+        <label for="telNum">전화번호</label>
+        <input name="telNum" id="telNum" type="tel" />
+        <label for="picture">업체사진</label>
+        <input
+          name="picture"
+          id="picture"
+          type="file"
+          accept="image/png, image/jpeg"
+        />
+        <label for="name">정기휴무</label>
+      </form>
 </body>
-
-</html>
