@@ -9,46 +9,39 @@
 
 <body>
     <div class="registContainer">
-        <form name="compCheckForm" id="compCheckForm" method="post">
+        <form name="checkCompForm" id="compCheckForm" method="post">
             <label for="name">대표자명</label>
             <input type="text" name="name" id="name" placeholder="사업자등록증에 적힌 성명을 입력해주세요." />
-            <br>
+            <br />
             <label for="compNum">사업자 등록번호</label>
             <input type="text" name="compNum" id="compNum" placeholder="- 없이 10자리 숫자만 입력해주세요." />
-            <br>
+            <br />
             <label for="openDate">개업일자</label>
             <input type="number" name="openDate" id="openDate" placeholder="YYYYMMDD 형식으로 입력해주세요. (예: 20220514)" />
-            <br>
             <input type="button" value="사업자 등록정보 확인" onclick="gocheckComp()" />
         </form>
         <script language="javascript" src="/javascripts/checkCompInfo.js"></script>
     </div>
     <div>
-        <form name="form">
-          <label for="compName">업체이름 (필수)</label>
-          <input
-            name="compName"
-            id="compName"
-            type="text"
-            placeholder="오픈맵에 표시할 업체의 이름을 입력해주세요"
-          />
-          <input name="addr" type="text" placeholder="도로명주소" />
-          <!-- <input name="addrDetail" type="text" placeholder="고객입력 상세주소" />
+        <form name="registCompform">
+            <label for="compName">업체이름 (필수)</label>
+            <input name="compName" id="compName" type="text" placeholder="오픈맵에 표시할 업체의 이름을 입력해주세요" />
+            <br>
+            <input name="addr" type="text" placeholder="도로명주소" />
+            <!-- <input name="addrDetail" type="text" placeholder="고객입력 상세주소" />
         <input name="zipNo" type="text" placeholder="우편번호" /> -->
-          <input type="button" value="주소검색" onclick="goPopup()" />
+            <input type="button" value="주소검색" onclick="goPopup()" />
+            <br>
+            <label for="telNum">전화번호</label>
+            <input name="telNum" id="telNum" type="tel" />
+            <br>
+            <label for="picture">업체사진</label>
+            <input name="picture" id="picture" type="file" accept="image/png, image/jpeg" />
+            <br>
+            <label for="name">정기휴무</label>
         </form>
-      </div>
-      <script language="javascript" src="/javascripts/address.js"></script>
-      <form>
-        <label for="telNum">전화번호</label>
-        <input name="telNum" id="telNum" type="tel" />
-        <label for="picture">업체사진</label>
-        <input
-          name="picture"
-          id="picture"
-          type="file"
-          accept="image/png, image/jpeg"
-        />
-        <label for="name">정기휴무</label>
-      </form>
+    </div>
+    <script language="javascript" src="/javascripts/address.js"></script>
 </body>
+
+</html>
