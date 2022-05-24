@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Document</title>
+    <script type="text/javascript" src="../public/javascripts/idCheck.js" defer></script>
 </head>
 <body>
 <h3>회원 가입</h3>
@@ -10,11 +11,15 @@
     <table>
         <tr>
             <td>아이디 : </td>
-            <td><input type="text" name="userid"></td>
+            <td><input type="text" name="userid" id="userid"></td>
+            <td><input type="submit" id = "idcheck_btn" value="중복확인"></td>
+            <span id="msg"></span>
         </tr>
+        <tr>
         <tr>
             <td>이름 : </td>
             <td><input type="text" name="username"></td>
+        </tr>
         </tr>
         <tr>
             <td>비밀번호 : </td>
@@ -24,6 +29,10 @@
           <td>이메일: </td>
           <td><input type="email" name="email"></td>
         </tr>
+        <tr>
+            <td>개인정보 수집에 동의합니다</td>
+            <td><input type="checkbox" name="agree"></td>
+          </tr>
         <tr>
           <td><input type="submit" value="회원가입"></td>
         </tr>

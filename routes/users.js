@@ -6,6 +6,10 @@ var router = express.Router();
 const models = require('./../models');
 const crypto = require('crypto');
 let session = require('express-session');
+const { runInNewContext } = require('vm');
+const db = require('./../models');
+const nodemailer = require('nodemailer');
+
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -33,9 +37,13 @@ router.post("/sign_up", async function(req,res,next){
   })
 
   if(exUser){
-    res.status(500).send({
-      message : "duplicate id!"
-    });
+    // res.status(500).send({
+    //   message : "중복된 아이디 입니다!"
+    // });
+    res.status(500).send(`<script>alert('중복된 아이디입니다');history.go(-1);</script>`);
+    return;
+  }else{
+    res.send(`<script>alert('사용 가능한 아이디입니다');history.go(-1);</script>`);
     return;
   }
 
@@ -62,6 +70,7 @@ router.post("/sign_up", async function(req,res,next){
     });
   });
 });
+
 
 router.get('/login', function(req, res, next) {
   res.render("login.ejs");
@@ -90,13 +99,15 @@ router.post('/login', async function(req,res,next){
   let hashPassword = crypto.createHash("sha512").update(inputPassword + salt).digest("hex");
 
   if(dbPassword === hashPassword){
-    res.send({
-      message : "Login success",
-      status: 'success',
-      data:{
-        id:body.userid
-      }
-    })
+    // res.send({
+    //   message : "Login success",
+    //   status: 'success',
+    //   data:{
+    //     id:body.userid
+    //   }
+    // })
+    res.send(`<script>alert('로그인 성공!');history.go(-1);</script>`);
+    return;
   }
   else{
     res.status(500).send({
@@ -104,6 +115,7 @@ router.post('/login', async function(req,res,next){
     });
   }
 })
+
 
 
 module.exports = router;
