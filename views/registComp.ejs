@@ -7,15 +7,13 @@
 </head>
 
 <body>
-    <span>
+    <div class="step">
         <h1>업체등록하기</h1>
         <h2>STEP 1</h2>
-    </span>
+    </div>
 
-
-    <span>
-        <div class="registContainer">
-            <form name="checkCompForm" id="compCheckForm" method="post">
+        <div class="compRegist">
+            <form name="checkCompForm" id="compRegistForm" method="post">
                 <label for="name">대표자명</label>
                 <br>
                 <input type="text" name="name" id="name" placeholder="사업자등록증에 적힌 성명을 입력해주세요." />
@@ -27,11 +25,9 @@
                 <label for="openDate">개업일자</label>
                 <br>
                 <input type="number" name="openDate" id="openDate" placeholder="YYYYMMDD 형식으로 입력해주세요. (예: 20220514)" />
-                <!-- <input type="button" value="사업자 등록정보 확인" onclick="gocheckComp()" /> -->
-            </form>
-        </div>
-        <div>
-            <form name="registCompform">
+                <input type="button" value="사업자 등록정보 확인" onclick="gocheckComp()" />
+                <br>
+
                 <label for="compName">업체이름 (필수)</label>
                 <br>
                 <input name="compName" id="compName" type="text" placeholder="오픈맵에 표시할 업체의 이름을 입력해주세요" />
@@ -51,7 +47,7 @@
                 <br>
                 <input name="picture" id="picture" type="file" accept="image/png, image/jpeg" />
                 <br>
-                외부사진 혹은 내부사진을 업로드 해주세요.
+                <p>외부사진 혹은 내부사진을 업로드 해주세요.</p>
                 <br>
                 <label for="name">정기휴무</label>
                 <br>
@@ -69,6 +65,4 @@
                 <input type="button" value="NEXT" onlick="goNext()"/>
             </form>
         </div>
-    </span>
-    
 </body>

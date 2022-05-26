@@ -1,11 +1,31 @@
-require('dotenv').config();
-const db = require("../models/index")
-const Company = db.company;
+require("dotenv").config();
+const db = require("../models/index"),
+    Company = db.company,
+    Op = db.Sequelize.Op;
 
 // 업체등록 1 - 이미 존재하는지 확인
-exports.checkExistComp = (req, res) =>{
+exports.checkExistComp = (req, res) => {
     res.render("checkExistComp");
-}
+};
+
+exports.searchExistComp = (req, res, next) => {
+    let searchWord = req.body.compName;
+    Company.findAll({
+        where: {
+            compName: {
+                [Op.like]: "%" + searchWord + "%",
+            },
+        },
+    })
+        .then((result) => {
+            // console.log(result);
+            res.render("searchExistComp", {searchComp : result});
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+};
+
 // 여기서 있으면 그 업체 클릭 -> 이미등록된업체로..(?)
 
 // 없으면 업체 유형 선택 페이지
@@ -14,9 +34,9 @@ exports.chooseCompType = (req, res) => {
 };
 
 // 일단 업체 공통 정보 입력 페이지
-exports.registComp = (req, res)=>{
+exports.registComp = (req, res) => {
     res.render("registComp");
-}
+};
 
 // // 식당 클릭했으면 registRest
 // exports.registRest = (req, res) =>{
