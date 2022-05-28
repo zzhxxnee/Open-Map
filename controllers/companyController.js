@@ -1,7 +1,11 @@
 require("dotenv").config();
 const db = require("../models/index"),
     Company = db.company,
-    Op = db.Sequelize.Op;
+    Op = db.Sequelize.Op,
+    geocoder = require("google-geocoder"),
+    geo = geocoder({
+        key: "AIzaSyAAi3TP-tpiV_A9za-bwhnJc57xPcCIDbU",
+    });
 
 // 업체등록 1 - 이미 존재하는지 확인
 exports.checkExistComp = (req, res) => {
@@ -19,7 +23,7 @@ exports.searchExistComp = (req, res, next) => {
     })
         .then((result) => {
             // console.log(result);
-            res.render("searchExistComp", {searchComp : result});
+            res.render("searchExistComp", { searchComp: result });
         })
         .catch((err) => {
             console.log(err);
@@ -28,12 +32,12 @@ exports.searchExistComp = (req, res, next) => {
 
 // 여기서 있으면 그 업체 클릭 -> 이미등록된업체로..(?)
 
-// 없으면 업체 유형 선택 페이지
+// 없으면 업체 유형 선택 페이지 -> 안하는 게 나을 것 같음..
 exports.chooseCompType = (req, res) => {
     res.render("chooseCompType");
 };
 
-// 일단 업체 공통 정보 입력 페이지
+// 일단 업체 공통 정보 입력 페이지, 여기서 업체 유형 선택하도록 하기
 exports.registComp = (req, res) => {
     res.render("registComp");
 };
