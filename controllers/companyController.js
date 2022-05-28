@@ -4,7 +4,7 @@ const db = require("../models/index"),
     Op = db.Sequelize.Op,
     geocoder = require("google-geocoder"),
     geo = geocoder({
-        key: "AIzaSyAAi3TP-tpiV_A9za-bwhnJc57xPcCIDbU",
+        key: process.env.GOOGLE_API_KEY
     });
 
 // 업체등록 1 - 이미 존재하는지 확인
