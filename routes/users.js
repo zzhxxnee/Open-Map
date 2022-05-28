@@ -16,30 +16,6 @@ router.get('/myPage', (req, res, next)=>{
   res.send("my page");
 })
 
-// router.get('/compCheck', (req, res, next) => {
-//   res.render("compCheck");
-// })
-
-// router.get('/compRegist', (req, res, next) => {
-//   res.render("compRegist");
-
-// })
-
-// router.post('/compRegist', (req, res, next) => {
-//   res.render("compRegist");
-// })
-
-
-// router.get('/compRegist/popup/jusoPopup', (req, res) => {
-//   res.render('jusoPopup');
-// });
-
-// router.post('/compRegist/popup/jusoPopup', (req, res) => {
-//   res.locals = req.body;
-//   res.locals.islogin = req.user;
-//   res.render('jusoPopup');
-// });
-
 router.get('/sign_up', function(req, res, next) {
   res.render("signup.ejs");
 });

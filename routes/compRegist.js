@@ -2,105 +2,25 @@ const { json } = require("body-parser");
 const express = require("express");
 const router = express.Router();
 const companyController = require("../controllers/companyController");
-const geocoder = require("google-geocoder"),
-  geo = geocoder({
-    key: "AIzaSyAAi3TP-tpiV_A9za-bwhnJc57xPcCIDbU",
-  });
+// const geocoder = require("google-geocoder"),
+//   geo = geocoder({
+//     key: process.env.GOOGLE_API_KEY
+//   });
 
-let compInfo = {
-  userId: "",
-  image: "",
-  compName: "", //not null
-  bNo: "",
-  openDate: "",
-  address: "", //not null
-  tel: "",
-  todayClosed: false,
-  earlyClosed: false,
-  vacation: false,
-  latitude: "", //not null
-  longitude: "", //not null
-  type: "", //not null
-  mon: false,
-  tue: false,
-  wed: false,
-  thu: false,
-  fri: false,
-  sat: false,
-  sun: false,
-};
 
-let restInfo = {
-  restOpen: "",
-  restClosed: "",
-  restType: "", //not null
-  breakStart: "",
-  breakEnd: "",
-};
-
-let cafeInfo = {
-  cafeOpen: "",
-  cafeClosed: "",
-  cafeType: "", //not null
-};
-
-let hospitalInfo = {
-  HospType: "",
-  HospOpenMon: "",
-
-  HospCloseMon: "",
-
-  HospOpenTue: "",
-
-  HospCloseTue: "",
-
-  HospOpenWed: "",
-  HospCloseWed: "",
-
-  HospOpenThu: "",
-  HospCloseThu: "",
-
-  HospOpenFri: "",
-  HospCloseFri: "",
-
-  HospOpenSat: "",
-  HospCloseSat: "",
-
-  HospOpenSun: "",
-  HospCloseSun: "",
-
-  HospOpenVac: "",
-  HospCloseVac: "",
-
-  content: "",
-
-  breakStart: "",
-  breakEnd: "",
-};
-
-let menuInfo = {
-  price:"",
-  menuName:"",
-  compId:""
-}
-
+// 업체등록페이지 1 - 이미 존재하는지 확인
 router.get("/", companyController.checkExistComp);
 router.post("/", companyController.checkExistComp);
+// 검색하기 해서 db 불러온 페이지
 router.get("/search", companyController.searchExistComp);
 router.post("/search", companyController.searchExistComp);
 
-router.get("/chooseCompType", companyController.chooseCompType);
+// 없을 경우 업체 타입 저장 -- 일단 없이 하기
+// router.get("/chooseCompType", companyController.chooseCompType);
+
+// 내 업체가 없어요 -> registComp
 router.get("/registComp", companyController.registComp);
-router.post("/registComp", (req, res, next) => {
-  //console.log(req.body.addr);
-  geo.find(req.body.addr, function (err, res) {
-    console.log(res[0].location["lat"]);
-    console.log(res[0].location["lng"]);
-  });
-});
-// router.get("/registRest", companyController.registRest);
-// router.get("/registCafe", companyController.registCafe);
-// router.get("/registHospital", companyController.registHospital);
+router.post("/registComp", companyController.registCompNext);
 
 router.get("/registComp/popup/jusoPopup", (req, res) => {
   res.render("jusoPopup");
@@ -111,5 +31,9 @@ router.post("/registComp/popup/jusoPopup", (req, res) => {
   res.locals.islogin = req.user;
   res.render("jusoPopup");
 });
+
+// router.get("/registRest", companyController.registRest);
+// router.get("/registCafe", companyController.registCafe);
+// router.get("/registHospital", companyController.registHospital);
 
 module.exports = router;
