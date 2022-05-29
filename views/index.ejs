@@ -34,47 +34,47 @@
   </script>
   <% closedRestaurantPositionTotal.forEach(r => { %>
     <script>
-      closedRestaurantPositions.push(new kakao.maps.LatLng(parseFloat("<%= r.latitude %>"), parseFloat("<%= r.longitude %>")))
+      closedRestaurantPositions.push(new kakao.maps.LatLng(parseFloat("<%= r.dataValues.latitude %>"), parseFloat("<%= r.dataValues.longitude %>")))
     </script>
   <% }); %>
   <% closedCafePositionTotal.forEach(c => { %>
     <script>
-      closedCafePositions.push(new kakao.maps.LatLng(parseFloat("<%= c.latitude %>"), parseFloat("<%= c.longitude %>")))
+      closedCafePositions.push(new kakao.maps.LatLng(parseFloat("<%= c.dataValues.latitude %>"), parseFloat("<%= c.dataValues.longitude %>")))
     </script>
   <% }); %>
   <% closedHospitalPositionTotal.forEach(h => { %>
     <script>
-      closedHospitalPositions.push(new kakao.maps.LatLng(parseFloat("<%= h.latitude %>"), parseFloat("<%= h.longitude %>")))
+      closedHospitalPositions.push(new kakao.maps.LatLng(parseFloat("<%= h.dataValues.latitude %>"), parseFloat("<%= h.dataValues.longitude %>")))
     </script>
   <% }); %>
   <% todayClosedRestaurantPosition.forEach(r => { %>
     <script>
-      todayClosedRestaurantPositions.push(new kakao.maps.LatLng(parseFloat("<%= r.latitude %>"), parseFloat("<%= r.longitude %>")))
+      todayClosedRestaurantPositions.push(new kakao.maps.LatLng(parseFloat("<%= r.dataValues.latitude %>"), parseFloat("<%= r.dataValues.longitude %>")))
     </script>
   <% }); %>
   <% todayClosedCafePosition.forEach(c => { %>
     <script>
-      todayClosedCafeMarkers.push(new kakao.maps.LatLng(parseFloat("<%= c.latitude %>"), parseFloat("<%= c.longitude %>")))
+      todayClosedCafeMarkers.push(new kakao.maps.LatLng(parseFloat("<%= c.dataValues.latitude %>"), parseFloat("<%= c.dataValues.longitude %>")))
     </script>
   <% }); %>
   <% todayClosedHospitalPosition.forEach(h => { %>
     <script>
-      todayClosedHospitalPositions.push(new kakao.maps.LatLng(parseFloat("<%= h.latitude %>"), parseFloat("<%= h.longitude %>")))
+      todayClosedHospitalPositions.push(new kakao.maps.LatLng(parseFloat("<%= h.dataValues.latitude %>"), parseFloat("<%= h.dataValues.longitude %>")))
     </script>
   <% }); %>
   <% openedRestaurantPosition.forEach(r => { %>
     <script>
-      openedRestaurantPositions.push(new kakao.maps.LatLng(parseFloat("<%= r.latitude %>"), parseFloat("<%= r.longitude %>")))
+      openedRestaurantPositions.push(new kakao.maps.LatLng(parseFloat("<%= r.dataValues.latitude %>"), parseFloat("<%= r.dataValues.longitude %>")))
     </script>
   <% }); %>
   <% openedCafePosition.forEach(c => { %>
     <script>
-      openedCafePositions.push(new kakao.maps.LatLng(parseFloat("<%= c.latitude %>"), parseFloat("<%= c.longitude %>")))
+      openedCafePositions.push(new kakao.maps.LatLng(parseFloat("<%= c.dataValues.latitude %>"), parseFloat("<%= c.dataValues.longitude %>")))
     </script>
   <% }); %>
   <% openedHospitalPosition.forEach(h => { %>
     <script>
-      openedHospitalPositions.push(new kakao.maps.LatLng(parseFloat("<%= h.latitude %>"), parseFloat("<%= h.longitude %>")))
+      openedHospitalPositions.push(new kakao.maps.LatLng(parseFloat("<%= h.dataValues.latitude %>"), parseFloat("<%= h.dataValues.longitude %>")))
     </script>
   <% }); %>
   <script src="/javascripts/mapLoader.js"></script>

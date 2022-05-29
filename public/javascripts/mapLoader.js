@@ -146,7 +146,7 @@ function createClosedHospitalMarkers() {
         
         var imageSize = new kakao.maps.Size(35, 44),
             imageOptions = {   
-                spriteOrigin: new kakao.maps.Point(0, 85),    
+                spriteOrigin: new kakao.maps.Point(0, 87),    
                 spriteSize: new kakao.maps.Size(36, 133)  
             };       
      
@@ -204,7 +204,7 @@ function createTodayClosedHospitalMarkers() {
         
         var imageSize = new kakao.maps.Size(35, 44),
             imageOptions = {   
-                spriteOrigin: new kakao.maps.Point(0, 85),    
+                spriteOrigin: new kakao.maps.Point(0, 87),    
                 spriteSize: new kakao.maps.Size(36, 133)  
             };       
      
@@ -262,8 +262,8 @@ function createOpenedHospitalMarkers() {
         
         var imageSize = new kakao.maps.Size(35, 80),
             imageOptions = {   
-                spriteOrigin: new kakao.maps.Point(0, 85),    
-                spriteSize: new kakao.maps.Size(36, 133)  
+                spriteOrigin: new kakao.maps.Point(0, 87),    
+                spriteSize: new kakao.maps.Size(36, 133)
             };       
      
         // 마커이미지와 마커를 생성합니다
