@@ -9,6 +9,9 @@ const Cafe = db.cafe;
 let today = new Date();
 const day = today.getDay();
 let hour = today.getHours();
+if(hour < 6){
+    hour += 24;
+}
 let minute = today.getMinutes();
 if(minute < 10){
     minute = '0' + minute;
@@ -564,11 +567,11 @@ exports.getAllPositions = async (req, res) => {
         }
 
         let openedRestaurantId = new Array();
-        openedRestaurant.forEach(r => openedRestaurantId.push(r.compId));
+        openedRestaurant.forEach(r => openedRestaurantId.push(r.dataValues.compId));
         let openedCafeId = new Array();
-        openedCafe.forEach(c => openedCafeId.push(c.compId));
+        openedCafe.forEach(c => openedCafeId.push(c.dataValues.compId));
         let openedHospitalId = new Array();
-        openedHospital.forEach(h => openedHospitalId.push(h.compId));
+        openedHospital.forEach(h => openedHospitalId.push(h.dataValues.compId));
 
         openedRestaurantPosition = await Company.findAll({
             attributes: ['compId', 'latitude', 'longitude'],
@@ -586,6 +589,7 @@ exports.getAllPositions = async (req, res) => {
                 }
             }
         });
+        console.log(openedCafePosition);
         openedHospitalPosition = await Company.findAll({
             attributes: ['compId', 'latitude', 'longitude'],
             where: {

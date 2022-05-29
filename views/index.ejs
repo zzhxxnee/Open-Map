@@ -4,28 +4,79 @@
     <link rel="stylesheet" href="/stylesheets/main.css" />
   </head>
   <body>
-    <% closedRestaurantPositionTotal.forEach(r => { %>
-      <div>
-        <%= r.latitude %>
-      </div>
-    <% }); %>
-      <div id="map" style="width: 100%; height: 100%; position: fixed;"></div>
+    <div id="map" style="width: 100%; height: 100%; position: fixed;"></div>
       <div id="slideNav">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
         <div class="option">
-            <div>
-                <form onsubmit="searchPlaces(); return false;">
-                  검색어를 입력하세요
-                  <input type="text" id="keyword" size="15"> 
-                  <button type="submit">검색하기</button> 
-                </form>
-            </div>
+          <div>
+            <form onsubmit="searchPlaces(); return false;">
+              검색어를 입력하세요
+              <input type="text" id="keyword" size="15"> 
+              <button type="submit">검색하기</button> 
+            </form>
+          </div>
         </div>
         <hr>
       </div>
     </div>
   </body>
   <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=<%=apikey%>&libraries=services,clusterer,drawing"></script>
+  <script>
+    let closedRestaurantPositions = []; // 오늘 마감 식당 위치 객체를 가지고 있을 배열입니다
+    let closedCafePositions = []; // 오늘 마감 휴게음식점 위치 객체를 가지고 있을 배열입니다
+    let closedHospitalPositions = []; // 오늘 마감 병원 위치 객체를 가지고 있을 배열입니다
+    let todayClosedRestaurantPositions = []; // 오늘 휴무 식당 위치 객체를 가지고 있을 배열입니다
+    let todyClosedCafePositions = []; // 오늘 휴무 휴게음식점 위치 객체를 가지고 있을 배열입니다
+    let todayClosedHospitalPositions = []; // 오늘 휴무 병원 위치 객체를 가지고 있을 배열입니다
+    let openedRestaurantPositions = []; // 영업중인 식당 위치 객체를 가지고 있을 배열입니다
+    let openedCafePositions = []; // 영업중인 휴게음식점 위치 객체를 가지고 있을 배열입니다
+    let openedHospitalPositions = []; // 영업중인 병원 위치 객체를 가지고 있을 배열입니다
+  </script>
+  <% closedRestaurantPositionTotal.forEach(r => { %>
+    <script>
+      closedRestaurantPositions.push(new kakao.maps.LatLng(parseFloat("<%= r.latitude %>"), parseFloat("<%= r.longitude %>")))
+    </script>
+  <% }); %>
+  <% closedCafePositionTotal.forEach(c => { %>
+    <script>
+      closedCafePositions.push(new kakao.maps.LatLng(parseFloat("<%= c.latitude %>"), parseFloat("<%= c.longitude %>")))
+    </script>
+  <% }); %>
+  <% closedHospitalPositionTotal.forEach(h => { %>
+    <script>
+      closedHospitalPositions.push(new kakao.maps.LatLng(parseFloat("<%= h.latitude %>"), parseFloat("<%= h.longitude %>")))
+    </script>
+  <% }); %>
+  <% todayClosedRestaurantPosition.forEach(r => { %>
+    <script>
+      todayClosedRestaurantPositions.push(new kakao.maps.LatLng(parseFloat("<%= r.latitude %>"), parseFloat("<%= r.longitude %>")))
+    </script>
+  <% }); %>
+  <% todayClosedCafePosition.forEach(c => { %>
+    <script>
+      todayClosedCafeMarkers.push(new kakao.maps.LatLng(parseFloat("<%= c.latitude %>"), parseFloat("<%= c.longitude %>")))
+    </script>
+  <% }); %>
+  <% todayClosedHospitalPosition.forEach(h => { %>
+    <script>
+      todayClosedHospitalPositions.push(new kakao.maps.LatLng(parseFloat("<%= h.latitude %>"), parseFloat("<%= h.longitude %>")))
+    </script>
+  <% }); %>
+  <% openedRestaurantPosition.forEach(r => { %>
+    <script>
+      openedRestaurantPositions.push(new kakao.maps.LatLng(parseFloat("<%= r.latitude %>"), parseFloat("<%= r.longitude %>")))
+    </script>
+  <% }); %>
+  <% openedCafePosition.forEach(c => { %>
+    <script>
+      openedCafePositions.push(new kakao.maps.LatLng(parseFloat("<%= c.latitude %>"), parseFloat("<%= c.longitude %>")))
+    </script>
+  <% }); %>
+  <% openedHospitalPosition.forEach(h => { %>
+    <script>
+      openedHospitalPositions.push(new kakao.maps.LatLng(parseFloat("<%= h.latitude %>"), parseFloat("<%= h.longitude %>")))
+    </script>
+  <% }); %>
   <script src="/javascripts/mapLoader.js"></script>
   <script src="/javascripts/slideNav.js"></script>
 </html>
