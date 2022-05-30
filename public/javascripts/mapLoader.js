@@ -43,6 +43,9 @@ function searchPlaces() {
 
 // 키워드 검색 완료 시 호출되는 콜백함수 입니다
 function placesSearchCB (data, status, pagination) {
+    // 검색 결과 목록에 추가된 항목들을 제거합니다
+    removeAllChildNods(listEl);
+
     if (status === kakao.maps.services.Status.OK) {
 
         // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
@@ -91,6 +94,28 @@ function createMarker(position, image) {
     return marker;  
 }   
 
+function createInfowindowEvent(itemEl, marker, title) {
+    kakao.maps.event.addListener(marker, 'mouseover', function() {
+        displayInfowindow(marker, title);
+    });
+
+    kakao.maps.event.addListener(marker, 'mouseout', function() {
+        infowindow.close();
+    });
+
+    itemEl.onmouseover =  function () {
+        displayInfowindow(marker, title);
+    };
+
+    itemEl.onmouseout =  function () {
+        infowindow.close();
+    };
+}
+
+const listEl = document.getElementById('placesList');
+const menuEl = document.getElementById('slideNav');
+const fragment = document.createDocumentFragment();
+
 let closedRestaurantMarkers = [];
 let closedCafeMarkers = [];
 let closedHospitalMarkers = [];
@@ -104,13 +129,15 @@ let openedHospitalMarkers = [];
 // 오늘 마감 식당 마커를 생성하고 오늘 마감 식당 마커 배열에 추가하는 함수입니다
 function createClosedRestaurantMarkers() {
     
-    for (var i = 0; i < closedRestaurantPositions.length; i++) {  
+    for (var i = 0; i < closedRestaurant.length; i++) {  
         
         var imageSize = new kakao.maps.Size(35, 44),
             imageOptions = {  
                 spriteOrigin: new kakao.maps.Point(0, 45),    
                 spriteSize: new kakao.maps.Size(36, 133)  
             };     
+
+        let itemEl_CR = getClosedRestarantItem(closedRestaurant[i]);
         
         // 마커이미지와 마커를 생성합니다
         var markerImage = createMarkerImage(closedMarkerImageSrc, imageSize, imageOptions),    
@@ -118,18 +145,24 @@ function createClosedRestaurantMarkers() {
         
         // 생성된 마커를 마커 배열에 추가합니다
         closedRestaurantMarkers.push(marker);
+
+        createInfowindowEvent(itemEl_CR, marker, closedRestaurant[i].compName);
+
+        fragment.appendChild(itemEl_CR);
     }     
 }
 
 // 오늘 마감 휴게음식점 마커를 생성하고 오늘 마감 휴게음식점 마커 배열에 추가하는 함수입니다
 function createClosedCafeMarkers() {
-    for (var i = 0; i < closedCafePositions.length; i++) {
+    for (var i = 0; i < closedCafe.length; i++) {
         
         var imageSize = new kakao.maps.Size(35, 44),
             imageOptions = {   
                 spriteOrigin: new kakao.maps.Point(0, 2),    
                 spriteSize: new kakao.maps.Size(36, 133)  
-            };       
+            };  
+            
+        let itemEl_CC = getClosedCafeItem(closedCafe[i]);
      
         // 마커이미지와 마커를 생성합니다
         var markerImage = createMarkerImage(closedMarkerImageSrc, imageSize, imageOptions),    
@@ -137,38 +170,50 @@ function createClosedCafeMarkers() {
 
         // 생성된 마커를 마커 배열에 추가합니다
         closedCafeMarkers.push(marker);    
+
+        createInfowindowEvent(itemEl_CC, marker, closedCafe[i].compName);
+
+        fragment.appendChild(itemEl_CC);
     }        
 }
 
 // 오늘 마감 병원 마커를 생성하고 오늘 마감 병원 마커 배열에 추가하는 함수입니다
 function createClosedHospitalMarkers() {
-    for (var i = 0; i < closedHospitalPositions.length; i++) {
+    for (var i = 0; i < closedHospital.length; i++) {
         
         var imageSize = new kakao.maps.Size(35, 44),
             imageOptions = {   
                 spriteOrigin: new kakao.maps.Point(0, 87),    
                 spriteSize: new kakao.maps.Size(36, 133)  
-            };       
+            };    
+            
+        let itemEl_CH = getClosedHospitalItem(closedHospital[i]);
      
         // 마커이미지와 마커를 생성합니다
         var markerImage = createMarkerImage(closedMarkerImageSrc, imageSize, imageOptions),    
             marker = createMarker(closedHospitalPositions[i], markerImage);  
 
         // 생성된 마커를 마커 배열에 추가합니다
-        closedHospitalMarkers.push(marker);        
+        closedHospitalMarkers.push(marker);  
+        
+        createInfowindowEvent(itemEl_CH, marker, closedHospital[i].compName);
+
+        fragment.appendChild(itemEl_CH);
     }                
 }
 
 // 오늘 휴무 식당 마커를 생성하고 오늘 휴무 식당 마커 배열에 추가하는 함수입니다
 function createTodayClosedRestaurantMarkers() {
     
-    for (var i = 0; i < todayClosedRestaurantPositions.length; i++) {  
+    for (var i = 0; i < todayClosedRestaurant.length; i++) {  
         
         var imageSize = new kakao.maps.Size(35, 44),
             imageOptions = {  
                 spriteOrigin: new kakao.maps.Point(0, 45),    
                 spriteSize: new kakao.maps.Size(36, 133)  
-            };     
+            };   
+            
+        let itemEl_TCR = getTodayClosedRestarantItem(todayClosedRestaurant[i]);
         
         // 마커이미지와 마커를 생성합니다
         var markerImage = createMarkerImage(holidayMarkerImageSrc, imageSize, imageOptions),    
@@ -176,51 +221,69 @@ function createTodayClosedRestaurantMarkers() {
         
         // 생성된 마커를 마커 배열에 추가합니다
         todayClosedRestaurantMarkers.push(marker);
+
+        createInfowindowEvent(itemEl_TCR, marker, todayClosedRestaurant[i].compName);
+
+        fragment.appendChild(itemEl_TCR);
     }     
 }
 
 // 오늘 휴무 휴게음식점 마커를 생성하고 오늘 휴무 휴게음식점 마커 배열에 추가하는 함수입니다
 function createTodayClosedCafeMarkers() {
-    for (var i = 0; i < todyClosedCafePositions.length; i++) {
+
+    for (var i = 0; i < todayClosedCafe.length; i++) {
         
         var imageSize = new kakao.maps.Size(35, 44),
             imageOptions = {   
                 spriteOrigin: new kakao.maps.Point(0, 2),    
                 spriteSize: new kakao.maps.Size(36, 133)  
             };       
+
+        let itemEl_TCC = getClosedCafeItem(todayClosedCafe[i]);
      
         // 마커이미지와 마커를 생성합니다
         var markerImage = createMarkerImage(holidayMarkerImageSrc, imageSize, imageOptions),    
             marker = createMarker(todyClosedCafePositions[i], markerImage);  
 
         // 생성된 마커를 마커 배열에 추가합니다
-        todayClosedCafeMarkers.push(marker);    
+        todayClosedCafeMarkers.push(marker);   
+        
+        createInfowindowEvent(itemEl_TCC, marker, todayClosedCafe[i].compName);
+
+        fragment.appendChild(itemEl_TCC);
     }        
 }
 
 // 오늘 휴무 병원 마커를 생성하고 오늘 휴무 병원 마커 배열에 추가하는 함수입니다
 function createTodayClosedHospitalMarkers() {
-    for (var i = 0; i < todayClosedHospitalPositions.length; i++) {
+
+    for (var i = 0; i < todayClosedHospital.length; i++) {
         
         var imageSize = new kakao.maps.Size(35, 44),
             imageOptions = {   
                 spriteOrigin: new kakao.maps.Point(0, 87),    
                 spriteSize: new kakao.maps.Size(36, 133)  
-            };       
+            };      
+            
+        let itemEl_TCH = getTodayClosedHospitalItem(todayClosedHospital[i]);
      
         // 마커이미지와 마커를 생성합니다
         var markerImage = createMarkerImage(holidayMarkerImageSrc, imageSize, imageOptions),    
             marker = createMarker(todayClosedHospitalPositions[i], markerImage);  
 
         // 생성된 마커를 마커 배열에 추가합니다
-        todayClosedHospitalMarkers.push(marker);        
+        todayClosedHospitalMarkers.push(marker);  
+        
+        createInfowindowEvent(itemEl_TCH, marker, todayClosedHospital[i].compName);
+
+        fragment.appendChild(itemEl_TCH);
     }                
 }
 
 // 영업중 식당 마커를 생성하고 영업중 식당 마커 배열에 추가하는 함수입니다
 function createOpenedRestaurantMarkers() {
     
-    for (var i = 0; i < openedRestaurantPositions.length; i++) {  
+    for (var i = 0; i < openedRestaurant.length; i++) {  
         
         var imageSize = new kakao.maps.Size(35, 44),
             imageOptions = {  
@@ -228,50 +291,75 @@ function createOpenedRestaurantMarkers() {
                 spriteSize: new kakao.maps.Size(36, 133)  
             };     
         
+        let itemEl_OR = getOpenedRestarantItem(openedRestaurant[i]);
+        
         // 마커이미지와 마커를 생성합니다
         var markerImage = createMarkerImage(opendMarkerImageSrc, imageSize, imageOptions),    
             marker = createMarker(openedRestaurantPositions[i], markerImage);  
         
         // 생성된 마커를 마커 배열에 추가합니다
         openedRestaurantMarkers.push(marker);
-    }     
-}
+
+        createInfowindowEvent(itemEl_OR, marker, openedRestaurant[i].compName);
+
+        fragment.appendChild(itemEl_OR);
+    }
+
+    // 검색결과 항목들을 검색결과 목록 Element에 추가합니다
+    listEl.appendChild(fragment);
+    menuEl.scrollTop = 0;
+}     
 
 // 영업중 휴게음식점 마커를 생성하고 영업중 휴게음식점 마커 배열에 추가하는 함수입니다
 function createOpenedCafeMarkers() {
-    for (var i = 0; i < openedCafePositions.length; i++) {
+
+    for (var i = 0; i < openedCafe.length; i++) {
+        
         
         var imageSize = new kakao.maps.Size(35, 44),
             imageOptions = {   
                 spriteOrigin: new kakao.maps.Point(0, 2),    
                 spriteSize: new kakao.maps.Size(36, 133)  
             };       
-     
+
+        let itemEl_OC = getOpenedCafeItem(openedCafe[i]);
+        
         // 마커이미지와 마커를 생성합니다
         var markerImage = createMarkerImage(opendMarkerImageSrc, imageSize, imageOptions),    
             marker = createMarker(openedCafePositions[i], markerImage);  
 
         // 생성된 마커를 마커 배열에 추가합니다
         openedCafeMarkers.push(marker);    
+
+        createInfowindowEvent(itemEl_OC, marker, openedCafe[i].compName);
+
+        fragment.appendChild(itemEl_OC);
     }     
 }
 
 // 영업중 병원 마커를 생성하고 영업중 병원 마커 배열에 추가하는 함수입니다
 function createOpenedHospitalMarkers() {
-    for (var i = 0; i < openedHospitalPositions.length; i++) {
+
+    for (var i = 0; i < openedHospital.length; i++) {
         
         var imageSize = new kakao.maps.Size(35, 80),
             imageOptions = {   
                 spriteOrigin: new kakao.maps.Point(0, 87),    
                 spriteSize: new kakao.maps.Size(36, 133)
-            };       
+            };     
+            
+        let itemEl_OH = getOpenedHospitalItem(openedHospital[i]);
      
         // 마커이미지와 마커를 생성합니다
         var markerImage = createMarkerImage(opendMarkerImageSrc, imageSize, imageOptions),    
             marker = createMarker(openedHospitalPositions[i], markerImage);  
 
         // 생성된 마커를 마커 배열에 추가합니다
-        openedHospitalMarkers.push(marker);        
+        openedHospitalMarkers.push(marker);    
+        
+        createInfowindowEvent(itemEl_OH, marker, openedHospital[i].compName);
+
+        fragment.appendChild(itemEl_OH);
     }                
 }
 
@@ -336,4 +424,198 @@ function setOpenedHospitalMarkers(map) {
     for (var i = 0; i < openedHospitalMarkers.length; i++) {  
         openedHospitalMarkers[i].setMap(map);
     }        
+}
+
+// 지도 위에 표시되고 있는 마커를 모두 제거합니다
+function removeMarker() {
+    for ( var i = 0; i < markers.length; i++ ) {
+        markers[i].setMap(null);
+    }   
+    markers = [];
+}
+
+function removeAllChildNods(el) {   
+    while (el.hasChildNodes()) {
+        el.removeChild (el.lastChild);
+    }
+}
+
+
+function getClosedRestarantItem(places) {
+
+    var el = document.createElement('li'),
+    itemStr = '<div class="info">' +
+        '   <h5>' + places.compName + '</h5>';
+
+    itemStr += '    <span>' + places.address + '</span>';
+    itemStr += '    <span>' +  places.restOpen  + '</span>'+
+        '   <span>' +  places.restClosed  + '</span>'; 
+
+    itemStr += '  <span class="tel"> 오늘 마감 </span>' +
+        '</div>';           
+
+    el.innerHTML = itemStr;
+    el.className = 'item';
+
+    return el;
+}
+
+function getClosedCafeItem(places) {
+
+    var el = document.createElement('li'),
+    itemStr = '<div class="info">' +
+        '   <h5>' + places.compName + '</h5>';
+    itemStr += '    <span>' + places.address + '</span>';
+    itemStr += '    <span>' + places.cafeType + '</span>';
+    itemStr += '    <span>' +  places.cafeOpen  + '</span>'+
+        '   <span>' +  places.cafeClosed  + '</span>'; 
+
+    itemStr += '  <span class="tel"> 오늘 마감 </span>' +
+        '</div>';           
+
+    el.innerHTML = itemStr;
+    el.className = 'item';
+
+    return el;
+}
+
+function getClosedHospitalItem(places) {
+
+    var el = document.createElement('li'),
+    itemStr = '<div class="info">' +
+        '   <h5>' + places.compName + '</h5>';
+    itemStr += '    <span>' + places.address + '</span>';
+    itemStr += '    <span>' + places.HospType + '</span>';
+    itemStr += '    <span>' +  places.hospitalOpen  + '</span>'+
+        '   <span>' +  places.hospitalClosed  + '</span>'; 
+    itemStr += '    <span>' + places.content + '</span>';
+
+    itemStr += '  <span class="tel"> 오늘 마감 </span>' +
+        '</div>';           
+
+    el.innerHTML = itemStr;
+    el.className = 'item';
+
+    return el;
+}
+
+function getTodayClosedRestarantItem(places) {
+
+    var el = document.createElement('li'),
+    itemStr = '<div class="info">' +
+        '   <h5>' + places.compName + '</h5>';
+
+    itemStr += '    <span>' + places.address + '</span>';
+    itemStr += '    <span> 휴무 </span>'
+
+    itemStr += '  <span class="tel"> 오늘 휴무 </span>' +
+        '</div>';           
+
+    el.innerHTML = itemStr;
+    el.className = 'item';
+
+    return el;
+}
+
+function getTodayClosedCafeItem(places) {
+
+    var el = document.createElement('li'),
+    itemStr = '<div class="info">' +
+        '   <h5>' + places.compName + '</h5>';
+    itemStr += '    <span>' + places.address + '</span>';
+    itemStr += '    <span>' + places.cafeType + '</span>';
+    itemStr += '    <span> 휴무 </span>'
+
+    itemStr += '  <span class="tel"> 오늘 휴무 </span>' +
+        '</div>';           
+
+    el.innerHTML = itemStr;
+    el.className = 'item';
+
+    return el;
+}
+
+function getTodayClosedHospitalItem(places) {
+
+    var el = document.createElement('li'),
+    itemStr = '<div class="info">' +
+        '   <h5>' + places.compName + '</h5>';
+    itemStr += '    <span>' + places.address + '</span>';
+    itemStr += '    <span>' + places.HospType + '</span>';
+    itemStr += '    <span> 휴무 </span>'
+    itemStr += '    <span>' + places.content + '</span>';
+
+    itemStr += '  <span class="tel"> 오늘 휴무 </span>' +
+        '</div>';           
+
+    el.innerHTML = itemStr;
+    el.className = 'item';
+
+    return el;
+}
+
+function getOpenedRestarantItem(places) {
+
+    var el = document.createElement('li'),
+    itemStr = '<div class="info">' +
+        '   <h5>' + places.compName + '</h5>';
+
+    itemStr += '    <span>' + places.address + '</span>';
+    itemStr += '    <span>' +  places.restOpen  + '</span>'+
+        '   <span>' +  places.restClosed  + '</span>'; 
+
+    itemStr += '  <span class="tel"> 영업중 </span>' +
+        '</div>';           
+
+    el.innerHTML = itemStr;
+    el.className = 'item';
+
+    return el;
+}
+
+function getOpenedCafeItem(places) {
+
+    var el = document.createElement('li'),
+    itemStr = '<div class="info">' +
+        '   <h5>' + places.compName + '</h5>';
+    itemStr += '    <span>' + places.address + '</span>';
+    itemStr += '    <span>' + places.cafeType + '</span>';
+    itemStr += '    <span>' +  places.cafeOpen  + '</span>'+
+        '   <span>' +  places.cafeClosed  + '</span>'; 
+
+    itemStr += '  <span class="tel"> 영업중 </span>' +
+        '</div>';           
+
+    el.innerHTML = itemStr;
+    el.className = 'item';
+
+    return el;
+}
+
+function getOpenedHospitalItem(places) {
+
+    var el = document.createElement('li'),
+    itemStr = '<div class="info">' +
+        '   <h5>' + places.compName + '</h5>';
+    itemStr += '    <span>' + places.address + '</span>';
+    itemStr += '    <span>' + places.HospType + '</span>';
+    itemStr += '    <span>' +  places.hospitalOpen  + '</span>'+
+        '   <span>' +  places.hospitalClosed  + '</span>'; 
+    itemStr += '    <span>' + places.content + '</span>';
+
+    itemStr += '  <span class="tel"> 영업중 </span>' +
+        '</div>';           
+
+    el.innerHTML = itemStr;
+    el.className = 'item';
+
+    return el;
+}
+
+
+function displayInfowindow(marker, title) {
+    var content = '<div style="padding:5px;z-index:1;">' + title + '</div>';
+
+    infowindow.setContent(content);
+    infowindow.open(map, marker);
 }
