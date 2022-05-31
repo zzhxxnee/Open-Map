@@ -155,22 +155,10 @@ exports.registCompNext = (req, res) => {
     }else if(compInfo.type =="C"){
         res.render("registCafe");
     }
-    else{
+    else if(compInfo.type=="H"){
         res.render("registHospital")
     }
+    else{
+        res.send(req.body);
+    }
 };
-
-// // 식당 클릭했으면 registRest
-// exports.registRest = (req, res) =>{
-//     res.render("registRest");
-// }
-
-// // 휴게음식점 클릭했으면 registCafe
-// exports.registCafe = (req, res) => {
-//     res.render("registCafe");
-// }
-
-// // 병원 클릭했으면 registHospital
-// exports.registHospital = (req, res) => {
-//     res.render("registHospital");
-// }

@@ -1,1 +1,23 @@
-병원등록페이지입니다.
+<head>
+    <script language="javascript" src="/javascripts/registHosp.js"></script>
+</head>
+
+<body>
+    <div class="step">
+        <h1>병원 등록하기</h1>
+        <h2>STEP 2</h2>
+    </div>
+    <form name="hospRegistForm" id="restRegistForm" method="post">
+        <% for(var i = 0; i < 9; i++){ %>
+            <div>
+                <label for="openTime">오픈시각</label>
+                <input type="time" class="timepicker" name="openTime" id="openTime" value="00:00:00" />
+                <label for="openTime">마감시각</label>
+                <input type="time" class="timepicker" name="closedTime" id="closedTime" value="00:00:00" />
+            </div>
+           <% } %>
+
+
+        <input type="submit" value="업체등록하기" />
+    </form>
+</body>

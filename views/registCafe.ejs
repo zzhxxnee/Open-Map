@@ -1,1 +1,42 @@
-휴게음식점 등록 페이지입니다.
+<head>
+    <script language="javascript" src="/javascripts/registCafe.js"></script>
+</head>
+
+<body>
+    <div class="step">
+        <h1>휴게 음식점 등록하기</h1>
+        <h2>STEP 2</h2>
+    </div>
+    <form name="cafeRegistForm" id="restRegistForm" method="post">
+        <div>
+            <label for="openTime">오픈시각</label>
+            <input type="time" class="timepicker" name="openTime" id="openTime" value="00:00:00" />
+            <label for="openTime">마감시각</label>
+            <input type="time" class="timepicker" name="closedTime" id="closedTime" value="00:00:00" />
+            <input type="checkbox" name="tomorrow" id="tomorrow" value="true" />익일
+            <input type="checkbox" name="24hours" id="24hours" value="true" onclick='get24hoursValue(event)' />24시간 영업
+        </div>
+        <div>
+            <label for="restType">업종(선택 필수)</label>
+            <select name="restType" , id="restType" required>
+                <option value="">업종</option>
+                <option value="korea">커피숍</option>
+                <option value="china">편의점</option>
+                <option value="Japan">패스트푸드</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="menu">주요메뉴</label>
+            <input type="button" value="메뉴 추가하기" onclick="addMenu()">
+            <br>
+            <div id="menuBox">
+                <input type="text" name="menu" id="menu" placeholder="메뉴명" />
+                <input type="number" name="price" id="price" placeholder="가격" />원
+            </div>
+            <div id="field"></div>
+        </div>
+
+        <input type="submit" value="업체등록하기" />
+    </form>
+</body>

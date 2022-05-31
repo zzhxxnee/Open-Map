@@ -1,1 +1,55 @@
-식당등록페이지입니다.
+<head>
+    <script language="javascript" src="/javascripts/registRest.js"></script>
+</head>
+
+<body>
+    <div class="step">
+        <h1>식당등록하기</h1>
+        <h2>STEP 2</h2>
+    </div>
+    <form name="restRegistForm" id="restRegistForm" method="post">
+        <div>
+            <label for="openTime">오픈시각</label>
+            <input type="time" class="timepicker" name="openTime" id="openTime" value="00:00:00" />
+            <label for="openTime">마감시각</label>
+            <input type="time" class="timepicker" name="closedTime" id="closedTime" value="00:00:00" />
+            <input type="checkbox" name="tomorrow" id="tomorrow" value="true" />익일
+            <input type="checkbox" name="24hours" id="24hours" value="true" onclick='get24hoursValue(event)' />24시간 영업
+        </div>
+        <div>
+            <label for="openTime">브레이크 시작시각</label>
+            <input type="time" class="timepicker" name="breakStart" id="breakStart" value="00:00:00" />
+            <label for="openTime">브레이크 마감시각</label>
+            <input type="time" class="timepicker" name="breakEnd" id="breakEnd" value="00:00:00" />
+            <input type="checkbox" name="noBreak" id="noBreak" value="true" onclick='getNoBreakValue(event)' />브레이크 타임없음
+        </div>
+        <div>
+            <label for="restType">음식 종류 (선택 필수)</label>
+            <select name="restType" , id="restType" required>
+                <option value="">음식 종류</option>
+                <option value="korea">한식</option>
+                <option value="china">중식</option>
+                <option value="Japan">일식</option>
+                <option value="western">경양식</option>
+                <option value="snack">분식</option>
+                <option value="meat">고깃집</option>
+                <option value="bar">술집</option>
+                <option value="chicken">치킨</option>
+                <option value="etc">기타</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="menu">주요메뉴</label>
+            <input type="button" value="메뉴 추가하기" onclick="addMenu()">
+            <br>
+            <div id="menuBox">
+                <input type="text" name="menu" id="menu" placeholder="메뉴명" />
+                <input type="number" name="price" id="price" placeholder="가격" />원
+            </div>
+            <div id="field"></div>
+        </div>
+
+        <input type="submit" value="업체등록하기" />
+    </form>
+</body>
