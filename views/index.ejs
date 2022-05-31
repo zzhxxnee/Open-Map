@@ -2,6 +2,8 @@
 <html>
   <head>
     <link rel="stylesheet" href="/stylesheets/main.css" />
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=<%=apikey%>&libraries=services,clusterer,drawing"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   </head>
   <style>
     .wrap {position: absolute;left: 0;bottom: 40px;width: 360px;height: 362px;margin-left: -180px;text-align: left;overflow: hidden;font-size: 12px;font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;line-height: 1.5;}
@@ -37,18 +39,7 @@
       </div>
     </div>
   </body>
-  <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=<%=apikey%>&libraries=services,clusterer,drawing"></script>
   <script>
-    let closedRestaurantPositions = []; // 오늘 마감 식당 위치 객체를 가지고 있을 배열입니다
-    let closedCafePositions = []; // 오늘 마감 휴게음식점 위치 객체를 가지고 있을 배열입니다
-    let closedHospitalPositions = []; // 오늘 마감 병원 위치 객체를 가지고 있을 배열입니다
-    let todayClosedRestaurantPositions = []; // 오늘 휴무 식당 위치 객체를 가지고 있을 배열입니다
-    let todyClosedCafePositions = []; // 오늘 휴무 휴게음식점 위치 객체를 가지고 있을 배열입니다
-    let todayClosedHospitalPositions = []; // 오늘 휴무 병원 위치 객체를 가지고 있을 배열입니다
-    let openedRestaurantPositions = []; // 영업중인 식당 위치 객체를 가지고 있을 배열입니다
-    let openedCafePositions = []; // 영업중인 휴게음식점 위치 객체를 가지고 있을 배열입니다
-    let openedHospitalPositions = []; // 영업중인 병원 위치 객체를 가지고 있을 배열입니다
-
     let closedRestaurant = []; // 오늘 마감 식당 객체를 가지고 있을 배열입니다
     let closedCafe = []; // 오늘 마감 휴게음식점 객체를 가지고 있을 배열입니다
     let closedHospital = []; // 오늘 마감 병원 객체를 가지고 있을 배열입니다
@@ -65,6 +56,8 @@
       closedRestaurantObject = {
         compName:'<%= r.dataValues.compName %>',
         address: '<%= r.dataValues.address %>',
+        latitude: '<%= r.dataValues.latitude %>',
+        longitude: '<%= r.dataValues.longitude %>',
         tel: '<%= r.dataValues.tel %>',
         restOpen: '<%= r.dataValues.restOpen %>',
         restClosed: '<%= r.dataValues.restClosed %>',
@@ -81,6 +74,8 @@
       closedCafeObject = {
         compName:'<%= c.dataValues.compName %>',
         address: '<%= c.dataValues.address %>',
+        latitude: '<%= c.dataValues.latitude %>',
+        longitude: '<%= c.dataValues.longitude %>',
         tel: '<%= c.dataValues.tel %>',
         cafeOpen: '<%= c.dataValues.cafeOpen %>',
         cafeClosed: '<%= c.dataValues.cafeClosed %>',
@@ -96,6 +91,8 @@
       closedHospitalObject = {
         compName:'<%= h.dataValues.compName %>',
         address: '<%= h.dataValues.address %>',
+        latitude: '<%= h.dataValues.latitude %>',
+        longitude: '<%= h.dataValues.longitude %>',
         tel: '<%= h.dataValues.tel %>',
         hospitalOpen: '<%= h.dataValues.HospOpenSun %>',
         hospitalClosed: '<%= h.dataValues.HospCloseSun %>',
@@ -111,6 +108,8 @@
       closedHospitalObject = {
         compName:'<%= h.dataValues.compName %>',
         address: '<%= h.dataValues.address %>',
+        latitude: '<%= h.dataValues.latitude %>',
+        longitude: '<%= h.dataValues.longitude %>',
         tel: '<%= h.dataValues.tel %>',
         hospitalOpen: '<%= h.dataValues.HospOpenMon %>',
         hospitalClosed: '<%= h.dataValues.HospCloseMon %>',
@@ -126,6 +125,8 @@
       closedHospitalObject = {
         compName:'<%= h.dataValues.compName %>',
         address: '<%= h.dataValues.address %>',
+        latitude: '<%= h.dataValues.latitude %>',
+        longitude: '<%= h.dataValues.longitude %>',
         tel: '<%= h.dataValues.tel %>',
         hospitalOpen: '<%= h.dataValues.HospOpenTue %>',
         hospitalClosed: '<%= h.dataValues.HospCloseTue %>',
@@ -141,6 +142,8 @@
       closedHospitalObject = {
         compName:'<%= h.dataValues.compName %>',
         address: '<%= h.dataValues.address %>',
+        latitude: '<%= h.dataValues.latitude %>',
+        longitude: '<%= h.dataValues.longitude %>',
         tel: '<%= h.dataValues.tel %>',
         hospitalOpen: '<%= h.dataValues.HospOpenWed %>',
         hospitalClosed: '<%= h.dataValues.HospCloseWed %>',
@@ -156,6 +159,8 @@
       closedHospitalObject = {
         compName:'<%= h.dataValues.compName %>',
         address: '<%= h.dataValues.address %>',
+        latitude: '<%= h.dataValues.latitude %>',
+        longitude: '<%= h.dataValues.longitude %>',
         tel: '<%= h.dataValues.tel %>',
         hospitalOpen: '<%= h.dataValues.HospOpenThu %>',
         hospitalClosed: '<%= h.dataValues.HospCloseThu %>',
@@ -171,6 +176,8 @@
       closedHospitalObject = {
         compName:'<%= h.dataValues.compName %>',
         address: '<%= h.dataValues.address %>',
+        latitude: '<%= h.dataValues.latitude %>',
+        longitude: '<%= h.dataValues.longitude %>',
         tel: '<%= h.dataValues.tel %>',
         hospitalOpen: '<%= h.dataValues.HospOpenFri %>',
         hospitalClosed: '<%= h.dataValues.HospCloseFri %>',
@@ -186,6 +193,8 @@
       closedHospitalObject = {
         compName:'<%= h.dataValues.compName %>',
         address: '<%= h.dataValues.address %>',
+        latitude: '<%= h.dataValues.latitude %>',
+        longitude: '<%= h.dataValues.longitude %>',
         tel: '<%= h.dataValues.tel %>',
         hospitalOpen: '<%= h.dataValues.HospOpenSat %>',
         hospitalClosed: '<%= h.dataValues.HospCloseSat %>',
@@ -202,6 +211,8 @@
       todayClosedRestaurantObject = {
         compName:'<%= r.dataValues.compName %>',
         address: '<%= r.dataValues.address %>',
+        latitude: '<%= r.dataValues.latitude %>',
+        longitude: '<%= r.dataValues.longitude %>',
         tel: '<%= r.dataValues.tel %>',
         image: '<%= r.dataValues.image %>',
         type: 'tcr'
@@ -214,6 +225,8 @@
       todayClosedCafeObject = {
         compName:'<%= c.dataValues.compName %>',
         address: '<%= c.dataValues.address %>',
+        latitude: '<%= c.dataValues.latitude %>',
+        longitude: '<%= c.dataValues.longitude %>',
         tel: '<%= c.dataValues.tel %>',
         cafeType: '<%= c.dataValues.cafeType %>',
         image: '<%= c.dataValues.image %>',
@@ -222,13 +235,15 @@
       todayClosedCafe.push(todayClosedCafeObject);
     </script>
   <% }); %>
-  <% todayClosedHospital.forEach(c => { %>
+  <% todayClosedHospital.forEach(h => { %>
     <script>
       todayClosedHospitalObject = {
-        compName:'<%= c.dataValues.compName %>',
-        address: '<%= rc.dataValues.address %>',
-        tel: '<%= c.dataValues.tel %>',
-        image: '<%= c.dataValues.image %>',
+        compName:'<%= h.dataValues.compName %>',
+        address: '<%= h.dataValues.address %>',
+        latitude: '<%= h.dataValues.latitude %>',
+        longitude: '<%= h.dataValues.longitude %>',
+        tel: '<%= h.dataValues.tel %>',
+        image: '<%= h.dataValues.image %>',
         HospType: '<%= h.dataValues.HospType %>',
         content: '<%= h.dataValues.content %>',
         type: 'tch'
@@ -241,6 +256,8 @@
       openedRestaurantObject = {
         compName:'<%= r.dataValues.compName %>',
         address: '<%= r.dataValues.address %>',
+        latitude: '<%= r.dataValues.latitude %>',
+        longitude: '<%= r.dataValues.longitude %>',
         tel: '<%= r.dataValues.tel %>',
         restOpen: '<%= r.dataValues.restOpen %>',
         restClosed: '<%= r.dataValues.restClosed %>',
@@ -257,6 +274,8 @@
       openedCafeObject = {
         compName:'<%= c.dataValues.compName %>',
         address: '<%= c.dataValues.address %>',
+        latitude: '<%= c.dataValues.latitude %>',
+        longitude: '<%= c.dataValues.longitude %>',
         tel: '<%= c.dataValues.tel %>',
         cafeOpen: '<%= c.dataValues.cafeOpen %>',
         cafeClosed: '<%= c.dataValues.cafeClosed %>',
@@ -272,6 +291,8 @@
       openedHospitalObject = {
         compName:'<%= h.dataValues.compName %>',
         address: '<%= h.dataValues.address %>',
+        latitude: '<%= h.dataValues.latitude %>',
+        longitude: '<%= h.dataValues.longitude %>',
         tel: '<%= h.dataValues.tel %>',
         hospitalOpen: '<%= h.dataValues.HospOpenSun %>',
         hospitalClosed: '<%= h.dataValues.HospCloseSun %>',
@@ -287,6 +308,8 @@
       openedHospitalObject = {
         compName:'<%= h.dataValues.compName %>',
         address: '<%= h.dataValues.address %>',
+        latitude: '<%= h.dataValues.latitude %>',
+        longitude: '<%= h.dataValues.longitude %>',
         tel: '<%= h.dataValues.tel %>',
         hospitalOpen: '<%= h.dataValues.HospOpenMon %>',
         hospitalClosed: '<%= h.dataValues.HospCloseMon %>',
@@ -302,6 +325,8 @@
       openedHospitalObject = {
         compName:'<%= h.dataValues.compName %>',
         address: '<%= h.dataValues.address %>',
+        latitude: '<%= h.dataValues.latitude %>',
+        longitude: '<%= h.dataValues.longitude %>',
         tel: '<%= h.dataValues.tel %>',
         hospitalOpen: '<%= h.dataValues.HospOpenTue %>',
         hospitalClosed: '<%= h.dataValues.HospCloseTue %>',
@@ -317,6 +342,8 @@
       openedHospitalObject = {
         compName:'<%= h.dataValues.compName %>',
         address: '<%= h.dataValues.address %>',
+        latitude: '<%= h.dataValues.latitude %>',
+        longitude: '<%= h.dataValues.longitude %>',
         tel: '<%= h.dataValues.tel %>',
         hospitalOpen: '<%= h.dataValues.HospOpenWed %>',
         hospitalClosed: '<%= h.dataValues.HospCloseWed %>',
@@ -332,6 +359,8 @@
       openedHospitalObject = {
         compName:'<%= h.dataValues.compName %>',
         address: '<%= h.dataValues.address %>',
+        latitude: '<%= h.dataValues.latitude %>',
+        longitude: '<%= h.dataValues.longitude %>',
         tel: '<%= h.dataValues.tel %>',
         hospitalOpen: '<%= h.dataValues.HospOpenThu %>',
         hospitalClosed: '<%= h.dataValues.HospCloseThu %>',
@@ -347,6 +376,8 @@
       openedHospitalObject = {
         compName:'<%= h.dataValues.compName %>',
         address: '<%= h.dataValues.address %>',
+        latitude: '<%= h.dataValues.latitude %>',
+        longitude: '<%= h.dataValues.longitude %>',
         tel: '<%= h.dataValues.tel %>',
         hospitalOpen: '<%= h.dataValues.HospOpenFri %>',
         hospitalClosed: '<%= h.dataValues.HospCloseFri %>',
@@ -362,6 +393,8 @@
       openedHospitalObject = {
         compName:'<%= h.dataValues.compName %>',
         address: '<%= h.dataValues.address %>',
+        latitude: '<%= h.dataValues.latitude %>',
+        longitude: '<%= h.dataValues.longitude %>',
         tel: '<%= h.dataValues.tel %>',
         hospitalOpen: '<%= h.dataValues.HospOpenSat %>',
         hospitalClosed: '<%= h.dataValues.HospCloseSat %>',
@@ -373,51 +406,6 @@
       openedHospital.push(openedHospitalObject);
     </script>
   <% })}; %>
-  <% closedRestaurantTotal.forEach(r => { %>
-    <script>
-      closedRestaurantPositions.push(new kakao.maps.LatLng(parseFloat("<%= r.dataValues.latitude %>"), parseFloat("<%= r.dataValues.longitude %>")))
-    </script>
-  <% }); %>
-  <% closedCafeTotal.forEach(c => { %>
-    <script>
-      closedCafePositions.push(new kakao.maps.LatLng(parseFloat("<%= c.dataValues.latitude %>"), parseFloat("<%= c.dataValues.longitude %>")))
-    </script>
-  <% }); %>
-  <% closedHospitalTotal.forEach(h => { %>
-    <script>
-      closedHospitalPositions.push(new kakao.maps.LatLng(parseFloat("<%= h.dataValues.latitude %>"), parseFloat("<%= h.dataValues.longitude %>")))
-    </script>
-  <% }); %>
-  <% todayClosedRestaurant.forEach(r => { %>
-    <script>
-      todayClosedRestaurantPositions.push(new kakao.maps.LatLng(parseFloat("<%= r.dataValues.latitude %>"), parseFloat("<%= r.dataValues.longitude %>")))
-    </script>
-  <% }); %>
-  <% todayClosedCafe.forEach(c => { %>
-    <script>
-      todayClosedCafeMarkers.push(new kakao.maps.LatLng(parseFloat("<%= c.dataValues.latitude %>"), parseFloat("<%= c.dataValues.longitude %>")))
-    </script>
-  <% }); %>
-  <% todayClosedHospital.forEach(h => { %>
-    <script>
-      todayClosedHospitalPositions.push(new kakao.maps.LatLng(parseFloat("<%= h.dataValues.latitude %>"), parseFloat("<%= h.dataValues.longitude %>")))
-    </script>
-  <% }); %>
-  <% openedRestaurant.forEach(r => { %>
-    <script>
-      openedRestaurantPositions.push(new kakao.maps.LatLng(parseFloat("<%= r.dataValues.latitude %>"), parseFloat("<%= r.dataValues.longitude %>")))
-    </script>
-  <% }); %>
-  <% openedCafe.forEach(c => { %>
-    <script>
-      openedCafePositions.push(new kakao.maps.LatLng(parseFloat("<%= c.dataValues.latitude %>"), parseFloat("<%= c.dataValues.longitude %>")))
-    </script>
-  <% }); %>
-  <% openedHospital.forEach(h => { %>
-    <script>
-      openedHospitalPositions.push(new kakao.maps.LatLng(parseFloat("<%= h.dataValues.latitude %>"), parseFloat("<%= h.dataValues.longitude %>")))
-    </script>
-  <% }); %>
   <script src="/javascripts/mapLoader.js"></script>
   <script src="/javascripts/slideNav.js"></script>
 </html>

@@ -4,6 +4,10 @@ let init = 0;
 const closedMarkerImageSrc = "//localhost:3000/images/closed.png";  // 마커이미지의 주소입니다. 스프라이트 이미지 입니다
 const holidayMarkerImageSrc = "//localhost:3000/images/holiday.png";
 const opendMarkerImageSrc = "//localhost:3000/images/open.png";
+let companyTotal = [... closedCafe, openedCafe, todayClosedCafe, closedRestaurant, openedRestaurant, todayClosedRestaurant, closedHospital, openedHospital, todayClosedHospital];
+const listEl = document.getElementById('placesList');
+const menuEl = document.getElementById('slideNav');
+const fragment = document.createDocumentFragment();
 
 function setCenter() {            
     // 이동할 위도 경도 위치를 생성합니다 
@@ -25,7 +29,6 @@ const map = new kakao.maps.Map(mapContainer, mapOption);
 if(init === 0){
     setCenter();
     init++;
-    console.log(init);
 }
 
 
@@ -46,6 +49,8 @@ function placesSearchCB (data, status, pagination) {
     // 검색 결과 목록에 추가된 항목들을 제거합니다
     removeAllChildNods(listEl);
 
+    let count = 0;
+
     if (status === kakao.maps.services.Status.OK) {
 
         // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
@@ -54,28 +59,210 @@ function placesSearchCB (data, status, pagination) {
 
         for (var i=0; i<data.length; i++) {   
             bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
-        }       
+        }    
 
         // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
         map.setBounds(bounds);
-        createClosedRestaurantMarkers(); 
-        setClosedRestaurantMarkers(map);
-        createClosedCafeMarkers();
-        setClosedCafeMarkers(map);
-        createClosedHospitalMarkers();
-        setClosedHospitalMarkers(map);
-        createTodayClosedRestaurantMarkers();
-        setTodayClosedRestaurantMarkers(map);
-        createTodayClosedCafeMarkers();
-        setTodayClosedCafeMarkers(map);
-        createTodayClosedHospitalMarkers();
-        setTodayClosedHospitalMarkers(map);
-        createOpenedRestaurantMarkers();
-        setOpenedRestaurantMarkers(map);
-        createOpenedCafeMarkers();
-        setOpenedCafeMarkers(map);
-        createOpenedHospitalMarkers();
-        setOpenedHospitalMarkers(map);
+        
+        for(let j=0; j<data.length; j++){
+            for(let i=0; i < companyTotal.length; i++){
+                if(companyTotal[i].compName == data[j].place_name){
+                    if(companyTotal[i].type == 'cr'){
+                        var imageSize = new kakao.maps.Size(35, 44),
+                        imageOptions = {  
+                            spriteOrigin: new kakao.maps.Point(0, 45),    
+                            spriteSize: new kakao.maps.Size(36, 133)  
+                        }; 
+                        let itemEl_CR = getClosedRestarantItem(companyTotal[i]);
+                        
+                        // 마커이미지와 마커를 생성합니다
+                        var markerImage = createMarkerImage(closedMarkerImageSrc, imageSize, imageOptions);    
+                        marker = createMarker(new kakao.maps.LatLng(parseFloat(companyTotal[i].latitude), parseFloat(companyTotal[i].longitude)), markerImage);  
+    
+                        // 생성된 마커를 마커 배열에 추가합니다
+                        closedRestaurantMarkers.push(marker);
+                        createInfowindowEvent(itemEl_CR, marker, companyTotal[i]);
+                        fragment.appendChild(itemEl_CR);
+    
+                        setClosedRestaurantMarkers(map);
+                        count++;
+                    }else if(companyTotal[i].type == 'cc'){
+                        var imageSize = new kakao.maps.Size(35, 44),
+                        imageOptions = {   
+                            spriteOrigin: new kakao.maps.Point(0, 2),    
+                            spriteSize: new kakao.maps.Size(36, 133)  
+                        }; 
+                        let itemEl_CC = getClosedCafeItem(companyTotal[i]);
+                        console.log(itemEl_CC);
+         
+                        // 마커이미지와 마커를 생성합니다
+                        var markerImage = createMarkerImage(closedMarkerImageSrc, imageSize, imageOptions);    
+                            marker = createMarker(new kakao.maps.LatLng(parseFloat(companyTotal[i].latitude), parseFloat(companyTotal[i].longitude)), markerImage);  
+                
+                        // 생성된 마커를 마커 배열에 추가합니다
+                        closedCafeMarkers.push(marker);    
+                        createInfowindowEvent(itemEl_CC, marker, companyTotal[i]);
+                        fragment.appendChild(itemEl_CC);
+    
+                        setClosedCafeMarkers(map);
+                        count++;
+                    }else if(companyTotal[i].type == 'ch'){
+                        var imageSize = new kakao.maps.Size(35, 44),
+                        imageOptions = {   
+                            spriteOrigin: new kakao.maps.Point(0, 87),    
+                            spriteSize: new kakao.maps.Size(36, 133)  
+                        };  
+                        let itemEl_CH = getClosedHospitalItem(companyTotal[i]);
+         
+                        // 마커이미지와 마커를 생성합니다
+                        var markerImage = createMarkerImage(closedMarkerImageSrc, imageSize, imageOptions),    
+                            marker = createMarker(new kakao.maps.LatLng(parseFloat(companyTotal[i].latitude), parseFloat(companyTotal[i].longitude)), markerImage);  
+                
+                        // 생성된 마커를 마커 배열에 추가합니다
+                        closedHospitalMarkers.push(marker);  
+                        createInfowindowEvent(itemEl_CH, marker, companyTotal[i]);
+                        fragment.appendChild(itemEl_CH);
+    
+                        setClosedHospitalMarkers(map);
+                        count++;
+                    }else if(companyTotal[i].type == 'tcr'){
+                        var imageSize = new kakao.maps.Size(35, 44),
+                        imageOptions = {  
+                            spriteOrigin: new kakao.maps.Point(0, 45),    
+                            spriteSize: new kakao.maps.Size(36, 133)  
+                        }; 
+                        let itemEl_TCR = getTodayClosedRestarantItem(companyTotal[i]);
+            
+                        // 마커이미지와 마커를 생성합니다
+                        var markerImage = createMarkerImage(holidayMarkerImageSrc, imageSize, imageOptions),    
+                            marker = createMarker(new kakao.maps.LatLng(parseFloat(companyTotal[i].latitude), parseFloat(companyTotal[i].longitude)), markerImage);  
+                        
+                        // 생성된 마커를 마커 배열에 추가합니다
+                        todayClosedRestaurantMarkers.push(marker);
+                        createInfowindowEvent(itemEl_TCR, marker, companyTotal[i]);
+                        fragment.appendChild(itemEl_TCR);
+    
+                        setTodayClosedRestaurantMarkers(map);
+                        count++;
+                    }else if(companyTotal[i].type == 'tcc'){
+                        var imageSize = new kakao.maps.Size(35, 44),
+                        imageOptions = {   
+                            spriteOrigin: new kakao.maps.Point(0, 2),    
+                            spriteSize: new kakao.maps.Size(36, 133)  
+                        };  
+                        let itemEl_TCC = getClosedCafeItem(companyTotal[i]);
+         
+                        // 마커이미지와 마커를 생성합니다
+                        var markerImage = createMarkerImage(holidayMarkerImageSrc, imageSize, imageOptions),    
+                            marker = createMarker(new kakao.maps.LatLng(parseFloat(companyTotal[i].latitude), parseFloat(companyTotal[i].longitude)), markerImage);  
+                
+                        // 생성된 마커를 마커 배열에 추가합니다
+                        todayClosedCafeMarkers.push(marker);   
+                        createInfowindowEvent(itemEl_TCC, marker, companyTotal[i]);
+                        fragment.appendChild(itemEl_TCC);
+    
+                        setTodayClosedCafeMarkers(map);
+                        count++;
+                    }else if(companyTotal[i].type == 'tch'){
+                        var imageSize = new kakao.maps.Size(35, 44),
+                        imageOptions = {   
+                            spriteOrigin: new kakao.maps.Point(0, 87),    
+                            spriteSize: new kakao.maps.Size(36, 133)  
+                        };  
+                        let itemEl_TCH = getTodayClosedHospitalItem(companyTotal[i]);
+         
+                        // 마커이미지와 마커를 생성합니다
+                        var markerImage = createMarkerImage(holidayMarkerImageSrc, imageSize, imageOptions),    
+                            marker = createMarker(new kakao.maps.LatLng(parseFloat(companyTotal[i].latitude), parseFloat(companyTotal[i].longitude)), markerImage);  
+                
+                        // 생성된 마커를 마커 배열에 추가합니다
+                        todayClosedHospitalMarkers.push(marker);  
+                        createInfowindowEvent(itemEl_TCH, marker, companyTotal[i]);
+                        fragment.appendChild(itemEl_TCH);
+    
+                        setTodayClosedHospitalMarkers(map);
+                        count++;
+                    }else if(companyTotal[i].type == 'or'){
+                        var imageSize = new kakao.maps.Size(35, 44),
+                        imageOptions = {  
+                            spriteOrigin: new kakao.maps.Point(0, 45),    
+                            spriteSize: new kakao.maps.Size(36, 133)  
+                        };  
+                        const itemEl_OR = getOpenedRestarantItem(companyTotal[i]);
+            
+                        // 마커이미지와 마커를 생성합니다
+                        var markerImage = createMarkerImage(opendMarkerImageSrc, imageSize, imageOptions),    
+                            marker = createMarker(new kakao.maps.LatLng(parseFloat(companyTotal[i].latitude), parseFloat(companyTotal[i].longitude)), markerImage);  
+                        
+                        // 생성된 마커를 마커 배열에 추가합니다
+                        openedRestaurantMarkers.push(marker);
+                        createInfowindowEvent(itemEl_OR, marker, companyTotal[i]);
+                        fragment.appendChild(itemEl_OR);
+    
+                        setOpenedRestaurantMarkers(map);
+                        count++;
+                    }else if(companyTotal[i].type == 'oc'){
+                        var imageSize = new kakao.maps.Size(35, 44),
+                        imageOptions = {   
+                            spriteOrigin: new kakao.maps.Point(0, 2),    
+                            spriteSize: new kakao.maps.Size(36, 133)  
+                        };    
+                        let itemEl_OC = getOpenedCafeItem(companyTotal[i]);
+            
+                        // 마커이미지와 마커를 생성합니다
+                        var markerImage = createMarkerImage(opendMarkerImageSrc, imageSize, imageOptions),    
+                            marker = createMarker(new kakao.maps.LatLng(parseFloat(companyTotal[i].latitude), parseFloat(companyTotal[i].longitude)), markerImage);  
+                
+                        // 생성된 마커를 마커 배열에 추가합니다
+                        openedCafeMarkers.push(marker);    
+                        createInfowindowEvent(itemEl_OC, marker, companyTotal[i]);
+                        fragment.appendChild(itemEl_OC);
+    
+                        setOpenedCafeMarkers(map);
+                        count++;
+                    }else if(companyTotal[i].type == 'oh'){
+                        var imageSize = new kakao.maps.Size(35, 80),
+                        imageOptions = {   
+                            spriteOrigin: new kakao.maps.Point(0, 87),    
+                            spriteSize: new kakao.maps.Size(36, 133)
+                        };    
+                        let itemEl_OH = getOpenedHospitalItem(companyTotal[i]);
+         
+                        // 마커이미지와 마커를 생성합니다
+                        var markerImage = createMarkerImage(opendMarkerImageSrc, imageSize, imageOptions),    
+                            marker = createMarker(new kakao.maps.LatLng(parseFloat(companyTotal[i].latitude), parseFloat(companyTotal[i].longitude)), markerImage);  
+                
+                        // 생성된 마커를 마커 배열에 추가합니다
+                        openedHospitalMarkers.push(marker);    
+                        createInfowindowEvent(itemEl_OH, marker, companyTotal[i]);
+                        fragment.appendChild(itemEl_OH);
+    
+                        setOpenedHospitalMarkers(map);
+                        count++;
+                    }
+                }
+            }
+        }
+        if(count == 0){
+            createClosedRestaurantMarkers(); 
+            setClosedRestaurantMarkers(map);
+            createClosedCafeMarkers();
+            setClosedCafeMarkers(map);
+            createClosedHospitalMarkers();
+            setClosedHospitalMarkers(map);
+            createTodayClosedRestaurantMarkers();
+            setTodayClosedRestaurantMarkers(map);
+            createTodayClosedCafeMarkers();
+            setTodayClosedCafeMarkers(map);
+            createTodayClosedHospitalMarkers();
+            setTodayClosedHospitalMarkers(map);
+            createOpenedRestaurantMarkers();
+            setOpenedRestaurantMarkers(map);
+            createOpenedCafeMarkers();
+            setOpenedCafeMarkers(map);
+            createOpenedHospitalMarkers();
+            setOpenedHospitalMarkers(map);
+        }
     } 
 }
 
@@ -110,10 +297,6 @@ function closeOverlay() {
     overlay.setMap(null);     
 }
 
-const listEl = document.getElementById('placesList');
-const menuEl = document.getElementById('slideNav');
-const fragment = document.createDocumentFragment();
-
 let closedRestaurantMarkers = [];
 let closedCafeMarkers = [];
 let closedHospitalMarkers = [];
@@ -139,7 +322,7 @@ function createClosedRestaurantMarkers() {
         
         // 마커이미지와 마커를 생성합니다
         var markerImage = createMarkerImage(closedMarkerImageSrc, imageSize, imageOptions),    
-            marker = createMarker(closedRestaurantPositions[i], markerImage);  
+            marker = createMarker(new kakao.maps.LatLng(parseFloat(closedRestaurant[i].latitude), parseFloat(closedRestaurant[i].longitude)), markerImage);  
         
         // 생성된 마커를 마커 배열에 추가합니다
         closedRestaurantMarkers.push(marker);
@@ -164,7 +347,7 @@ function createClosedCafeMarkers() {
      
         // 마커이미지와 마커를 생성합니다
         var markerImage = createMarkerImage(closedMarkerImageSrc, imageSize, imageOptions),    
-            marker = createMarker(closedCafePositions[i], markerImage);  
+            marker = createMarker(new kakao.maps.LatLng(parseFloat(closedCafe[i].latitude), parseFloat(closedCafe[i].longitude)), markerImage);  
 
         // 생성된 마커를 마커 배열에 추가합니다
         closedCafeMarkers.push(marker);    
@@ -189,7 +372,7 @@ function createClosedHospitalMarkers() {
      
         // 마커이미지와 마커를 생성합니다
         var markerImage = createMarkerImage(closedMarkerImageSrc, imageSize, imageOptions),    
-            marker = createMarker(closedHospitalPositions[i], markerImage);  
+            marker = createMarker(new kakao.maps.LatLng(parseFloat(closedHospital[i].latitude), parseFloat(closedHospital[i].longitude)), markerImage);  
 
         // 생성된 마커를 마커 배열에 추가합니다
         closedHospitalMarkers.push(marker);  
@@ -215,7 +398,7 @@ function createTodayClosedRestaurantMarkers() {
         
         // 마커이미지와 마커를 생성합니다
         var markerImage = createMarkerImage(holidayMarkerImageSrc, imageSize, imageOptions),    
-            marker = createMarker(todayClosedRestaurantPositions[i], markerImage);  
+            marker = createMarker(new kakao.maps.LatLng(parseFloat(todayClosedRestaurant[i].latitude), parseFloat(todayClosedRestaurant[i].longitude)), markerImage);  
         
         // 생성된 마커를 마커 배열에 추가합니다
         todayClosedRestaurantMarkers.push(marker);
@@ -241,7 +424,7 @@ function createTodayClosedCafeMarkers() {
      
         // 마커이미지와 마커를 생성합니다
         var markerImage = createMarkerImage(holidayMarkerImageSrc, imageSize, imageOptions),    
-            marker = createMarker(todyClosedCafePositions[i], markerImage);  
+            marker = createMarker(new kakao.maps.LatLng(parseFloat(todayClosedCafe[i].latitude), parseFloat(todayClosedCafe[i].longitude)), markerImage);  
 
         // 생성된 마커를 마커 배열에 추가합니다
         todayClosedCafeMarkers.push(marker);   
@@ -267,7 +450,7 @@ function createTodayClosedHospitalMarkers() {
      
         // 마커이미지와 마커를 생성합니다
         var markerImage = createMarkerImage(holidayMarkerImageSrc, imageSize, imageOptions),    
-            marker = createMarker(todayClosedHospitalPositions[i], markerImage);  
+            marker = createMarker(new kakao.maps.LatLng(parseFloat(todayClosedHospital[i].latitude), parseFloat(todayClosedHospital[i].longitude)), markerImage);  
 
         // 생성된 마커를 마커 배열에 추가합니다
         todayClosedHospitalMarkers.push(marker);  
@@ -293,7 +476,7 @@ function createOpenedRestaurantMarkers() {
         
         // 마커이미지와 마커를 생성합니다
         var markerImage = createMarkerImage(opendMarkerImageSrc, imageSize, imageOptions),    
-            marker = createMarker(openedRestaurantPositions[i], markerImage);  
+            marker = createMarker(new kakao.maps.LatLng(parseFloat(openedRestaurant[i].latitude), parseFloat(openedRestaurant[i].longitude)), markerImage);  
         
         // 생성된 마커를 마커 배열에 추가합니다
         openedRestaurantMarkers.push(marker);
@@ -324,7 +507,7 @@ function createOpenedCafeMarkers() {
         
         // 마커이미지와 마커를 생성합니다
         var markerImage = createMarkerImage(opendMarkerImageSrc, imageSize, imageOptions),    
-            marker = createMarker(openedCafePositions[i], markerImage);  
+            marker = createMarker(new kakao.maps.LatLng(parseFloat(openedCafe[i].latitude), parseFloat(openedCafe[i].longitude)), markerImage);  
 
         // 생성된 마커를 마커 배열에 추가합니다
         openedCafeMarkers.push(marker);    
@@ -350,7 +533,7 @@ function createOpenedHospitalMarkers() {
      
         // 마커이미지와 마커를 생성합니다
         var markerImage = createMarkerImage(opendMarkerImageSrc, imageSize, imageOptions),    
-            marker = createMarker(openedHospitalPositions[i], markerImage);  
+            marker = createMarker(new kakao.maps.LatLng(parseFloat(openedHospital[i].latitude), parseFloat(openedHospital[i].longitude)), markerImage);  
 
         // 생성된 마커를 마커 배열에 추가합니다
         openedHospitalMarkers.push(marker);    
@@ -430,15 +613,15 @@ function removeAllChildNods(el) {
     }
 }
 
-function getClosedRestarantItem(places) {
+function getClosedRestarantItem(place) {
 
     let el = document.createElement('li'),
     itemStr = '<div class="info">' +
-        '   <h5>' + places.compName + '</h5>';
+        '   <h5>' + place.compName + '</h5>';
 
-    itemStr += '    <span>' + places.address + '</span>';
-    itemStr += '    <span>' +  (places.restOpen).substr(0, 2) + ':'+ (places.restOpen).substr(2, 2)   + '</span>'+
-        '   <span> ~ ' +  (places.restClosed).substr(0, 2)  + ':'+ (places.restClosed).substr(2, 2) + '</span>'; 
+    itemStr += '    <span>' + place.address + '</span>';
+    itemStr += '    <span>' +  (place.restOpen).substr(0, 2) + ':'+ (place.restOpen).substr(2, 2)   + '</span>'+
+        '   <span> ~ ' +  (place.restClosed).substr(0, 2)  + ':'+ (place.restClosed).substr(2, 2) + '</span>'; 
 
     itemStr += '  <span class="tel"> 오늘 마감 </span>' +
         '</div>';           
@@ -449,14 +632,14 @@ function getClosedRestarantItem(places) {
     return el;
 }
 
-function getClosedCafeItem(places) {
+function getClosedCafeItem(place) {
 
     let el = document.createElement('li'),
     itemStr = '<div class="info">' +
-        '   <h5>' + places.compName + '</h5>';
-    itemStr += '    <span>' + places.address + '</span>';
-    itemStr += '    <span>' +  (places.cafeOpen).substr(0, 2) + ':'+ (places.cafeOpen).substr(2, 2)  + '</span>'+
-        '   <span> ~ ' +  (places.cafeClosed).substr(0, 2) + ':'+ (places.cafeClosed).substr(2, 2)  + '</span>'; 
+        '   <h5>' + place.compName + '</h5>';
+    itemStr += '    <span>' + place.address + '</span>';
+    itemStr += '    <span>' +  (place.cafeOpen).substr(0, 2) + ':'+ (place.cafeOpen).substr(2, 2)  + '</span>'+
+        '   <span> ~ ' +  (place.cafeClosed).substr(0, 2) + ':'+ (place.cafeClosed).substr(2, 2)  + '</span>'; 
 
     itemStr += '  <span class="tel"> 오늘 마감 </span>' +
         '</div>';           
@@ -467,14 +650,14 @@ function getClosedCafeItem(places) {
     return el;
 }
 
-function getClosedHospitalItem(places) {
+function getClosedHospitalItem(place) {
 
     let el = document.createElement('li'),
     itemStr = '<div class="info">' +
-        '   <h5>' + places.compName + '</h5>';
-    itemStr += '    <span>' + places.address + '</span>';
-    itemStr += '    <span>' +  (places.hospitalOpen).substr(0, 2) + ':'+ (places.hospitalOpen).substr(2, 2)  + '</span>'+
-        '   <span> ~ ' +  (places.hospitalClosed).substr(0, 2) + ':'+ (places.hospitalClosed).substr(2, 2)  + '</span>'; 
+        '   <h5>' + place.compName + '</h5>';
+    itemStr += '    <span>' + place.address + '</span>';
+    itemStr += '    <span>' +  (place.hospitalOpen).substr(0, 2) + ':'+ (place.hospitalOpen).substr(2, 2)  + '</span>'+
+        '   <span> ~ ' +  (place.hospitalClosed).substr(0, 2) + ':'+ (place.hospitalClosed).substr(2, 2)  + '</span>'; 
 
     itemStr += '  <span class="tel"> 오늘 마감 </span>' +
         '</div>';           
@@ -485,13 +668,13 @@ function getClosedHospitalItem(places) {
     return el;
 }
 
-function getTodayClosedRestarantItem(places) {
+function getTodayClosedRestarantItem(place) {
 
     let el = document.createElement('li'),
     itemStr = '<div class="info">' +
-        '   <h5>' + places.compName + '</h5>';
+        '   <h5>' + place.compName + '</h5>';
 
-    itemStr += '    <span>' + places.address + '</span>';
+    itemStr += '    <span>' + place.address + '</span>';
     itemStr += '    <span> 휴무 </span>'
 
     itemStr += '  <span class="tel"> 오늘 휴무 </span>' +
@@ -503,12 +686,12 @@ function getTodayClosedRestarantItem(places) {
     return el;
 }
 
-function getTodayClosedCafeItem(places) {
+function getTodayClosedCafeItem(place) {
 
     let el = document.createElement('li'),
     itemStr = '<div class="info">' +
-        '   <h5>' + places.compName + '</h5>';
-    itemStr += '    <span>' + places.address + '</span>';
+        '   <h5>' + place.compName + '</h5>';
+    itemStr += '    <span>' + place.address + '</span>';
     itemStr += '    <span> 휴무 </span>'
 
     itemStr += '  <span class="tel"> 오늘 휴무 </span>' +
@@ -520,12 +703,12 @@ function getTodayClosedCafeItem(places) {
     return el;
 }
 
-function getTodayClosedHospitalItem(places) {
+function getTodayClosedHospitalItem(place) {
 
     let el = document.createElement('li'),
     itemStr = '<div class="info">' +
-        '   <h5>' + places.compName + '</h5>';
-    itemStr += '    <span>' + places.address + '</span>';
+        '   <h5>' + place.compName + '</h5>';
+    itemStr += '    <span>' + place.address + '</span>';
     itemStr += '    <span> 휴무 </span>'
 
     itemStr += '  <span class="tel"> 오늘 휴무 </span>' +
@@ -537,15 +720,15 @@ function getTodayClosedHospitalItem(places) {
     return el;
 }
 
-function getOpenedRestarantItem(places) {
+function getOpenedRestarantItem(place) {
 
     let el = document.createElement('li'),
     itemStr = '<div class="info">' +
-        '   <h5>' + places.compName + '</h5>';
+        '   <h5>' + place.compName + '</h5>';
 
-    itemStr += '    <span>' + places.address + '</span>';
-    itemStr += '    <span>' +  (places.restOpen).substr(0, 2)+ ':'+ (places.restOpen).substr(2, 2)   + '</span>'+
-        '   <span> ~ ' +  (places.restClosed).substr(0, 2)  + ':'+ (places.restClosed).substr(2, 2) + '</span>'; 
+    itemStr += '    <span>' + place.address + '</span>';
+    itemStr += '    <span>' +  (place.restOpen).substr(0, 2)+ ':'+ (place.restOpen).substr(2, 2)   + '</span>'+
+        '   <span> ~ ' +  (place.restClosed).substr(0, 2)  + ':'+ (place.restClosed).substr(2, 2) + '</span>'; 
 
     itemStr += '  <span class="tel"> 영업중 </span>' +
         '</div>';           
@@ -556,14 +739,14 @@ function getOpenedRestarantItem(places) {
     return el;
 }
 
-function getOpenedCafeItem(places) {
+function getOpenedCafeItem(place) {
 
     let el = document.createElement('li'),
     itemStr = '<div class="info">' +
-        '   <h5>' + places.compName + '</h5>';
-    itemStr += '    <span>' + places.address + '</span>';
-    itemStr += '    <span>' +  (places.cafeOpen).substr(0, 2) + ':'+ (places.cafeOpen).substr(2, 2)  + '</span>'+
-        '   <span> ~ ' +  (places.cafeClosed).substr(0, 2) + ':'+ (places.cafeClosed).substr(2, 2)  + '</span>'; 
+        '   <h5>' + place.compName + '</h5>';
+    itemStr += '    <span>' + place.address + '</span>';
+    itemStr += '    <span>' +  (place.cafeOpen).substr(0, 2) + ':'+ (place.cafeOpen).substr(2, 2)  + '</span>'+
+        '   <span> ~ ' +  (place.cafeClosed).substr(0, 2) + ':'+ (place.cafeClosed).substr(2, 2)  + '</span>'; 
 
     itemStr += '  <span class="tel"> 영업중 </span>' +
         '</div>';           
@@ -574,14 +757,14 @@ function getOpenedCafeItem(places) {
     return el;
 }
 
-function getOpenedHospitalItem(places) {
+function getOpenedHospitalItem(place) {
 
     let el = document.createElement('li'),
     itemStr = '<div class="info">' +
-        '   <h5>' + places.compName + '</h5>';
-    itemStr += '    <span>' + places.address + '</span>';
-    itemStr += '    <span>' +  (places.hospitalOpen).substr(0, 2) + ':'+ (places.hospitalOpen).substr(2, 2)  + '</span>'+
-        '   <span> ~ ' +  (places.hospitalClosed).substr(0, 2) + ':'+ (places.hospitalClosed).substr(2, 2)  + '</span>'; 
+        '   <h5>' + place.compName + '</h5>';
+    itemStr += '    <span>' + place.address + '</span>';
+    itemStr += '    <span>' +  (place.hospitalOpen).substr(0, 2) + ':'+ (place.hospitalOpen).substr(2, 2)  + '</span>'+
+        '   <span> ~ ' +  (place.hospitalClosed).substr(0, 2) + ':'+ (place.hospitalClosed).substr(2, 2)  + '</span>'; 
 
     itemStr += '  <span class="tel"> 영업중 </span>' +
         '</div>';           
@@ -600,6 +783,19 @@ function getOpenedHospitalItem(places) {
 // }
 
 function setOverlay(place, marker){
+    let img;
+
+    if(place.image){
+        async () => {
+            const res = await axios.get("http://localhost:3000/");
+            let buff = new Buffer(res.data.images[0], "base64");
+            let text = buff.toString("ascii");
+            img = `data:image/png;base64,${text}`;
+        };
+    }else{
+        img = '//localhost:3000/images/baseimg.jpg'
+    }
+
     if(place.type == 'cr'){
         itemStr = '<div class="wrap">' + 
     '    <div class="info">' + 
@@ -609,7 +805,7 @@ function setOverlay(place, marker){
     '        </div>' + 
     '        <div class="body">' + 
     '            <div class="img">' +
-    '                <img src="https://cfile181.uf.daum.net/image/250649365602043421936D" width="73" height="70">' +
+    `                <img src=${img} width="73" height="70">` +
     '           </div>' + 
     '            <div class="desc">' + 
                     place.address +
@@ -637,7 +833,7 @@ function setOverlay(place, marker){
         '        </div>' + 
         '        <div class="body">' + 
         '            <div class="img">' +
-        '                <img src="https://cfile181.uf.daum.net/image/250649365602043421936D" width="73" height="70">' +
+        `                <img src=${img} width="73" height="70">` +
         '           </div>' + 
         '            <div class="desc">' + 
                         place.cafeType +
@@ -668,7 +864,7 @@ function setOverlay(place, marker){
         '        </div>' + 
         '        <div class="body">' + 
         '            <div class="img">' +
-        '                <img src="https://cfile181.uf.daum.net/image/250649365602043421936D" width="73" height="70">' +
+        `                <img src=${img} width="73" height="70">` +
         '           </div>' + 
         '            <div class="desc">' + 
                         place.HospType +
@@ -701,7 +897,7 @@ function setOverlay(place, marker){
         '        </div>' + 
         '        <div class="body">' + 
         '            <div class="img">' +
-        '                <img src="https://cfile181.uf.daum.net/image/250649365602043421936D" width="73" height="70">' +
+        `                <img src=${img} width="73" height="70">` +
         '           </div>' + 
         '            <div class="desc">' + 
                         place.address +
@@ -723,7 +919,7 @@ function setOverlay(place, marker){
         '        </div>' + 
         '        <div class="body">' + 
         '            <div class="img">' +
-        '                <img src="https://cfile181.uf.daum.net/image/250649365602043421936D" width="73" height="70">' +
+        `                <img src=${img} width="73" height="70">` +
         '           </div>' + 
         '            <div class="desc">' + 
                         place.cafeType +
@@ -748,7 +944,7 @@ function setOverlay(place, marker){
         '        </div>' + 
         '        <div class="body">' + 
         '            <div class="img">' +
-        '                <img src="https://cfile181.uf.daum.net/image/250649365602043421936D" width="73" height="70">' +
+        `                <img src=${img} width="73" height="70">` +
         '           </div>' + 
         '            <div class="desc">' + 
                         place.HospType +
@@ -775,7 +971,7 @@ function setOverlay(place, marker){
         '        </div>' + 
         '        <div class="body">' + 
         '            <div class="img">' +
-        '                <img src="https://cfile181.uf.daum.net/image/250649365602043421936D" width="73" height="70">' +
+        `                <img src=${img} width="73" height="70">` +
         '           </div>' + 
         '            <div class="desc">' + 
                         place.address +
@@ -803,7 +999,7 @@ function setOverlay(place, marker){
         '        </div>' + 
         '        <div class="body">' + 
         '            <div class="img">' +
-        '                <img src="https://cfile181.uf.daum.net/image/250649365602043421936D" width="73" height="70">' +
+        `                <img src=${img} width="73" height="70">` +
         '           </div>' + 
         '            <div class="desc">' + 
                         place.cafeType +
@@ -834,7 +1030,7 @@ function setOverlay(place, marker){
         '        </div>' + 
         '        <div class="body">' + 
         '            <div class="img">' +
-        '                <img src="https://cfile181.uf.daum.net/image/250649365602043421936D" width="73" height="70">' +
+        `                <img src=${img} width="73" height="70">` +
         '           </div>' + 
         '            <div class="desc">' + 
                         place.HospType +
