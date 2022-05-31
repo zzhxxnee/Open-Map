@@ -30,3 +30,6 @@ function addMenu(){
     div.innerHTML = document.getElementById('menuBox').innerHTML;
     document.getElementById('field').appendChild(div);
 }
+function removeMenu(obj){
+    document.getElementById('field').removeChild(obj.parentNode);
+}

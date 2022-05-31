@@ -7,17 +7,31 @@
         <h1>병원 등록하기</h1>
         <h2>STEP 2</h2>
     </div>
-    <form name="hospRegistForm" id="restRegistForm" method="post">
-        <% for(var i = 0; i < 9; i++){ %>
-            <div>
-                <label for="openTime">오픈시각</label>
-                <input type="time" class="timepicker" name="openTime" id="openTime" value="00:00:00" />
-                <label for="openTime">마감시각</label>
-                <input type="time" class="timepicker" name="closedTime" id="closedTime" value="00:00:00" />
-            </div>
-           <% } %>
-
-
-        <input type="submit" value="업체등록하기" />
+    <form name="hospRegistForm" id="restRegistForm" action="/compRegist/registComp/finished" method="post">
+        <input type="checkbox" name="24hours" id="24hours" value="true" onclick="get24hoursValue(event)" />24시간 영업
+        <input type="checkbox" name="noBreak" id="noBreak" value="true" onclick="getNoBreakValue(event)" />점심시간 없음 <%
+            var day=["월요일", "화요일" , "수요일" , "목요일" , "금요일" , "토요일" , "일요일" , "공휴일" , "점심시간" ] %>
+            <% for(var i=0; i < 9; i++){ %>
+                <p>
+                    <%=day[i]%>
+                </p>
+                <div>
+                    <% if (i==8) { %>
+                        <label for="openTime">점심시간 시작</label>
+                        <input type="time" class="timepicker" name="openTime" id="openTime" value="00:00:00" />
+                        <label for="openTime">점심시간 끝</label>
+                        <input type="time" class="timepicker" name="closedTime" id="closedTime" value="00:00:00" />
+                        <% }else{ %>
+                            <label for="openTime">오픈시각</label>
+                            <input type="time" class="timepicker" name="openTime" id="openTime" value="00:00:00" />
+                            <label for="openTime">마감시각</label>
+                            <input type="time" class="timepicker" name="closedTime" id="closedTime" value="00:00:00" />
+                            <% } %>
+                </div>
+                <% } %>
+                    <label for="content">비고</label>
+                    <br>
+                    <input name="content" id="content" type="text" placeholder="사람들이 특별히 참고해야할 사항에 대해 적어주세요." maxlength="200"/>
+                    <input type="submit" value="업체등록하기" />
     </form>
 </body>

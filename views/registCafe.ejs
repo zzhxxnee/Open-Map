@@ -7,7 +7,7 @@
         <h1>휴게 음식점 등록하기</h1>
         <h2>STEP 2</h2>
     </div>
-    <form name="cafeRegistForm" id="restRegistForm" method="post">
+    <form name="cafeRegistForm" id="restRegistForm" action="/compRegist/registComp/finished" method="post">
         <div>
             <label for="openTime">오픈시각</label>
             <input type="time" class="timepicker" name="openTime" id="openTime" value="00:00:00" />
@@ -31,8 +31,9 @@
             <input type="button" value="메뉴 추가하기" onclick="addMenu()">
             <br>
             <div id="menuBox">
-                <input type="text" name="menu" id="menu" placeholder="메뉴명" />
-                <input type="number" name="price" id="price" placeholder="가격" />원
+                <input type="text" name="menu" id="menu" placeholder="메뉴명" required/>
+                <input type="number" name="price" id="price" placeholder="가격" required/>원
+                <input type="button" value="삭제" onclick="removeMenu(this)">
             </div>
             <div id="field"></div>
         </div>

@@ -36,4 +36,9 @@ router.post("/registComp/popup/jusoPopup", (req, res) => {
 // router.get("/registCafe", companyController.registCafe);
 // router.get("/registHospital", companyController.registHospital);
 
+router.get("/registComp/finished", (req, res)=>{
+  res.send("잘못된 접근입니다.");
+})
+router.post("/registComp/finished", companyController.registFinished);
+
 module.exports = router;

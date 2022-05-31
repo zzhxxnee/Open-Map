@@ -122,8 +122,8 @@ exports.registComp = (req, res) => {
 exports.registCompNext = (req, res) => {
     // 도로명주소로 위경도 변환해서 저장
     geo.find(req.body.addr, function (err, res) {
-        // console.log(res[0].location["lat"]);
-        // console.log(res[0].location["lng"]);
+        console.log(res[0].location["lat"]);
+        console.log(res[0].location["lng"]);
         compInfo.latitude = res[0].location["lat"];
         compInfo.longitude = res[0].location["lng"];
     });
@@ -159,6 +159,10 @@ exports.registCompNext = (req, res) => {
         res.render("registHospital")
     }
     else{
-        res.send(req.body);
+        res.send("뭔가 잘못됨...!");
     }
 };
+
+exports.registFinished = (req, res) =>{
+    res.send(req.body);
+}
