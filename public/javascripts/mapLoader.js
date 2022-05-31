@@ -94,22 +94,20 @@ function createMarker(position, image) {
     return marker;  
 }   
 
-function createInfowindowEvent(itemEl, marker, title) {
-    kakao.maps.event.addListener(marker, 'mouseover', function() {
-        displayInfowindow(marker, title);
+function createInfowindowEvent(itemEl, marker, place) {
+    kakao.maps.event.addListener(marker, 'click', function() {
+        overlay = setOverlay(place, marker);
+        overlay.setMap(map);
     });
 
-    kakao.maps.event.addListener(marker, 'mouseout', function() {
-        infowindow.close();
-    });
-
-    itemEl.onmouseover =  function () {
-        displayInfowindow(marker, title);
+    itemEl.onclick =  function () {
+        overlay = setOverlay(place, marker);
+        overlay.setMap(map);
     };
+}
 
-    itemEl.onmouseout =  function () {
-        infowindow.close();
-    };
+function closeOverlay() {
+    overlay.setMap(null);     
 }
 
 const listEl = document.getElementById('placesList');
@@ -146,7 +144,7 @@ function createClosedRestaurantMarkers() {
         // 생성된 마커를 마커 배열에 추가합니다
         closedRestaurantMarkers.push(marker);
 
-        createInfowindowEvent(itemEl_CR, marker, closedRestaurant[i].compName);
+        createInfowindowEvent(itemEl_CR, marker, closedRestaurant[i]);
 
         fragment.appendChild(itemEl_CR);
     }     
@@ -171,7 +169,7 @@ function createClosedCafeMarkers() {
         // 생성된 마커를 마커 배열에 추가합니다
         closedCafeMarkers.push(marker);    
 
-        createInfowindowEvent(itemEl_CC, marker, closedCafe[i].compName);
+        createInfowindowEvent(itemEl_CC, marker, closedCafe[i]);
 
         fragment.appendChild(itemEl_CC);
     }        
@@ -196,7 +194,7 @@ function createClosedHospitalMarkers() {
         // 생성된 마커를 마커 배열에 추가합니다
         closedHospitalMarkers.push(marker);  
         
-        createInfowindowEvent(itemEl_CH, marker, closedHospital[i].compName);
+        createInfowindowEvent(itemEl_CH, marker, closedHospital[i]);
 
         fragment.appendChild(itemEl_CH);
     }                
@@ -222,7 +220,7 @@ function createTodayClosedRestaurantMarkers() {
         // 생성된 마커를 마커 배열에 추가합니다
         todayClosedRestaurantMarkers.push(marker);
 
-        createInfowindowEvent(itemEl_TCR, marker, todayClosedRestaurant[i].compName);
+        createInfowindowEvent(itemEl_TCR, marker, todayClosedRestaurant[i]);
 
         fragment.appendChild(itemEl_TCR);
     }     
@@ -248,7 +246,7 @@ function createTodayClosedCafeMarkers() {
         // 생성된 마커를 마커 배열에 추가합니다
         todayClosedCafeMarkers.push(marker);   
         
-        createInfowindowEvent(itemEl_TCC, marker, todayClosedCafe[i].compName);
+        createInfowindowEvent(itemEl_TCC, marker, todayClosedCafe[i]);
 
         fragment.appendChild(itemEl_TCC);
     }        
@@ -274,7 +272,7 @@ function createTodayClosedHospitalMarkers() {
         // 생성된 마커를 마커 배열에 추가합니다
         todayClosedHospitalMarkers.push(marker);  
         
-        createInfowindowEvent(itemEl_TCH, marker, todayClosedHospital[i].compName);
+        createInfowindowEvent(itemEl_TCH, marker, todayClosedHospital[i]);
 
         fragment.appendChild(itemEl_TCH);
     }                
@@ -291,7 +289,7 @@ function createOpenedRestaurantMarkers() {
                 spriteSize: new kakao.maps.Size(36, 133)  
             };     
         
-        let itemEl_OR = getOpenedRestarantItem(openedRestaurant[i]);
+        const itemEl_OR = getOpenedRestarantItem(openedRestaurant[i]);
         
         // 마커이미지와 마커를 생성합니다
         var markerImage = createMarkerImage(opendMarkerImageSrc, imageSize, imageOptions),    
@@ -300,7 +298,7 @@ function createOpenedRestaurantMarkers() {
         // 생성된 마커를 마커 배열에 추가합니다
         openedRestaurantMarkers.push(marker);
 
-        createInfowindowEvent(itemEl_OR, marker, openedRestaurant[i].compName);
+        createInfowindowEvent(itemEl_OR, marker, openedRestaurant[i]);
 
         fragment.appendChild(itemEl_OR);
     }
@@ -331,7 +329,7 @@ function createOpenedCafeMarkers() {
         // 생성된 마커를 마커 배열에 추가합니다
         openedCafeMarkers.push(marker);    
 
-        createInfowindowEvent(itemEl_OC, marker, openedCafe[i].compName);
+        createInfowindowEvent(itemEl_OC, marker, openedCafe[i]);
 
         fragment.appendChild(itemEl_OC);
     }     
@@ -357,7 +355,7 @@ function createOpenedHospitalMarkers() {
         // 생성된 마커를 마커 배열에 추가합니다
         openedHospitalMarkers.push(marker);    
         
-        createInfowindowEvent(itemEl_OH, marker, openedHospital[i].compName);
+        createInfowindowEvent(itemEl_OH, marker, openedHospital[i]);
 
         fragment.appendChild(itemEl_OH);
     }                
@@ -426,30 +424,21 @@ function setOpenedHospitalMarkers(map) {
     }        
 }
 
-// 지도 위에 표시되고 있는 마커를 모두 제거합니다
-function removeMarker() {
-    for ( var i = 0; i < markers.length; i++ ) {
-        markers[i].setMap(null);
-    }   
-    markers = [];
-}
-
 function removeAllChildNods(el) {   
     while (el.hasChildNodes()) {
         el.removeChild (el.lastChild);
     }
 }
 
-
 function getClosedRestarantItem(places) {
 
-    var el = document.createElement('li'),
+    let el = document.createElement('li'),
     itemStr = '<div class="info">' +
         '   <h5>' + places.compName + '</h5>';
 
     itemStr += '    <span>' + places.address + '</span>';
-    itemStr += '    <span>' +  places.restOpen  + '</span>'+
-        '   <span>' +  places.restClosed  + '</span>'; 
+    itemStr += '    <span>' +  (places.restOpen).substr(0, 2) + ':'+ (places.restOpen).substr(2, 2)   + '</span>'+
+        '   <span> ~ ' +  (places.restClosed).substr(0, 2)  + ':'+ (places.restClosed).substr(2, 2) + '</span>'; 
 
     itemStr += '  <span class="tel"> 오늘 마감 </span>' +
         '</div>';           
@@ -462,13 +451,12 @@ function getClosedRestarantItem(places) {
 
 function getClosedCafeItem(places) {
 
-    var el = document.createElement('li'),
+    let el = document.createElement('li'),
     itemStr = '<div class="info">' +
         '   <h5>' + places.compName + '</h5>';
     itemStr += '    <span>' + places.address + '</span>';
-    itemStr += '    <span>' + places.cafeType + '</span>';
-    itemStr += '    <span>' +  places.cafeOpen  + '</span>'+
-        '   <span>' +  places.cafeClosed  + '</span>'; 
+    itemStr += '    <span>' +  (places.cafeOpen).substr(0, 2) + ':'+ (places.cafeOpen).substr(2, 2)  + '</span>'+
+        '   <span> ~ ' +  (places.cafeClosed).substr(0, 2) + ':'+ (places.cafeClosed).substr(2, 2)  + '</span>'; 
 
     itemStr += '  <span class="tel"> 오늘 마감 </span>' +
         '</div>';           
@@ -481,14 +469,12 @@ function getClosedCafeItem(places) {
 
 function getClosedHospitalItem(places) {
 
-    var el = document.createElement('li'),
+    let el = document.createElement('li'),
     itemStr = '<div class="info">' +
         '   <h5>' + places.compName + '</h5>';
     itemStr += '    <span>' + places.address + '</span>';
-    itemStr += '    <span>' + places.HospType + '</span>';
-    itemStr += '    <span>' +  places.hospitalOpen  + '</span>'+
-        '   <span>' +  places.hospitalClosed  + '</span>'; 
-    itemStr += '    <span>' + places.content + '</span>';
+    itemStr += '    <span>' +  (places.hospitalOpen).substr(0, 2) + ':'+ (places.hospitalOpen).substr(2, 2)  + '</span>'+
+        '   <span> ~ ' +  (places.hospitalClosed).substr(0, 2) + ':'+ (places.hospitalClosed).substr(2, 2)  + '</span>'; 
 
     itemStr += '  <span class="tel"> 오늘 마감 </span>' +
         '</div>';           
@@ -501,7 +487,7 @@ function getClosedHospitalItem(places) {
 
 function getTodayClosedRestarantItem(places) {
 
-    var el = document.createElement('li'),
+    let el = document.createElement('li'),
     itemStr = '<div class="info">' +
         '   <h5>' + places.compName + '</h5>';
 
@@ -519,11 +505,10 @@ function getTodayClosedRestarantItem(places) {
 
 function getTodayClosedCafeItem(places) {
 
-    var el = document.createElement('li'),
+    let el = document.createElement('li'),
     itemStr = '<div class="info">' +
         '   <h5>' + places.compName + '</h5>';
     itemStr += '    <span>' + places.address + '</span>';
-    itemStr += '    <span>' + places.cafeType + '</span>';
     itemStr += '    <span> 휴무 </span>'
 
     itemStr += '  <span class="tel"> 오늘 휴무 </span>' +
@@ -537,13 +522,11 @@ function getTodayClosedCafeItem(places) {
 
 function getTodayClosedHospitalItem(places) {
 
-    var el = document.createElement('li'),
+    let el = document.createElement('li'),
     itemStr = '<div class="info">' +
         '   <h5>' + places.compName + '</h5>';
     itemStr += '    <span>' + places.address + '</span>';
-    itemStr += '    <span>' + places.HospType + '</span>';
     itemStr += '    <span> 휴무 </span>'
-    itemStr += '    <span>' + places.content + '</span>';
 
     itemStr += '  <span class="tel"> 오늘 휴무 </span>' +
         '</div>';           
@@ -556,13 +539,13 @@ function getTodayClosedHospitalItem(places) {
 
 function getOpenedRestarantItem(places) {
 
-    var el = document.createElement('li'),
+    let el = document.createElement('li'),
     itemStr = '<div class="info">' +
         '   <h5>' + places.compName + '</h5>';
 
     itemStr += '    <span>' + places.address + '</span>';
-    itemStr += '    <span>' +  places.restOpen  + '</span>'+
-        '   <span>' +  places.restClosed  + '</span>'; 
+    itemStr += '    <span>' +  (places.restOpen).substr(0, 2)+ ':'+ (places.restOpen).substr(2, 2)   + '</span>'+
+        '   <span> ~ ' +  (places.restClosed).substr(0, 2)  + ':'+ (places.restClosed).substr(2, 2) + '</span>'; 
 
     itemStr += '  <span class="tel"> 영업중 </span>' +
         '</div>';           
@@ -575,13 +558,12 @@ function getOpenedRestarantItem(places) {
 
 function getOpenedCafeItem(places) {
 
-    var el = document.createElement('li'),
+    let el = document.createElement('li'),
     itemStr = '<div class="info">' +
         '   <h5>' + places.compName + '</h5>';
     itemStr += '    <span>' + places.address + '</span>';
-    itemStr += '    <span>' + places.cafeType + '</span>';
-    itemStr += '    <span>' +  places.cafeOpen  + '</span>'+
-        '   <span>' +  places.cafeClosed  + '</span>'; 
+    itemStr += '    <span>' +  (places.cafeOpen).substr(0, 2) + ':'+ (places.cafeOpen).substr(2, 2)  + '</span>'+
+        '   <span> ~ ' +  (places.cafeClosed).substr(0, 2) + ':'+ (places.cafeClosed).substr(2, 2)  + '</span>'; 
 
     itemStr += '  <span class="tel"> 영업중 </span>' +
         '</div>';           
@@ -594,14 +576,12 @@ function getOpenedCafeItem(places) {
 
 function getOpenedHospitalItem(places) {
 
-    var el = document.createElement('li'),
+    let el = document.createElement('li'),
     itemStr = '<div class="info">' +
         '   <h5>' + places.compName + '</h5>';
     itemStr += '    <span>' + places.address + '</span>';
-    itemStr += '    <span>' + places.HospType + '</span>';
-    itemStr += '    <span>' +  places.hospitalOpen  + '</span>'+
-        '   <span>' +  places.hospitalClosed  + '</span>'; 
-    itemStr += '    <span>' + places.content + '</span>';
+    itemStr += '    <span>' +  (places.hospitalOpen).substr(0, 2) + ':'+ (places.hospitalOpen).substr(2, 2)  + '</span>'+
+        '   <span> ~ ' +  (places.hospitalClosed).substr(0, 2) + ':'+ (places.hospitalClosed).substr(2, 2)  + '</span>'; 
 
     itemStr += '  <span class="tel"> 영업중 </span>' +
         '</div>';           
@@ -612,10 +592,279 @@ function getOpenedHospitalItem(places) {
     return el;
 }
 
+// function displayInfoWindow(place) {
+    
+//     itemStr = '<div style="padding:5px;z-index:1;">' + place.compName + '</div>';
+//     infowindow.setContent(itemStr);
+//     infowindow.open(map, marker);
+// }
 
-function displayInfowindow(marker, title) {
-    var content = '<div style="padding:5px;z-index:1;">' + title + '</div>';
+function setOverlay(place, marker){
+    if(place.type == 'cr'){
+        itemStr = '<div class="wrap">' + 
+    '    <div class="info">' + 
+    '        <div class="title">' 
+                + place.compName + 
+    '            <div class="close" onclick="closeOverlay()" title="닫기"></div>' + 
+    '        </div>' + 
+    '        <div class="body">' + 
+    '            <div class="img">' +
+    '                <img src="https://cfile181.uf.daum.net/image/250649365602043421936D" width="73" height="70">' +
+    '           </div>' + 
+    '            <div class="desc">' + 
+                    place.address +
+    '            </div>' + 
+    '            <div class="desc">' + 
+                    place.tel +
+    '            </div>' +
+    '            <span class="desc">' + 
+                    (place.restOpen).substr(0, 2)+ ':'+ (place.restOpen).substr(2, 2) +
+    '            </span>' + 
+    '            <span class="desc"> ~ ' + 
+                    (place.restClosed).substr(0, 2)  + ':'+ (place.restClosed).substr(2, 2) +
+    '            </span>' + 
+    '            <span class="desc"> 오늘 마감 </span>' + 
+    '            <div><a href="#" target="_blank" class="link">메뉴판 보기</a></div>' + 
+    '        </div>' + 
+    '    </div>' +    
+    '</div>';
+    }else if(place.type == 'cc'){
+        itemStr = '<div class="wrap">' + 
+        '    <div class="info">' + 
+        '        <div class="title">' 
+                    + place.compName + 
+        '            <div class="close" onclick="closeOverlay()" title="닫기"></div>' + 
+        '        </div>' + 
+        '        <div class="body">' + 
+        '            <div class="img">' +
+        '                <img src="https://cfile181.uf.daum.net/image/250649365602043421936D" width="73" height="70">' +
+        '           </div>' + 
+        '            <div class="desc">' + 
+                        place.cafeType +
+        '            </div>' +
+        '            <div class="desc">' + 
+                        place.address +
+        '            </div>' + 
+        '            <div class="desc">' + 
+                        place.tel +
+        '            </div>' +
+        '            <span class="desc">' + 
+                        (place.cafeOpen).substr(0, 2)+ ':'+ (place.cafeOpen).substr(2, 2) +
+        '            </span>' + 
+        '            <span class="desc"> ~ ' + 
+                        (place.cafeClosed).substr(0, 2)  + ':'+ (place.cafeClosed).substr(2, 2) +
+        '            </span>' + 
+        '            <span class="desc"> 오늘 마감 </span>' + 
+        '            <div><a href="#" target="_blank" class="link">메뉴판 보기</a></div>' + 
+        '        </div>' + 
+        '    </div>' +    
+        '</div>';
+    }else if(place.type == 'ch'){
+        itemStr = '<div class="wrap">' + 
+        '    <div class="info">' + 
+        '        <div class="title">' 
+                    + place.compName + 
+        '            <div class="close" onclick="closeOverlay()" title="닫기"></div>' + 
+        '        </div>' + 
+        '        <div class="body">' + 
+        '            <div class="img">' +
+        '                <img src="https://cfile181.uf.daum.net/image/250649365602043421936D" width="73" height="70">' +
+        '           </div>' + 
+        '            <div class="desc">' + 
+                        place.HospType +
+        '            </div>' +
+        '            <div class="desc">' + 
+                        place.address +
+        '            </div>' + 
+        '            <div class="desc">' + 
+                        place.tel +
+        '            </div>' +
+        '            <span class="desc">' + 
+                        (place.hospitalOpen).substr(0, 2)+ ':'+ (place.hospitalOpen).substr(2, 2) +
+        '            </span>' + 
+        '            <span class="desc"> ~ ' + 
+                        (place.hospitalClosed).substr(0, 2)  + ':'+ (place.hospitalClosed).substr(2, 2) +
+        '            </span>' + 
+        '            <span class="desc"> 오늘 마감 </span>' +
+        '            <div class="desc">' + 
+                        place.content +
+        '            </div>' +
+        '        </div>' + 
+        '    </div>' +    
+        '</div>';
+    }else if(place.type == 'tcr'){
+        itemStr = '<div class="wrap">' + 
+        '    <div class="info">' + 
+        '        <div class="title">' 
+                    + place.compName + 
+        '            <div class="close" onclick="closeOverlay()" title="닫기"></div>' + 
+        '        </div>' + 
+        '        <div class="body">' + 
+        '            <div class="img">' +
+        '                <img src="https://cfile181.uf.daum.net/image/250649365602043421936D" width="73" height="70">' +
+        '           </div>' + 
+        '            <div class="desc">' + 
+                        place.address +
+        '            </div>' + 
+        '            <div class="desc">' + 
+                        place.tel +
+        '            </div>' +
+        '            <span class="desc"> 오늘 휴무 </span>' + 
+        '            <div><a href="#" target="_blank" class="link">메뉴판 보기</a></div>' + 
+        '        </div>' + 
+        '    </div>' +    
+        '</div>';
+    }else if(place.type == 'tcc'){
+        itemStr = '<div class="wrap">' + 
+        '    <div class="info">' + 
+        '        <div class="title">' 
+                    + place.compName + 
+        '            <div class="close" onclick="closeOverlay()" title="닫기"></div>' + 
+        '        </div>' + 
+        '        <div class="body">' + 
+        '            <div class="img">' +
+        '                <img src="https://cfile181.uf.daum.net/image/250649365602043421936D" width="73" height="70">' +
+        '           </div>' + 
+        '            <div class="desc">' + 
+                        place.cafeType +
+        '            </div>' +
+        '            <div class="desc">' + 
+                        place.address +
+        '            </div>' + 
+        '            <div class="desc">' + 
+                        place.tel +
+        '            </div>' +
+        '            <span class="desc"> 오늘 휴무 </span>' + 
+        '            <div><a href="#" target="_blank" class="link">메뉴판 보기</a></div>' + 
+        '        </div>' + 
+        '    </div>' +    
+        '</div>';
+    }else if(place.type == 'tch'){
+        itemStr = '<div class="wrap">' + 
+        '    <div class="info">' + 
+        '        <div class="title">' 
+                    + place.compName + 
+        '            <div class="close" onclick="closeOverlay()" title="닫기"></div>' + 
+        '        </div>' + 
+        '        <div class="body">' + 
+        '            <div class="img">' +
+        '                <img src="https://cfile181.uf.daum.net/image/250649365602043421936D" width="73" height="70">' +
+        '           </div>' + 
+        '            <div class="desc">' + 
+                        place.HospType +
+        '            </div>' +
+        '            <div class="desc">' + 
+                        place.address +
+        '            </div>' + 
+        '            <div class="desc">' + 
+                        place.tel +
+        '            </div>' +
+        '            <span class="desc"> 오늘 휴무 </span>' +
+        '            <div class="desc">' + 
+                        place.content +
+        '            </div>' +
+        '        </div>' + 
+        '    </div>' +    
+        '</div>';
+    }else if(place.type == 'or'){
+        itemStr = '<div class="wrap">' + 
+        '    <div class="info">' + 
+        '        <div class="title">' 
+                    + place.compName + 
+        '            <div class="close" onclick="closeOverlay()" title="닫기"></div>' + 
+        '        </div>' + 
+        '        <div class="body">' + 
+        '            <div class="img">' +
+        '                <img src="https://cfile181.uf.daum.net/image/250649365602043421936D" width="73" height="70">' +
+        '           </div>' + 
+        '            <div class="desc">' + 
+                        place.address +
+        '            </div>' + 
+        '            <div class="desc">' + 
+                        place.tel +
+        '            </div>' +
+        '            <span class="desc">' + 
+                        (place.restOpen).substr(0, 2)+ ':'+ (place.restOpen).substr(2, 2) +
+        '            </span>' + 
+        '            <span class="desc"> ~ ' + 
+                        (place.restClosed).substr(0, 2)  + ':'+ (place.restClosed).substr(2, 2) +
+        '            </span>' + 
+        '            <span class="desc"> 영업중 </span>' + 
+        '            <div><a href="#" target="_blank" class="link">메뉴판 보기</a></div>' + 
+        '        </div>' + 
+        '    </div>' +    
+        '</div>';
+    }else if(place.type == 'oc'){
+        itemStr = '<div class="wrap">' + 
+        '    <div class="info">' + 
+        '        <div class="title">' 
+                    + place.compName + 
+        '            <div class="close" onclick="closeOverlay()" title="닫기"></div>' + 
+        '        </div>' + 
+        '        <div class="body">' + 
+        '            <div class="img">' +
+        '                <img src="https://cfile181.uf.daum.net/image/250649365602043421936D" width="73" height="70">' +
+        '           </div>' + 
+        '            <div class="desc">' + 
+                        place.cafeType +
+        '            </div>' +
+        '            <div class="desc">' + 
+                        place.address +
+        '            </div>' + 
+        '            <div class="desc">' + 
+                        place.tel +
+        '            </div>' +
+        '            <span class="desc">' + 
+                        (place.cafeOpen).substr(0, 2)+ ':'+ (place.cafeOpen).substr(2, 2) +
+        '            </span>' + 
+        '            <span class="desc"> ~ ' + 
+                        (place.cafeClosed).substr(0, 2)  + ':'+ (place.cafeClosed).substr(2, 2) +
+        '            </span>' + 
+        '            <span class="desc"> 영업중 </span>' + 
+        '            <div><a href="#" target="_blank" class="link">메뉴판 보기</a></div>' + 
+        '        </div>' + 
+        '    </div>' +    
+        '</div>';
+    }else if(place.type == 'oh'){
+        itemStr = '<div class="wrap">' + 
+        '    <div class="info">' + 
+        '        <div class="title">' 
+                    + place.compName + 
+        '            <div class="close" onclick="closeOverlay()" title="닫기"></div>' + 
+        '        </div>' + 
+        '        <div class="body">' + 
+        '            <div class="img">' +
+        '                <img src="https://cfile181.uf.daum.net/image/250649365602043421936D" width="73" height="70">' +
+        '           </div>' + 
+        '            <div class="desc">' + 
+                        place.HospType +
+        '            </div>' +
+        '            <div class="desc">' + 
+                        place.address +
+        '            </div>' + 
+        '            <div class="desc">' + 
+                        place.tel +
+        '            </div>' +
+        '            <span class="desc">' + 
+                        (place.hospitalOpen).substr(0, 2)+ ':'+ (place.hospitalOpen).substr(2, 2) +
+        '            </span>' + 
+        '            <span class="desc"> ~ ' + 
+                        (place.hospitalClosed).substr(0, 2)  + ':'+ (place.hospitalClosed).substr(2, 2) +
+        '            </span>' + 
+        '            <span class="desc"> 영업중 </span>' +
+        '            <div class="desc">' + 
+                        place.content +
+        '            </div>' +
+        '        </div>' + 
+        '    </div>' +    
+        '</div>';
+    }
 
-    infowindow.setContent(content);
-    infowindow.open(map, marker);
+    const overlayContent = new kakao.maps.CustomOverlay({
+        content: itemStr,
+        map: map,
+        position: marker.getPosition()       
+    });
+
+    return overlayContent;
 }

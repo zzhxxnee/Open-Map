@@ -3,6 +3,22 @@
   <head>
     <link rel="stylesheet" href="/stylesheets/main.css" />
   </head>
+  <style>
+    .wrap {position: absolute;left: 0;bottom: 40px;width: 360px;height: 362px;margin-left: -180px;text-align: left;overflow: hidden;font-size: 12px;font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;line-height: 1.5;}
+    .wrap * {padding: 0;margin: 0;}
+    .wrap .info {width: 360px;height: 350px;border-radius: 5px;border-bottom: 2px solid #ccc;border-right: 1px solid #ccc;overflow: hidden;background: #fff;}
+    .wrap .info:nth-child(1) {border: 0;box-shadow: 0px 1px 2px #888;}
+    .info .title {padding: 5px 0 0 10px;height: 30px;background: #eee;border-bottom: 1px solid #ddd;font-size: 18px;font-weight: bold;}
+    .info .close {position: absolute;top: 10px;right: 10px;color: #888;width: 17px;height: 17px;background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png');}
+    .info .close:hover {cursor: pointer;}
+    .info .body {position: relative;overflow: hidden;}
+    .info .desc {position: relative;margin: 13px 0 0 90px;height: 75px;}
+    .desc .ellipsis {overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
+    .desc .jibun {font-size: 11px;color: #888;margin-top: -2px;}
+    .info .img {position: absolute;top: 6px;left: 5px;width: 73px;height: 71px;border: 1px solid #ddd;color: #888;overflow: hidden;}
+    .info:after {content: '';position: absolute;margin-left: -12px;left: 50%;bottom: 0;width: 22px;height: 12px;background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')}
+    .info .link {color: #5085BB;}
+  </style>
   <body>
     <div id="map" style="width: 100%; height: 100%; position: fixed;"></div>
       <div id="slideNav">
@@ -55,6 +71,7 @@
         breakStart: '<%= r.dataValues.breakStart %>',
         breakEnd: '<%= r.dataValues.breakEnd %>',
         image: '<%= r.dataValues.image %>',
+        type: 'cr'
       };
       closedRestaurant.push(closedRestaurantObject);
     </script>
@@ -69,6 +86,7 @@
         cafeClosed: '<%= c.dataValues.cafeClosed %>',
         cafeType: '<%= c.dataValues.cafeType %>',
         image: '<%= c.dataValues.image %>',
+        type: 'cc'
       };
       closedCafe.push(closedCafeObject);
     </script>
@@ -83,7 +101,8 @@
         hospitalClosed: '<%= h.dataValues.HospCloseSun %>',
         image: '<%= h.dataValues.image %>',
         HospType: '<%= h.dataValues.HospType %>',
-        content: '<%= h.dataValues.content %>'
+        content: '<%= h.dataValues.content %>',
+        type: 'ch'
       };
       closedHospital.push(closedHospitalObject);
     </script>
@@ -97,7 +116,8 @@
         hospitalClosed: '<%= h.dataValues.HospCloseMon %>',
         image: '<%= h.dataValues.image %>',
         HospType: '<%= h.dataValues.HospType %>',
-        content: '<%= h.dataValues.content %>'
+        content: '<%= h.dataValues.content %>',
+        type: 'ch'
       };
       closedHospital.push(closedHospitalObject);
     </script>
@@ -111,7 +131,8 @@
         hospitalClosed: '<%= h.dataValues.HospCloseTue %>',
         image: '<%= h.dataValues.image %>',
         HospType: '<%= h.dataValues.HospType %>',
-        content: '<%= h.dataValues.content %>'
+        content: '<%= h.dataValues.content %>',
+        type: 'ch'
       };
       closedHospital.push(closedHospitalObject);
     </script>
@@ -125,7 +146,8 @@
         hospitalClosed: '<%= h.dataValues.HospCloseWed %>',
         image: '<%= h.dataValues.image %>',
         HospType: '<%= h.dataValues.HospType %>',
-        content: '<%= h.dataValues.content %>'
+        content: '<%= h.dataValues.content %>',
+        type: 'ch'
       };
       closedHospital.push(closedHospitalObject);
     </script>
@@ -139,7 +161,8 @@
         hospitalClosed: '<%= h.dataValues.HospCloseThu %>',
         image: '<%= h.dataValues.image %>',
         HospType: '<%= h.dataValues.HospType %>',
-        content: '<%= h.dataValues.content %>'
+        content: '<%= h.dataValues.content %>',
+        type: 'ch'
       };
       closedHospital.push(closedHospitalObject);
     </script>
@@ -153,7 +176,8 @@
         hospitalClosed: '<%= h.dataValues.HospCloseFri %>',
         image: '<%= h.dataValues.image %>',
         HospType: '<%= h.dataValues.HospType %>',
-        content: '<%= h.dataValues.content %>'
+        content: '<%= h.dataValues.content %>',
+        type: 'ch'
       };
       closedHospital.push(closedHospitalObject);
     </script>
@@ -167,7 +191,8 @@
         hospitalClosed: '<%= h.dataValues.HospCloseSat %>',
         image: '<%= h.dataValues.image %>',
         HospType: '<%= h.dataValues.HospType %>',
-        content: '<%= h.dataValues.content %>'
+        content: '<%= h.dataValues.content %>',
+        type: 'ch'
       };
       closedHospital.push(closedHospitalObject);
     </script>
@@ -179,6 +204,7 @@
         address: '<%= r.dataValues.address %>',
         tel: '<%= r.dataValues.tel %>',
         image: '<%= r.dataValues.image %>',
+        type: 'tcr'
       };
       todayClosedRestaurant.push(todayClosedRestaurantObject);
     </script>
@@ -191,6 +217,7 @@
         tel: '<%= c.dataValues.tel %>',
         cafeType: '<%= c.dataValues.cafeType %>',
         image: '<%= c.dataValues.image %>',
+        type: 'tcc'
       };
       todayClosedCafe.push(todayClosedCafeObject);
     </script>
@@ -203,7 +230,8 @@
         tel: '<%= c.dataValues.tel %>',
         image: '<%= c.dataValues.image %>',
         HospType: '<%= h.dataValues.HospType %>',
-        content: '<%= h.dataValues.content %>'
+        content: '<%= h.dataValues.content %>',
+        type: 'tch'
       };
       todayClosedHospital.push(todayClosedHospitalObject);
     </script>
@@ -219,6 +247,7 @@
         breakStart: '<%= r.dataValues.breakStart %>',
         breakEnd: '<%= r.dataValues.breakEnd %>',
         image: '<%= r.dataValues.image %>',
+        type: 'or'
       };
       openedRestaurant.push(openedRestaurantObject);
     </script>
@@ -231,8 +260,9 @@
         tel: '<%= c.dataValues.tel %>',
         cafeOpen: '<%= c.dataValues.cafeOpen %>',
         cafeClosed: '<%= c.dataValues.cafeClosed %>',
-        cafeType: '<%= r.dataValues.cafeType %>',
+        cafeType: '<%= c.dataValues.cafeType %>',
         image: '<%= c.dataValues.image %>',
+        type: 'oc'
       };
       openedCafe.push(openedCafeObject);
     </script>
@@ -247,7 +277,8 @@
         hospitalClosed: '<%= h.dataValues.HospCloseSun %>',
         image: '<%= h.dataValues.image %>',
         HospType: '<%= h.dataValues.HospType %>',
-        content: '<%= h.dataValues.content %>'
+        content: '<%= h.dataValues.content %>',
+        type: 'oh'
       };
       openedHospital.push(openedHospitalObject);
     </script>
@@ -261,7 +292,8 @@
         hospitalClosed: '<%= h.dataValues.HospCloseMon %>',
         image: '<%= h.dataValues.image %>',
         HospType: '<%= h.dataValues.HospType %>',
-        content: '<%= h.dataValues.content %>'
+        content: '<%= h.dataValues.content %>',
+        type: 'oh'
       };
       openedHospital.push(openedHospitalObject);
     </script>
@@ -275,7 +307,8 @@
         hospitalClosed: '<%= h.dataValues.HospCloseTue %>',
         image: '<%= h.dataValues.image %>',
         HospType: '<%= h.dataValues.HospType %>',
-        content: '<%= h.dataValues.content %>'
+        content: '<%= h.dataValues.content %>',
+        type: 'oh'
       };
       openedHospital.push(openedHospitalObject);
     </script>
@@ -289,7 +322,8 @@
         hospitalClosed: '<%= h.dataValues.HospCloseWed %>',
         image: '<%= h.dataValues.image %>',
         HospType: '<%= h.dataValues.HospType %>',
-        content: '<%= h.dataValues.content %>'
+        content: '<%= h.dataValues.content %>',
+        type: 'oh'
       };
       openedHospital.push(openedHospitalObject);
     </script>
@@ -303,7 +337,8 @@
         hospitalClosed: '<%= h.dataValues.HospCloseThu %>',
         image: '<%= h.dataValues.image %>',
         HospType: '<%= h.dataValues.HospType %>',
-        content: '<%= h.dataValues.content %>'
+        content: '<%= h.dataValues.content %>',
+        type: 'oh'
       };
       openedHospital.push(openedHospitalObject);
     </script>
@@ -317,7 +352,8 @@
         hospitalClosed: '<%= h.dataValues.HospCloseFri %>',
         image: '<%= h.dataValues.image %>',
         HospType: '<%= h.dataValues.HospType %>',
-        content: '<%= h.dataValues.content %>'
+        content: '<%= h.dataValues.content %>',
+        type: 'oh'
       };
       openedHospital.push(openedHospitalObject);
     </script>
@@ -331,7 +367,8 @@
         hospitalClosed: '<%= h.dataValues.HospCloseSat %>',
         image: '<%= h.dataValues.image %>',
         HospType: '<%= h.dataValues.HospType %>',
-        content: '<%= h.dataValues.content %>'
+        content: '<%= h.dataValues.content %>',
+        type: 'oh'
       };
       openedHospital.push(openedHospitalObject);
     </script>
