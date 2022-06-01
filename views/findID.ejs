@@ -8,12 +8,12 @@
 <body>
         <h1>아이디 찾기</h1>
         <table>
-            <form action="/findID" method="post">
-                <input id="email" name="email" type="text" placeholder="email">
+            <form action="users/findIDResult" method="POST">
+                <input name="email" type="email">
                 <br />
                 <button type="submit ">아이디 찾기</button>
             </form>
-            <form action="/findIDBack" method="post">
+            <form action="/findIDBack" method="POST">
                 <button type="submit">뒤로가기</button>
             </form>
         </table>
