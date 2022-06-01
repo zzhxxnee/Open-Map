@@ -81,18 +81,18 @@ router.get('/login', function(req, res, next) {
 router.post('/login', async function(req,res,next){
   let body = req.body;
 
-  if(!body.userid){
-    res.status(500).send({
-      message : "userid is null"
-    });
-    return;
-  }
-
   let result = await models.Users.findOne({
     where:{
       id:body.userid
     }
   });
+
+  if(!body.userid){
+    res.status(500).send({
+      message : "id is null"
+    });
+    return;
+  }
 
   let dbPassword = result.dataValues.password;
   let inputPassword = body.password;
@@ -195,7 +195,9 @@ router.get('/logout', (req, res, next)=>{
 //   models.Users.findOne( {where : {"email": uemail}}, (err, user) => {
 //       if (err) return res.json(err);
 //       if (user) {
-//         console.log('success');
+//         res.render('findIDResult', {
+//           FindID : uemail
+//         });
 //       } else {
 //           console.log('can not find ID');
 //           res.send(`
