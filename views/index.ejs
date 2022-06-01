@@ -4,6 +4,7 @@
     <link rel="stylesheet" href="/stylesheets/main.css" />
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=<%=apikey%>&libraries=services,clusterer,drawing"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="//code.jquery.com/jquery-3.4.1.min.js"></script>
   </head>
   <style>
     .wrap {position: absolute;left: 0;bottom: 40px;width: 360px;height: 362px;margin-left: -180px;text-align: left;overflow: hidden;font-size: 12px;font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;line-height: 1.5;}
@@ -20,6 +21,13 @@
     .info .img {position: absolute;top: 6px;left: 5px;width: 73px;height: 71px;border: 1px solid #ddd;color: #888;overflow: hidden;}
     .info:after {content: '';position: absolute;margin-left: -12px;left: 50%;bottom: 0;width: 22px;height: 12px;background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')}
     .info .link {color: #5085BB;}
+    #pagination {margin:10px auto;text-align: center; visibility: hidden;}
+    #pagination a {display:inline-block;margin-right:10px;}
+    #pagination .on {font-weight: bold; cursor: default;color:#777;} 
+    .category {overflow:hidden;top:10px;left:10px;width:150px;height:50px;z-index:10;border:1px solid black;font-family:'Malgun Gothic','맑은 고딕',sans-serif;font-size:12px;text-align:center;background-color:#fff;}
+    .category .menu_selected {background:#FF5F4A;color:#fff;border-left:1px solid #915B2F;border-right:1px solid #915B2F;margin:0 -1px;} 
+    .category li{list-style:none;float:left;width:50px;height:45px;padding-top:5px;cursor:pointer;} 
+    .category { height: 100px; background-color: #bbdefb; }
   </style>
   <body>
     <div id="map" style="width: 100%; height: 100%; position: fixed;"></div>
@@ -32,13 +40,38 @@
               <input type="text" id="keyword" size="15"> 
               <button type="submit">검색하기</button> 
             </form>
+            <p><button class="filter">Click</button></p>
+            <div class="category">
+              <ul>
+                <li id="restaurantMenu" onclick="changeMarker('restaurant')">
+                    식당
+                </li>
+                <li id="cafeMenu" onclick="changeMarker('cafe')">
+                    휴게음식점
+                </li>
+                <li id="hospitalMenu" onclick="changeMarker('hospital')">
+                    병원
+                </li>
+                <li id="none" onclick="changeMarker('none')">
+                  선택 해제
+                </li>
+            </ul>
+            </div>
           </div>
         </div>
         <hr>
         <ul id="placesList"></ul>
+        <div id="pagination"></div>
       </div>
     </div>
   </body>
+  <script>
+    $( document ).ready( function() {
+      $( 'button.filter' ).click( function() {
+        $( '.category' ).slideToggle();
+      } );
+    } );
+  </script>
   <script>
     let closedRestaurant = []; // 오늘 마감 식당 객체를 가지고 있을 배열입니다
     let closedCafe = []; // 오늘 마감 휴게음식점 객체를 가지고 있을 배열입니다
@@ -408,4 +441,5 @@
   <% })}; %>
   <script src="/javascripts/mapLoader.js"></script>
   <script src="/javascripts/slideNav.js"></script>
+  <script src="/javascripts/filter.js"></script>
 </html>

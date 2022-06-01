@@ -4,10 +4,9 @@ let init = 0;
 const closedMarkerImageSrc = "//localhost:3000/images/closed.png";  // 마커이미지의 주소입니다. 스프라이트 이미지 입니다
 const holidayMarkerImageSrc = "//localhost:3000/images/holiday.png";
 const opendMarkerImageSrc = "//localhost:3000/images/open.png";
-let companyTotal = [... closedCafe, openedCafe, todayClosedCafe, closedRestaurant, openedRestaurant, todayClosedRestaurant, closedHospital, openedHospital, todayClosedHospital];
+let companyTotal = closedCafe.concat(openedCafe, todayClosedCafe, closedRestaurant, openedRestaurant, todayClosedRestaurant, closedHospital, openedHospital, todayClosedHospital);
 const listEl = document.getElementById('placesList');
 const menuEl = document.getElementById('slideNav');
-const fragment = document.createDocumentFragment();
 
 function setCenter() {            
     // 이동할 위도 경도 위치를 생성합니다 
@@ -46,8 +45,11 @@ function searchPlaces() {
 
 // 키워드 검색 완료 시 호출되는 콜백함수 입니다
 function placesSearchCB (data, status, pagination) {
+
+    const fragment = document.createDocumentFragment();
     // 검색 결과 목록에 추가된 항목들을 제거합니다
     removeAllChildNods(listEl);
+    removeMarker();
 
     let count = 0;
 
@@ -63,7 +65,7 @@ function placesSearchCB (data, status, pagination) {
 
         // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
         map.setBounds(bounds);
-        
+
         for(let j=0; j<data.length; j++){
             for(let i=0; i < companyTotal.length; i++){
                 if(companyTotal[i].compName == data[j].place_name){
@@ -85,6 +87,8 @@ function placesSearchCB (data, status, pagination) {
                         fragment.appendChild(itemEl_CR);
     
                         setClosedRestaurantMarkers(map);
+                        // 검색결과 항목들을 검색결과 목록 Element에 추가합니다
+                        listEl.appendChild(fragment);
                         count++;
                     }else if(companyTotal[i].type == 'cc'){
                         var imageSize = new kakao.maps.Size(35, 44),
@@ -93,7 +97,6 @@ function placesSearchCB (data, status, pagination) {
                             spriteSize: new kakao.maps.Size(36, 133)  
                         }; 
                         let itemEl_CC = getClosedCafeItem(companyTotal[i]);
-                        console.log(itemEl_CC);
          
                         // 마커이미지와 마커를 생성합니다
                         var markerImage = createMarkerImage(closedMarkerImageSrc, imageSize, imageOptions);    
@@ -106,6 +109,8 @@ function placesSearchCB (data, status, pagination) {
     
                         setClosedCafeMarkers(map);
                         count++;
+                        // 검색결과 항목들을 검색결과 목록 Element에 추가합니다
+                        listEl.appendChild(fragment);
                     }else if(companyTotal[i].type == 'ch'){
                         var imageSize = new kakao.maps.Size(35, 44),
                         imageOptions = {   
@@ -125,6 +130,8 @@ function placesSearchCB (data, status, pagination) {
     
                         setClosedHospitalMarkers(map);
                         count++;
+                        // 검색결과 항목들을 검색결과 목록 Element에 추가합니다
+                        listEl.appendChild(fragment);
                     }else if(companyTotal[i].type == 'tcr'){
                         var imageSize = new kakao.maps.Size(35, 44),
                         imageOptions = {  
@@ -144,6 +151,8 @@ function placesSearchCB (data, status, pagination) {
     
                         setTodayClosedRestaurantMarkers(map);
                         count++;
+                        // 검색결과 항목들을 검색결과 목록 Element에 추가합니다
+                        listEl.appendChild(fragment);
                     }else if(companyTotal[i].type == 'tcc'){
                         var imageSize = new kakao.maps.Size(35, 44),
                         imageOptions = {   
@@ -163,6 +172,8 @@ function placesSearchCB (data, status, pagination) {
     
                         setTodayClosedCafeMarkers(map);
                         count++;
+                        // 검색결과 항목들을 검색결과 목록 Element에 추가합니다
+                        listEl.appendChild(fragment);
                     }else if(companyTotal[i].type == 'tch'){
                         var imageSize = new kakao.maps.Size(35, 44),
                         imageOptions = {   
@@ -182,13 +193,15 @@ function placesSearchCB (data, status, pagination) {
     
                         setTodayClosedHospitalMarkers(map);
                         count++;
+                        // 검색결과 항목들을 검색결과 목록 Element에 추가합니다
+                        listEl.appendChild(fragment);
                     }else if(companyTotal[i].type == 'or'){
                         var imageSize = new kakao.maps.Size(35, 44),
                         imageOptions = {  
                             spriteOrigin: new kakao.maps.Point(0, 45),    
                             spriteSize: new kakao.maps.Size(36, 133)  
                         };  
-                        const itemEl_OR = getOpenedRestarantItem(companyTotal[i]);
+                        let itemEl_OR = getOpenedRestarantItem(companyTotal[i]);
             
                         // 마커이미지와 마커를 생성합니다
                         var markerImage = createMarkerImage(opendMarkerImageSrc, imageSize, imageOptions),    
@@ -201,6 +214,8 @@ function placesSearchCB (data, status, pagination) {
     
                         setOpenedRestaurantMarkers(map);
                         count++;
+                        // 검색결과 항목들을 검색결과 목록 Element에 추가합니다
+                        listEl.appendChild(fragment);
                     }else if(companyTotal[i].type == 'oc'){
                         var imageSize = new kakao.maps.Size(35, 44),
                         imageOptions = {   
@@ -220,6 +235,8 @@ function placesSearchCB (data, status, pagination) {
     
                         setOpenedCafeMarkers(map);
                         count++;
+                        // 검색결과 항목들을 검색결과 목록 Element에 추가합니다
+                        listEl.appendChild(fragment);
                     }else if(companyTotal[i].type == 'oh'){
                         var imageSize = new kakao.maps.Size(35, 80),
                         imageOptions = {   
@@ -239,10 +256,13 @@ function placesSearchCB (data, status, pagination) {
     
                         setOpenedHospitalMarkers(map);
                         count++;
+                        // 검색결과 항목들을 검색결과 목록 Element에 추가합니다
+                        listEl.appendChild(fragment);
                     }
                 }
             }
         }
+        menuEl.scrollTop = 0;
         if(count == 0){
             createClosedRestaurantMarkers(); 
             setClosedRestaurantMarkers(map);
@@ -263,8 +283,42 @@ function placesSearchCB (data, status, pagination) {
             createOpenedHospitalMarkers();
             setOpenedHospitalMarkers(map);
         }
+        // 페이지 번호를 표출합니다
+        displayPagination(pagination);
     } 
 }
+
+// 검색결과 목록 하단에 페이지번호를 표시는 함수입니다
+function displayPagination(pagination) {
+    var paginationEl = document.getElementById('pagination'),
+        fragment = document.createDocumentFragment(),
+        i; 
+
+    // 기존에 추가된 페이지번호를 삭제합니다
+    while (paginationEl.hasChildNodes()) {
+        paginationEl.removeChild (paginationEl.lastChild);
+    }
+
+    for (i=1; i<=pagination.last; i++) {
+        var el = document.createElement('a');
+        el.href = "#";
+        el.innerHTML = i;
+
+        if (i===pagination.current) {
+            el.className = 'on';
+        } else {
+            el.onclick = (function(i) {
+                return function() {
+                    pagination.gotoPage(i);
+                }
+            })(i);
+        }
+
+        fragment.appendChild(el);
+    }
+    paginationEl.appendChild(fragment);
+}
+
 
 function createMarkerImage(src, size, options) {
     var markerImage = new kakao.maps.MarkerImage(src, size, options);
@@ -307,8 +361,49 @@ let openedRestaurantMarkers = [];
 let openedCafeMarkers = [];
 let openedHospitalMarkers = [];
 
+// 지도 위에 표시되고 있는 마커를 모두 제거합니다
+function removeMarker() {
+    for ( var i = 0; i < closedRestaurantMarkers.length; i++ ) {
+        closedRestaurantMarkers[i].setMap(null);
+    }   
+    for ( var i = 0; i < closedCafeMarkers.length; i++ ) {
+        closedCafeMarkers[i].setMap(null);
+    } 
+    for ( var i = 0; i < closedHospitalMarkers.length; i++ ) {
+        closedHospitalMarkers[i].setMap(null);
+    } 
+    for ( var i = 0; i < todayClosedRestaurantMarkers.length; i++ ) {
+        todayClosedRestaurantMarkers[i].setMap(null);
+    }
+    for ( var i = 0; i < todayClosedCafeMarkers.length; i++ ) {
+        todayClosedCafeMarkers[i].setMap(null);
+    }
+    for ( var i = 0; i < todayClosedHospitalMarkers.length; i++ ) {
+        todayClosedHospitalMarkers[i].setMap(null);
+    }
+    for ( var i = 0; i < openedRestaurantMarkers.length; i++ ) {
+        openedRestaurantMarkers[i].setMap(null);
+    }
+    for ( var i = 0; i < openedCafeMarkers.length; i++ ) {
+        openedCafeMarkers[i].setMap(null);
+    }
+    for ( var i = 0; i < openedHospitalMarkers.length; i++ ) {
+        openedHospitalMarkers[i].setMap(null);
+    }
+    closedRestaurantMarkers = [];
+    closedCafeMarkers = [];
+    closedHospitalMarkers = [];
+    todayClosedRestaurantMarkers = [];
+    todayClosedCafeMarkers = [];
+    todayClosedHospitalMarkers = [];
+    openedRestaurantMarkers = [];
+    openedCafeMarkers = [];
+    openedHospitalMarkers = [];
+}
+
 // 오늘 마감 식당 마커를 생성하고 오늘 마감 식당 마커 배열에 추가하는 함수입니다
 function createClosedRestaurantMarkers() {
+    const fragment = document.createDocumentFragment();
     
     for (var i = 0; i < closedRestaurant.length; i++) {  
         
@@ -331,10 +426,14 @@ function createClosedRestaurantMarkers() {
 
         fragment.appendChild(itemEl_CR);
     }     
+    // 검색결과 항목들을 검색결과 목록 Element에 추가합니다
+    listEl.appendChild(fragment);
+    menuEl.scrollTop = 0;
 }
 
 // 오늘 마감 휴게음식점 마커를 생성하고 오늘 마감 휴게음식점 마커 배열에 추가하는 함수입니다
 function createClosedCafeMarkers() {
+    const fragment = document.createDocumentFragment();
     for (var i = 0; i < closedCafe.length; i++) {
         
         var imageSize = new kakao.maps.Size(35, 44),
@@ -355,11 +454,15 @@ function createClosedCafeMarkers() {
         createInfowindowEvent(itemEl_CC, marker, closedCafe[i]);
 
         fragment.appendChild(itemEl_CC);
-    }        
+    }    
+    // 검색결과 항목들을 검색결과 목록 Element에 추가합니다
+    listEl.appendChild(fragment);
+    menuEl.scrollTop = 0;    
 }
 
 // 오늘 마감 병원 마커를 생성하고 오늘 마감 병원 마커 배열에 추가하는 함수입니다
 function createClosedHospitalMarkers() {
+    const fragment = document.createDocumentFragment();
     for (var i = 0; i < closedHospital.length; i++) {
         
         var imageSize = new kakao.maps.Size(35, 44),
@@ -380,11 +483,15 @@ function createClosedHospitalMarkers() {
         createInfowindowEvent(itemEl_CH, marker, closedHospital[i]);
 
         fragment.appendChild(itemEl_CH);
-    }                
+    }   
+    // 검색결과 항목들을 검색결과 목록 Element에 추가합니다
+    listEl.appendChild(fragment);
+    menuEl.scrollTop = 0;             
 }
 
 // 오늘 휴무 식당 마커를 생성하고 오늘 휴무 식당 마커 배열에 추가하는 함수입니다
 function createTodayClosedRestaurantMarkers() {
+    const fragment = document.createDocumentFragment();
     
     for (var i = 0; i < todayClosedRestaurant.length; i++) {  
         
@@ -406,11 +513,15 @@ function createTodayClosedRestaurantMarkers() {
         createInfowindowEvent(itemEl_TCR, marker, todayClosedRestaurant[i]);
 
         fragment.appendChild(itemEl_TCR);
-    }     
+    }  
+    // 검색결과 항목들을 검색결과 목록 Element에 추가합니다
+    listEl.appendChild(fragment);
+    menuEl.scrollTop = 0;   
 }
 
 // 오늘 휴무 휴게음식점 마커를 생성하고 오늘 휴무 휴게음식점 마커 배열에 추가하는 함수입니다
 function createTodayClosedCafeMarkers() {
+    const fragment = document.createDocumentFragment();
 
     for (var i = 0; i < todayClosedCafe.length; i++) {
         
@@ -432,11 +543,15 @@ function createTodayClosedCafeMarkers() {
         createInfowindowEvent(itemEl_TCC, marker, todayClosedCafe[i]);
 
         fragment.appendChild(itemEl_TCC);
-    }        
+    }  
+    // 검색결과 항목들을 검색결과 목록 Element에 추가합니다
+    listEl.appendChild(fragment);
+    menuEl.scrollTop = 0;      
 }
 
 // 오늘 휴무 병원 마커를 생성하고 오늘 휴무 병원 마커 배열에 추가하는 함수입니다
 function createTodayClosedHospitalMarkers() {
+    const fragment = document.createDocumentFragment();
 
     for (var i = 0; i < todayClosedHospital.length; i++) {
         
@@ -458,11 +573,15 @@ function createTodayClosedHospitalMarkers() {
         createInfowindowEvent(itemEl_TCH, marker, todayClosedHospital[i]);
 
         fragment.appendChild(itemEl_TCH);
-    }                
+    }     
+    // 검색결과 항목들을 검색결과 목록 Element에 추가합니다
+    listEl.appendChild(fragment);
+    menuEl.scrollTop = 0;           
 }
 
 // 영업중 식당 마커를 생성하고 영업중 식당 마커 배열에 추가하는 함수입니다
 function createOpenedRestaurantMarkers() {
+    const fragment = document.createDocumentFragment();
     
     for (var i = 0; i < openedRestaurant.length; i++) {  
         
@@ -493,6 +612,7 @@ function createOpenedRestaurantMarkers() {
 
 // 영업중 휴게음식점 마커를 생성하고 영업중 휴게음식점 마커 배열에 추가하는 함수입니다
 function createOpenedCafeMarkers() {
+    const fragment = document.createDocumentFragment();
 
     for (var i = 0; i < openedCafe.length; i++) {
         
@@ -516,10 +636,14 @@ function createOpenedCafeMarkers() {
 
         fragment.appendChild(itemEl_OC);
     }     
+    // 검색결과 항목들을 검색결과 목록 Element에 추가합니다
+    listEl.appendChild(fragment);
+    menuEl.scrollTop = 0;
 }
 
 // 영업중 병원 마커를 생성하고 영업중 병원 마커 배열에 추가하는 함수입니다
 function createOpenedHospitalMarkers() {
+    const fragment = document.createDocumentFragment();
 
     for (var i = 0; i < openedHospital.length; i++) {
         
@@ -541,7 +665,10 @@ function createOpenedHospitalMarkers() {
         createInfowindowEvent(itemEl_OH, marker, openedHospital[i]);
 
         fragment.appendChild(itemEl_OH);
-    }                
+    }         
+    // 검색결과 항목들을 검색결과 목록 Element에 추가합니다
+    listEl.appendChild(fragment);
+    menuEl.scrollTop = 0;       
 }
 
 // 오늘 마감 식당 마커들의 지도 표시 여부를 설정하는 함수입니다
