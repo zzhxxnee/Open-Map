@@ -1,3 +1,10 @@
+//필터 선택 부분 슬라이드 효과
+$( document ).ready( function() {
+    $( 'button.filter' ).click( function() {
+      $( '.category' ).slideToggle();
+    } );
+  } );
+
 // 카테고리를 클릭했을 때 type에 따라 카테고리의 스타일과 지도에 표시되는 마커를 변경합니다
 function changeMarker(type){
     

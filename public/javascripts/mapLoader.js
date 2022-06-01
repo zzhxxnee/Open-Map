@@ -7,6 +7,7 @@ const opendMarkerImageSrc = "//localhost:3000/images/open.png";
 let companyTotal = closedCafe.concat(openedCafe, todayClosedCafe, closedRestaurant, openedRestaurant, todayClosedRestaurant, closedHospital, openedHospital, todayClosedHospital);
 const listEl = document.getElementById('placesList');
 const menuEl = document.getElementById('slideNav');
+let selectedPlace;
 
 function setCenter() {            
     // 이동할 위도 경도 위치를 생성합니다 
@@ -337,12 +338,20 @@ function createMarker(position, image) {
 
 function createInfowindowEvent(itemEl, marker, place) {
     kakao.maps.event.addListener(marker, 'click', function() {
+        if(selectedPlace){
+            closeOverlay()
+        }
         overlay = setOverlay(place, marker);
+        selectedPlace = place;
         overlay.setMap(map);
     });
 
     itemEl.onclick =  function () {
+        if(selectedPlace){
+            closeOverlay()
+        }
         overlay = setOverlay(place, marker);
+        selectedPlace = place;
         overlay.setMap(map);
     };
 }
@@ -902,13 +911,6 @@ function getOpenedHospitalItem(place) {
     return el;
 }
 
-// function displayInfoWindow(place) {
-    
-//     itemStr = '<div style="padding:5px;z-index:1;">' + place.compName + '</div>';
-//     infowindow.setContent(itemStr);
-//     infowindow.open(map, marker);
-// }
-
 function setOverlay(place, marker){
     let img;
 
@@ -947,7 +949,7 @@ function setOverlay(place, marker){
                     (place.restClosed).substr(0, 2)  + ':'+ (place.restClosed).substr(2, 2) +
     '            </span>' + 
     '            <span class="desc"> 오늘 마감 </span>' + 
-    '            <div><a href="#" target="_blank" class="link">메뉴판 보기</a></div>' + 
+    '            <div><button class="menu">메뉴판 보기</a></div>' + 
     '        </div>' + 
     '    </div>' +    
     '</div>';
@@ -978,7 +980,7 @@ function setOverlay(place, marker){
                         (place.cafeClosed).substr(0, 2)  + ':'+ (place.cafeClosed).substr(2, 2) +
         '            </span>' + 
         '            <span class="desc"> 오늘 마감 </span>' + 
-        '            <div><a href="#" target="_blank" class="link">메뉴판 보기</a></div>' + 
+        '            <div><button class="menu">메뉴판 보기</button></div>' + 
         '        </div>' + 
         '    </div>' +    
         '</div>';
@@ -1033,7 +1035,7 @@ function setOverlay(place, marker){
                         place.tel +
         '            </div>' +
         '            <span class="desc"> 오늘 휴무 </span>' + 
-        '            <div><a href="#" target="_blank" class="link">메뉴판 보기</a></div>' + 
+        '            <div><button class="menu">메뉴판 보기</button></div>' + 
         '        </div>' + 
         '    </div>' +    
         '</div>';
@@ -1058,7 +1060,7 @@ function setOverlay(place, marker){
                         place.tel +
         '            </div>' +
         '            <span class="desc"> 오늘 휴무 </span>' + 
-        '            <div><a href="#" target="_blank" class="link">메뉴판 보기</a></div>' + 
+        '            <div><button class="menu">메뉴판 보기</button></div>' + 
         '        </div>' + 
         '    </div>' +    
         '</div>';
@@ -1113,7 +1115,7 @@ function setOverlay(place, marker){
                         (place.restClosed).substr(0, 2)  + ':'+ (place.restClosed).substr(2, 2) +
         '            </span>' + 
         '            <span class="desc"> 영업중 </span>' + 
-        '            <div><a href="#" target="_blank" class="link">메뉴판 보기</a></div>' + 
+        '            <div><button class="menu">메뉴판 보기</button></div>' + 
         '        </div>' + 
         '    </div>' +    
         '</div>';
@@ -1144,7 +1146,7 @@ function setOverlay(place, marker){
                         (place.cafeClosed).substr(0, 2)  + ':'+ (place.cafeClosed).substr(2, 2) +
         '            </span>' + 
         '            <span class="desc"> 영업중 </span>' + 
-        '            <div><a href="#" target="_blank" class="link">메뉴판 보기</a></div>' + 
+        '            <div><button class="menu">메뉴판 보기</button></div>' + 
         '        </div>' + 
         '    </div>' +    
         '</div>';
