@@ -690,11 +690,21 @@ exports.getAllPositions = async (req, res) => {
         let closedHospitalPositionTotal = new Array(earlyClosedHospitalPosition);
         closedHospitalPositionTotal = [...closedHospital];
 
-        res.render("index", {
-            todayClosedRestaurant : todayClosedRestaurantPosition, todayClosedCafe :  todayClosedCafePosition, todayClosedHospital : todayClosedHospitalPosition , 
-            openedRestaurant : openedRestaurant, openedCafe : openedCafe, openedHospital : openedHospital,
-            closedRestaurantTotal : closedRestaurantPositionTotal, closedCafeTotal : closedCafePositionTotal, closedHospitalTotal : closedHospitalPositionTotal,
-            apikey : process.env.KAKAO_JS_KEY, title: "OpenMap"});
+
+        if(req.session.user){
+            res.render("index", {
+                todayClosedRestaurant : todayClosedRestaurantPosition, todayClosedCafe :  todayClosedCafePosition, todayClosedHospital : todayClosedHospitalPosition , 
+                openedRestaurant : openedRestaurant, openedCafe : openedCafe, openedHospital : openedHospital,
+                closedRestaurantTotal : closedRestaurantPositionTotal, closedCafeTotal : closedCafePositionTotal, closedHospitalTotal : closedHospitalPositionTotal,
+                apikey : process.env.KAKAO_JS_KEY, isLogin: 'true'});
+        }else{
+            res.render("index", {
+                todayClosedRestaurant : todayClosedRestaurantPosition, todayClosedCafe :  todayClosedCafePosition, todayClosedHospital : todayClosedHospitalPosition , 
+                openedRestaurant : openedRestaurant, openedCafe : openedCafe, openedHospital : openedHospital,
+                closedRestaurantTotal : closedRestaurantPositionTotal, closedCafeTotal : closedCafePositionTotal, closedHospitalTotal : closedHospitalPositionTotal,
+                apikey : process.env.KAKAO_JS_KEY, isLogin: 'false'});
+        }
+
     }catch(err){
         res.status(500).send({
             message: err.message

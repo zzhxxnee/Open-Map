@@ -43,6 +43,7 @@ db.companyRestaurantView = require("./CompanyRestaurantView.js")(sequelize, Sequ
 db.companyCafeView = require("./CompanyCafeView.js")(sequelize, Sequelize);
 db.companyHospitalView = require("./CompanyHospitalView.js")(sequelize, Sequelize);
 db.menu = require("./Menu.js")(sequelize, Sequelize);
+db.myPlace = require("./MyPlace.js")(sequelize, Sequelize);
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

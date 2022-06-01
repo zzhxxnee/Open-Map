@@ -751,9 +751,15 @@ function removeAllChildNods(el) {
 
 function getClosedRestarantItem(place) {
 
+    let heart='';
+
+    if(isLogin  == 'true'){
+        heart = `</h5><span class="heart" onclick="setMyPlace(${place.compId})"><i class="fa-light fa-heart"></i></span>`;
+    }
+
     let el = document.createElement('li'),
     itemStr = '<div class="info">' +
-        '   <h5>' + place.compName + '</h5>';
+        '   <h5>' + place.compName + heart;
 
     itemStr += '    <span>' + place.address + '</span>';
     itemStr += '    <span>' +  (place.restOpen).substr(0, 2) + ':'+ (place.restOpen).substr(2, 2)   + '</span>'+
@@ -770,9 +776,15 @@ function getClosedRestarantItem(place) {
 
 function getClosedCafeItem(place) {
 
+    let heart='';
+
+    if(isLogin == 'true'){
+        heart = `</h5><span class="heart" onclick="setMyPlace(${place.compId})"><i class="fa-light fa-heart"></i></span>`;
+    }
+
     let el = document.createElement('li'),
     itemStr = '<div class="info">' +
-        '   <h5>' + place.compName + '</h5>';
+        '   <h5>' + place.compName + heart;
     itemStr += '    <span>' + place.address + '</span>';
     itemStr += '    <span>' +  (place.cafeOpen).substr(0, 2) + ':'+ (place.cafeOpen).substr(2, 2)  + '</span>'+
         '   <span> ~ ' +  (place.cafeClosed).substr(0, 2) + ':'+ (place.cafeClosed).substr(2, 2)  + '</span>'; 
@@ -788,9 +800,15 @@ function getClosedCafeItem(place) {
 
 function getClosedHospitalItem(place) {
 
+    let heart='';
+
+    if(isLogin == 'true'){
+        heart = `</h5><span class="heart" onclick="setMyPlace(${place.compId})"><i class="fa-light fa-heart"></i></span>`;
+    }
+
     let el = document.createElement('li'),
     itemStr = '<div class="info">' +
-        '   <h5>' + place.compName + '</h5>';
+        '   <h5>' + place.compName + heart;
     itemStr += '    <span>' + place.address + '</span>';
     itemStr += '    <span>' +  (place.hospitalOpen).substr(0, 2) + ':'+ (place.hospitalOpen).substr(2, 2)  + '</span>'+
         '   <span> ~ ' +  (place.hospitalClosed).substr(0, 2) + ':'+ (place.hospitalClosed).substr(2, 2)  + '</span>'; 
@@ -806,9 +824,15 @@ function getClosedHospitalItem(place) {
 
 function getTodayClosedRestarantItem(place) {
 
+    let heart='';
+
+    if(isLogin == 'true'){
+        heart = `</h5><span class="heart" onclick="setMyPlace(${place.compId})"><i class="fa-light fa-heart"></i></span>`;
+    }
+
     let el = document.createElement('li'),
     itemStr = '<div class="info">' +
-        '   <h5>' + place.compName + '</h5>';
+        '   <h5>' + place.compName + heart;
 
     itemStr += '    <span>' + place.address + '</span>';
     itemStr += '    <span> 휴무 </span>'
@@ -824,9 +848,15 @@ function getTodayClosedRestarantItem(place) {
 
 function getTodayClosedCafeItem(place) {
 
+    let heart='';
+
+    if(isLogin == 'true'){
+        heart = `</h5><span class="heart" onclick="setMyPlace(${place.compId})"><i class="fa-light fa-heart"></i></span>`;
+    }
+
     let el = document.createElement('li'),
     itemStr = '<div class="info">' +
-        '   <h5>' + place.compName + '</h5>';
+        '   <h5>' + place.compName + heart;
     itemStr += '    <span>' + place.address + '</span>';
     itemStr += '    <span> 휴무 </span>'
 
@@ -841,9 +871,15 @@ function getTodayClosedCafeItem(place) {
 
 function getTodayClosedHospitalItem(place) {
 
+    let heart='';
+
+    if(isLogin == 'true'){
+        heart = `</h5><span class="heart" onclick="setMyPlace(${place.compId})"><i class="fa-light fa-heart"></i></span>`;
+    }
+
     let el = document.createElement('li'),
     itemStr = '<div class="info">' +
-        '   <h5>' + place.compName + '</h5>';
+        '   <h5>' + place.compName + heart;
     itemStr += '    <span>' + place.address + '</span>';
     itemStr += '    <span> 휴무 </span>'
 
@@ -858,9 +894,15 @@ function getTodayClosedHospitalItem(place) {
 
 function getOpenedRestarantItem(place) {
 
+    let heart='';
+
+    if(isLogin == 'true'){
+        heart = `</h5><span class="heart" onclick="setMyPlace(${place.compId})"><i class="fa-light fa-heart"></i></span>`;
+    }
+
     let el = document.createElement('li'),
     itemStr = '<div class="info">' +
-        '   <h5>' + place.compName + '</h5>';
+        '   <h5>' + place.compName + heart;
 
     itemStr += '    <span>' + place.address + '</span>';
     itemStr += '    <span>' +  (place.restOpen).substr(0, 2)+ ':'+ (place.restOpen).substr(2, 2)   + '</span>'+
@@ -877,9 +919,15 @@ function getOpenedRestarantItem(place) {
 
 function getOpenedCafeItem(place) {
 
+    let heart='';
+
+    if(isLogin == 'true'){
+        heart = `</h5><span class="heart" onclick="setMyPlace(${place.compId})"><i class="fa-light fa-heart"></i></span>`;
+    }
+
     let el = document.createElement('li'),
     itemStr = '<div class="info">' +
-        '   <h5>' + place.compName + '</h5>';
+        '   <h5>' + place.compName + heart;
     itemStr += '    <span>' + place.address + '</span>';
     itemStr += '    <span>' +  (place.cafeOpen).substr(0, 2) + ':'+ (place.cafeOpen).substr(2, 2)  + '</span>'+
         '   <span> ~ ' +  (place.cafeClosed).substr(0, 2) + ':'+ (place.cafeClosed).substr(2, 2)  + '</span>'; 
@@ -895,9 +943,15 @@ function getOpenedCafeItem(place) {
 
 function getOpenedHospitalItem(place) {
 
+    let heart='';
+
+    if(isLogin == 'true'){
+        heart = `</h5><span class="heart" onclick="setMyPlace(${place.compId})"><i class="fa-light fa-heart"></i></span>`;
+    }
+
     let el = document.createElement('li'),
     itemStr = '<div class="info">' +
-        '   <h5>' + place.compName + '</h5>';
+        '   <h5>' + place.compName + heart;
     itemStr += '    <span>' + place.address + '</span>';
     itemStr += '    <span>' +  (place.hospitalOpen).substr(0, 2) + ':'+ (place.hospitalOpen).substr(2, 2)  + '</span>'+
         '   <span> ~ ' +  (place.hospitalClosed).substr(0, 2) + ':'+ (place.hospitalClosed).substr(2, 2)  + '</span>'; 
