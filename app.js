@@ -9,6 +9,7 @@ var session = require('express-session');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 const compRouter = require('./routes/compRegist');
+const myPageRouter = require('./routes/mypage');
 var sequelize = require('./models').sequelize; // mysql 시퀄라이즈 모델
 var geocoder = require('google-geocoder');
 var app = express();
@@ -51,6 +52,7 @@ app.use(function (req, res, next) {
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/compRegist', compRouter);
+app.use('/mypage',myPageRouter);
 
 //const { sequelize } = require('./models');
 
@@ -61,7 +63,7 @@ app.use(function(req, res, next) {
 
 
 
-sequelize.sync()
+sequelize.sync({alter:false})
 .then(() => {
     console.log('데이터베이스 연결 성공');
 })

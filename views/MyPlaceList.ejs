@@ -1,0 +1,111 @@
+<div class = myplacePage>
+    <div class = myplaceList>
+            
+            <% cafe.forEach( c => { %>
+                <div class = content>
+                    <image class="image" src=<%= c.image%> width="110px" height="110px">
+                    
+                    <div class = content_info>
+                        <span class="compName"><%=c.compName%></span>
+                        <span class="address"><%=c.address%></span>
+                        <span class = "time"><%=c.cafeOpen%> ~ <%=c.cafeClosed%></span>
+                        <span class = "status"><%=c.status%></span>
+                    </div>
+                    <form action="/mypage/config/myplace" method = "post">
+                        <input type="submit" value="삭제">
+                        <input type="hidden" name="comp_id" value= <%= c.compId %> >
+
+                    </form>
+                </div>
+            <% }); %>
+            <% rest.forEach( c => { %>
+                <div class = content>
+                    <image class="image" src=<%= c.image%> width="110px" height="110px">
+                    <div class = content_info>
+                        <span class="compName"><%=c.compName%></span>
+                        <span class="address"><%=c.address%></span>
+                        <span class = "time"><%=c.restOpen%> ~ <%=c.restClosed%></span>
+                        <span class = "status"><%=c.status%></span>
+                    </div>
+                    <form action="/mypage/config/myplace" method = "post">
+                        <input type="submit" value="삭제">
+                        <input type="hidden" name="comp_id" value= <%= c.compId %> >
+                    </form>
+                </div>
+            <% }); %>
+            <% hosp.forEach( c => { %>
+                <div class = content>
+                    <image class="image" src=<%= c.image%> width="110px" height="110px">
+                    <div class = content_info>
+                        <span class="compName"><%=c.compName%></span>
+                        <span class="address"><%=c.address%></span>
+                        <span class = "time"><%=c.hospOpen%> ~ <%=c.hospClosed%></span>
+                        <span class = "status"><%=c.status%></span>
+                    </div>
+                    <form action="/mypage/config/myplace" method = "post">
+                        <input type="submit" value="삭제">
+                        <input type="hidden" name="comp_id" value= <%= c.compId %> >
+                    </form>
+                </div>
+            <% }); %>
+    <div>
+</div>
+
+<style>
+    :root {
+        --main-bg-color: #FBF9FC;
+        --text-color: rgb(165, 165, 165);
+        --openmap-orange: #FE8201;
+        --openmap-orange-light: #ffcf9d;
+        --openmap-purple: #894AFF;
+        --openmap-green: #77C3CA;
+    }
+
+    .myplaceList {
+        overflow-y: scroll;
+        width: 780px;
+        height: 708px;
+    }
+
+    .content{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-bottom: 19px;
+        width: 730px;
+        height: 150px;
+        background-color: var(--main-bg-color);
+        border-radius: 20px;
+        line-height:150%;
+    }
+    
+    .compName{
+        font-size: 20px;
+        font-weight: 600;
+        line-height:180%;
+    }
+
+    .address{
+        display:block;
+        color:rgb(107, 107, 107);
+        font-size: 13px;
+    }
+
+    .time{
+        color:var(--openmap-purple);
+        font-size: 18px;
+        font-weight: 500;
+    }
+
+    .status{
+        font-size: 12px;
+    }
+
+    .delete{
+        align-self:center;
+    }
+
+    .image{
+        display: block;
+    }
+</style>
