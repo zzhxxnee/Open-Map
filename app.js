@@ -43,6 +43,7 @@ app.use(express.urlencoded({
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(expressLayouts);
 app.use('/node_modules', express.static(path.join(__dirname+'/node_modules')));
+app.use(express.static(path.join(__dirname, 'uploads')));
 
 app.use(function (req, res, next) {
   res.locals.islogin = req.user;
