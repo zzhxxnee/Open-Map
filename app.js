@@ -21,6 +21,17 @@ app.set('layout', 'layout');
 app.set("layout extractScripts", true);
 
 
+app.use(session({
+  key : 'id',
+  secret : 'mysecret',
+  resave:false,
+  saveUninitialized : true,
+  cookie:{
+    maxAge : 24000 * 60 * 60
+  }
+}));
+
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -48,16 +59,6 @@ app.use(function(req, res, next) {
   next(createError(404));
 });
 
-
-app.use(session({
-  key : 'sid',
-  secret : 'secret',
-  resave:false,
-  saveUninitialized : true,
-  cookie:{
-    maxAge : 24000 * 60 * 60
-  }
-}));
 
 
 sequelize.sync()
