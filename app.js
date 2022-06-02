@@ -8,8 +8,9 @@ var session = require('express-session');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+const compRouter = require('./routes/compRegist');
 var sequelize = require('./models').sequelize; // mysql 시퀄라이즈 모델
-
+var geocoder = require('google-geocoder');
 var app = express();
 const port = 3000;
 
@@ -20,12 +21,27 @@ app.set('layout', 'layout');
 app.set("layout extractScripts", true);
 
 
+app.use(session({
+  key : 'id',
+  secret : 'mysecret',
+  resave:false,
+  saveUninitialized : true,
+  cookie:{
+    maxAge : 24000 * 60 * 60
+  }
+}));
+
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(express.urlencoded({
+  extended:false
+}));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(expressLayouts);
+app.use('/node_modules', express.static(path.join(__dirname+'/node_modules')));
 
 app.use(function (req, res, next) {
   res.locals.islogin = req.user;
@@ -34,6 +50,7 @@ app.use(function (req, res, next) {
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/compRegist', compRouter);
 
 //const { sequelize } = require('./models');
 
@@ -42,16 +59,6 @@ app.use(function(req, res, next) {
   next(createError(404));
 });
 
-
-app.use(session({
-  key : 'sid',
-  secret : 'secret',
-  resave:false,
-  saveUninitialized : true,
-  cookie:{
-    maxAge : 24000 * 60 * 60
-  }
-}));
 
 
 sequelize.sync()

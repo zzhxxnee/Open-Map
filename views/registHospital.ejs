@@ -1,0 +1,88 @@
+<head>
+    <script language="javascript" src="/javascripts/registHosp.js"></script>
+</head>
+
+<body>
+    <div class="step">
+        <h1>병원 등록하기</h1>
+        <h2>STEP 2</h2>
+    </div>
+    <form name="hospRegistForm" id="restRegistForm" action="/compRegist/registComp/finished" method="post">
+        <select name="hospType" required>
+            <option value="">병원유형</option>
+            <option value="의원">병의원</option>
+            <option value="치과의원">치과</option>
+            <option value="한의원">한의원</option>
+        </select>
+
+        <input type="checkbox" name="alldays" id="alldays" value="true" />24시간 영업
+        <input type="checkbox" name="noBreak" id="noBreak" value="true"/>점심시간 없음 <%
+            var day=["월요일", "화요일" , "수요일" , "목요일" , "금요일" , "토요일" , "일요일" , "공휴일" , "점심시간" ] %>
+            <% for(var d=0; d < 9; d++){ %>
+                <p>
+                    <%=day[d]%>
+                </p>
+                <div>
+                    <% if (d==8) { %>
+                        <div>
+                            <select name="breakStart">브레이크 시작시각(시)
+                                브레이크 시작(시)
+                                <% for(var i=0; i < 24; i++){ %>
+                                    <option value="<%=i%>"><%=i%></option>
+                                    <% } %>
+                            </select>
+                            <select name="breakStart">브레이크 시작시각(분)
+                                브레이크 시작(분)
+                                <% for(var i=0; i < 60; i+=10){ %>
+                                    <option value="<%=i%>"><%=i%></option>
+                                    <% } %>
+                            </select>
+                        </div>
+                        <div>
+                            <select name="breakEnd">브레이크 마감시각(시)
+                                브레이크 끝(시)
+                                <% for(var i=0; i < 24; i++){ %>
+                                    <option value="<%=i%>"><%=i%></option>
+                                    <% } %>
+                            </select>
+                            <select name="breakEnd">브레이크 시작시각(분)
+                                브레이크 끝(분)
+                                <% for(var i=0; i < 60; i+=10){ %>
+                                    <option value="<%=i%>"><%=i%></option>
+                                    <% } %>
+                            </select>
+                        </div>
+                        <% }else{ %>
+                            <div>
+                                <select name="openTime" class="runtime">오픈시각(시)
+                                    <% for(var i=0; i < 24; i++){ %>
+                                        <option value="<%=i%>"><%=i%></option>
+                                        <% } %>
+                                </select>
+                                <select name="openTime" class="runtime">오픈시각(분)
+                                    <% for(var i=0; i < 60; i+=10){ %>
+                                        <option value="<%=i%>"><%=i%></option>
+                                        <% } %>
+                                </select>
+                            </div>
+                            <div>
+                                <select name="closedTime" class="runtime">마감시각(시)
+                                    <% for(var i=0; i < 24; i++){ %>
+                                        <option value="<%=i%>"><%=i%></option>
+                                        <% } %>
+                                </select>
+                                <select name="closedTime" class="runtime">마감시각(분)
+                                    <% for(var i=0; i < 60; i+=10){ %>
+                                        <option value="<%=i%>"><%=i%></option>
+                                        <% } %>
+                                </select>
+                            </div>
+                            <% } %>
+                </div>
+                <% } %>
+                    <label for="content">비고</label>
+                    <br>
+                    <input name="content" id="content" type="text" placeholder="사람들이 특별히 참고해야할 사항에 대해 적어주세요." maxlength="200"/>
+                    <input type="submit" value="업체등록하기" />
+    </form>
+</body>
