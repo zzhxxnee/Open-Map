@@ -4,14 +4,14 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const expressLayouts = require('express-ejs-layouts');
-var session = require('express-session');
+const session = require('express-session');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 const compRouter = require('./routes/compRegist');
 const myPageRouter = require('./routes/mypage');
 var sequelize = require('./models').sequelize; // mysql 시퀄라이즈 모델
-var geocoder = require('google-geocoder');
+
 var app = express();
 const port = 3000;
 
@@ -23,8 +23,8 @@ app.set("layout extractScripts", true);
 
 
 app.use(session({
-  key : 'id',
-  secret : 'mysecret',
+  key : 'sid',
+  secret : 'secret',
   resave:false,
   saveUninitialized : true,
   cookie:{
@@ -37,9 +37,6 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.urlencoded({
-  extended:false
-}));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(expressLayouts);
 app.use('/node_modules', express.static(path.join(__dirname+'/node_modules')));
@@ -83,9 +80,9 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+// app.listen(port, () => {
+//   console.log(`Example app listening on port ${port}`)
+// })
 
 module.exports = app;
 
