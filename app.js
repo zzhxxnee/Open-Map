@@ -10,7 +10,6 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 const compRouter = require('./routes/compRegist');
 var sequelize = require('./models').sequelize; // mysql 시퀄라이즈 모델
-var geocoder = require('google-geocoder');
 var app = express();
 const port = 3000;
 

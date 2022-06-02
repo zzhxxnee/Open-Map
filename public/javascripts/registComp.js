@@ -6,10 +6,10 @@ function goNext() {
     const typeForm = document.getElementById('compType');
     const compNameForm = document.getElementById('compName');
     const addrForm = document.getElementById('addr');
-    if(nameForm.disabled===false){
-        alert("사업자 등록정보를 확인해주세요.");
-    }
-    else if(typeForm.value == ""){
+    // if(nameForm.disabled===false){
+    //     alert("사업자 등록정보를 확인해주세요.");
+    // }
+    if(typeForm.value == ""){
         alert("업체 종류를 선택해주세요.");
     }
     else if(compNameForm.value == ""){

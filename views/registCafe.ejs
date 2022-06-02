@@ -42,7 +42,7 @@
                 </select>
             </div>
             <input type="checkbox" name="tomorrow" id="tomorrow" value="true" />익일
-            <input type="checkbox" name="alldays" id="alldays" value="true" />24시간 영업
+            <input type="checkbox" name="allDays" id="allDays" value="true" />24시간 영업
         </div>
         <div>
             <label for="cafeType">업종(선택 필수)</label>
@@ -57,6 +57,7 @@
         <div>
             <label for="menu">주요메뉴</label>
             <input type="button" value="메뉴 추가하기" onclick="addMenu()">
+            <input type="hidden" id="menuCount" name="menuCount" value="1">
             <br>
             <div id="menuBox">
                 <input type="text" name="menu" id="menu" placeholder="메뉴명" required />

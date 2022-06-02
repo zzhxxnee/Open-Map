@@ -15,7 +15,7 @@ function gocheckComp() {
     };
 
     $.ajax({
-        url: "https://api.odcloud.kr/api/nts-businessman/v1/validate?serviceKey=hs0julBlxqzmZ9DgULGBktXwbelsj7HVZ0/4K73cbI365ikw4cm0yZFfY5mEFXKETrYPacEwQihxIQZvyG4ecA==", // serviceKey 값을 xxxxxx에 입력
+        url: "https://api.odcloud.kr/api/nts-businessman/v1/validate?serviceKey=xS3AjvhSiaXPnwPtWNawNoLpfMhJriObqAZ8Fg8NnBmm1DcXSk4XDQcomP7iAtPbBiCWcyHr6DnVeR1LBlfgeg==", // serviceKey 값을 xxxxxx에 입력
         type: "POST",
         data: JSON.stringify(data), // json 을 string으로 변환하여 전송
         dataType: "JSON",
