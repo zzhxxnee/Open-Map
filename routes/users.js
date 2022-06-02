@@ -2,6 +2,7 @@ var express = require('express');
 const req = require('express/lib/request');
 const res = require('express/lib/response');
 const { response } = require('../app');
+var router = express.Router();
 const models = require('./../models');
 const crypto = require('crypto');
 let session = require('express-session');
@@ -14,10 +15,6 @@ const { resourceLimits } = require('worker_threads');
 router.get('/', function(req, res, next) {
     res.send('respond with a resource');
 });
-
-router.get('/myPage', (req, res, next)=>{
-  res.send("my page");
-})
 
 router.get('/sign_up', function(req, res, next) {
   res.render("signup.ejs");
@@ -41,9 +38,6 @@ router.post("/sign_up", async function(req,res,next){
 
   if(exUser){
     res.status(500).send(`<script>alert('중복된 아이디입니다');history.go(-1);</script>`);
-    return;
-  }else{
-    res.send(`<script>alert('사용 가능한 아이디입니다');history.go(-1);</script>`);
     return;
   }
 
@@ -71,6 +65,37 @@ router.post("/sign_up", async function(req,res,next){
   });
 });
 
+router.post('/checkid', async function(req, res, next){
+  let body = req.body;
+
+  if(!body.userid){
+    res.status(400).send({
+      message : "Content can not be empty!"
+    });
+    return;
+  }
+  
+  let exUser = await models.Users.findOne({ // 아이디 중복여부 체크
+    where:{
+      id : body.userid
+    }
+  })
+
+  if (exUser) {
+    res.send({
+      code: "success",
+      message: "중복된 아이디입니다!",
+    });
+    return;
+  } else {
+    res.send({
+      code: "error",
+      message: "사용 가능한 아이디입니다",
+    });
+    return;
+  }
+})
+
 
 router.get('/login', function(req, res, next) {
   let session = req.session;
@@ -84,12 +109,6 @@ router.get('/login', function(req, res, next) {
 router.post('/login', async function(req,res,next){
   let body = req.body;
 
-  let result = await models.Users.findOne({
-    where:{
-      id:body.userid
-    }
-  });
-
   if(!body.userid){
     res.status(500).send({
       message : "id is null"
@@ -97,29 +116,46 @@ router.post('/login', async function(req,res,next){
     return;
   }
 
-  let dbPassword = result.dataValues.password;
-  let inputPassword = body.password;
-  let salt = result.dataValues.salt;
-  let hashPassword = crypto.createHash("sha512").update(inputPassword + salt).digest("hex");
-
-  if(dbPassword === hashPassword){
-    console.log('비밀번호 일치');
-    req.session.user_id = body.userid;
-    res.redirect('/users/login');
-
-  }
-  else{
+  try { // 에러가 나도 무조건 실행
+    let result = await models.Users.findOne({
+      where: {
+        id: body.userid,
+      },
+    });
+  
+    let dbPassword = result.dataValues.password;
+    let inputPassword = body.password;
+    let salt = result.dataValues.salt;
+    let hashPassword = crypto
+      .createHash("sha512")
+      .update(inputPassword + salt)
+      .digest("hex");
+  
+    if (dbPassword === hashPassword) {
+      console.log("비밀번호 일치");
+      req.session.user_id = body.userid;
+      res.redirect("/users/login");
+    } else {
+      res.status(500).send({
+        message: "Wrong Password",
+      });
+    }
+    
+  } catch (error) {
     res.status(500).send({
-      message: 'Wrong Password'
+      message: error.message,
     });
   }
+
+
+
 })
 
 router.get('/logout', (req, res, next)=>{
   req.session.destroy();
   res.clearCookie('sid');
 
-  res.redirect('/users/login');
+  res.redirect('/users');
 })
 
 
@@ -138,7 +174,7 @@ router.get('/logout', (req, res, next)=>{
 //       const data = {
 //         // 4. 인증코드 테이블에 넣을 데이터 정리
 //         token,
-//         userid: user.id,
+//         userid: user.userid,
 //         ttl: 300, // ttl 값 설정 (5분)
 //       };
       
@@ -177,6 +213,7 @@ router.get('/logout', (req, res, next)=>{
 //     } else {
 //       return res.status(403).send('This account does not exist');
 //     }
+
 //   } catch (e) {
 //     // try에서 result 결과값이 null일때 catch에서 에러로 잡지 않음 이유는?..
 //     res.send(e);
@@ -187,28 +224,29 @@ router.get('/logout', (req, res, next)=>{
 //   res.render('findID.ejs');
 // })
 
-// router.get('/users/findIDResult', (req, res, next) =>{
+// router.get('/findIDResult', (req, res, next) =>{
 //   res.render('findIDResult.ejs');
 // })
 
-
-// router.post('/users/findIDResult', (req, res, next) => {
+// router.post('/users/findIDResult', (req, res, next)=>{
 //   var uemail = req.body.email;
 //   var uid = req.body.userid;
-//   models.Users.findOne( {where : {"email": uemail}}, (err, user) => {
-//       if (err) return res.json(err);
-//       if (user) {
-//         res.render('findIDResult', {
-//           FindID : uemail
-//         });
-//       } else {
-//           console.log('can not find ID');
-//           res.send(`
-//               <a href="/">Back</a>
-//               <h1>can not find id</h1>
-//           `);
-//       }
+
+//   models.Users.findOne({where : {"email" :uemail}}, (err, user) =>{
+//     if (err) return res.json(err);
+//     if(user) {
+//       res.render('findIDResult', {
+//         FindID : uid
+//       });
+//     }else{
+//       console.log('cannot findID');
+//       res.send(`
+//       <a href='/'>Back</a>
+//       <h1>cannot find id</h1>`);
+//     }
 //   })
 // })
+
+
 
 module.exports = router;
