@@ -147,8 +147,6 @@ router.post('/login', async function(req,res,next){
     });
   }
 
-
-
 })
 
 router.get('/logout', (req, res, next)=>{
