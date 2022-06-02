@@ -1,0 +1,71 @@
+<head>
+    <script language="javascript" src="/javascripts/registCafe.js"></script>
+</head>
+
+<body>
+    <div class="step">
+        <h1>휴게 음식점 등록하기</h1>
+        <h2>STEP 2</h2>
+    </div>
+    <form name="cafeRegistForm" id="restRegistForm" action="/compRegist/registComp/finished" method="post">
+        <div>
+            <div>
+                <select name="openTime" class="runtime">오픈시각(시)
+                    <% for(var i=0; i < 24; i++){ %>
+                        <option value="<%=i%>">
+                            <%=i%>
+                        </option>
+                        <% } %>
+                </select>
+                <select name="openTime" class="runtime">오픈시각(분)
+                    <% for(var i=0; i < 60; i+=10){ %>
+                        <option value="<%=i%>">
+                            <%=i%>
+                        </option>
+                        <% } %>
+                </select>
+            </div>
+            <div>
+                <select name="closedTime" class="runtime">마감시각(시)
+                    <% for(var i=0; i < 24; i++){ %>
+                        <option value="<%=i%>">
+                            <%=i%>
+                        </option>
+                        <% } %>
+                </select>
+                <select name="closedTime" class="runtime">마감시각(분)
+                    <% for(var i=0; i < 60; i+=10){ %>
+                        <option value="<%=i%>">
+                            <%=i%>
+                        </option>
+                        <% } %>
+                </select>
+            </div>
+            <input type="checkbox" name="tomorrow" id="tomorrow" value="true" />익일
+            <input type="checkbox" name="alldays" id="alldays" value="true" />24시간 영업
+        </div>
+        <div>
+            <label for="cafeType">업종(선택 필수)</label>
+            <select name="cafeType" , id="cafeType" required>
+                <option value="">업종</option>
+                <option value="커피숍">커피숍</option>
+                <option value="편의점">편의점</option>
+                <option value="패스트푸드">패스트푸드</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="menu">주요메뉴</label>
+            <input type="button" value="메뉴 추가하기" onclick="addMenu()">
+            <br>
+            <div id="menuBox">
+                <input type="text" name="menu" id="menu" placeholder="메뉴명" required />
+                <input type="number" name="price" id="price" placeholder="가격" required />원
+                <input type="button" value="삭제" onclick="removeMenu(this)">
+            </div>
+            <div id="field"></div>
+        </div>
+
+        <input type="submit" value="업체등록하기" />
+    </form>
+</body>

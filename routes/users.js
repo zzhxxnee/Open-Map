@@ -2,7 +2,6 @@ var express = require('express');
 const req = require('express/lib/request');
 const res = require('express/lib/response');
 const { response } = require('../app');
-var router = express.Router();
 const models = require('./../models');
 const crypto = require('crypto');
 let session = require('express-session');
@@ -15,6 +14,10 @@ const { resourceLimits } = require('worker_threads');
 router.get('/', function(req, res, next) {
     res.send('respond with a resource');
 });
+
+router.get('/myPage', (req, res, next)=>{
+  res.send("my page");
+})
 
 router.get('/sign_up', function(req, res, next) {
   res.render("signup.ejs");
