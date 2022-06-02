@@ -333,13 +333,14 @@ exports.registFinished = async (req, res) => {
                 }
             
                 else {
-                    res.send("뭔가 잘못됨...!");
+                    res.send("compType 에러");
                 }
             })
             .then(()=>{
                 if(compInfo.type=="H"){
                     createHospital();
                 }
+                // 등록완료되면 업주 여부 true로 변경
                 ownerTrue();
             })
             .catch((err)=>{

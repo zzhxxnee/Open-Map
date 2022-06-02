@@ -1,3 +1,7 @@
+<head>
+    <script language="javascript" src="/javascripts/registComp.js"></script>
+</head>
+
 <body>
     <h1>이미 오픈맵에 내 업체가 등록되어 있는지 확인해보세요!</h1>
 
@@ -11,11 +15,11 @@
     <div>
         <table>
             <tr>
-                <td>업체명</td>
+                <td>업체명 --</td>
                 <td>주소</td>
             </tr>
             <% for(let post of searchComp) { %>
-                <tr id="clickedComp">
+                <tr class="clickedComp">
                     <td>
                         <%= post.compName %>
                     </td>

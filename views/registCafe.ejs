@@ -9,7 +9,7 @@
     </div>
     <form name="cafeRegistForm" id="restRegistForm" action="/compRegist/registComp/finished" method="post">
         <div>
-            <div>
+            <div>오픈시각
                 <select name="openTime" class="runtime">오픈시각(시)
                     <% for(var i=0; i < 24; i++){ %>
                         <option value="<%=i%>">
@@ -17,6 +17,7 @@
                         </option>
                         <% } %>
                 </select>
+                시
                 <select name="openTime" class="runtime">오픈시각(분)
                     <% for(var i=0; i < 60; i+=10){ %>
                         <option value="<%=i%>">
@@ -24,8 +25,9 @@
                         </option>
                         <% } %>
                 </select>
+                분
             </div>
-            <div>
+            <div>마감시각
                 <select name="closedTime" class="runtime">마감시각(시)
                     <% for(var i=0; i < 24; i++){ %>
                         <option value="<%=i%>">
@@ -33,6 +35,7 @@
                         </option>
                         <% } %>
                 </select>
+                시
                 <select name="closedTime" class="runtime">마감시각(분)
                     <% for(var i=0; i < 60; i+=10){ %>
                         <option value="<%=i%>">
@@ -40,8 +43,9 @@
                         </option>
                         <% } %>
                 </select>
+                분
+                <input type="checkbox" name="tomorrow" id="tomorrow" value="true" />익일
             </div>
-            <input type="checkbox" name="tomorrow" id="tomorrow" value="true" />익일
             <input type="checkbox" name="allDays" id="allDays" value="true" />24시간 영업
         </div>
         <div>
