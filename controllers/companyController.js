@@ -216,7 +216,7 @@ exports.registFinished = async (req, res) => {
                             restType: req.body.restType, //not null
                             breakStart: null,
                             breakEnd: null,
-                            compId: compInfo.compId,
+                            CompanyCompId: compInfo.compId,
                         });
                     } else {
                         Rest.create({
@@ -225,7 +225,7 @@ exports.registFinished = async (req, res) => {
                             restType: req.body.restType, //not null
                             breakStart: req.body.breakStart[0] * 100 + req.body.breakStart[1] * 1,
                             breakEnd: req.body.breakEnd[0] * 100 + req.body.breakEnd[1] * 1,
-                            compId: compInfo.compId,
+                            CompanyCompId: compInfo.compId,
                         });
                     }
                     //메뉴 해결하기
@@ -384,7 +384,7 @@ function createHospital() {
         breakStart: hospitalInfo.breakStart,
         breakEnd: hospitalInfo.breakEnd,
 
-        compId : hospitalInfo.compId
+        CompanyCompId : hospitalInfo.compId
     });
 }
 
