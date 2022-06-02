@@ -30,8 +30,8 @@ module.exports = (sequelize, DataTypes) => {
             comment: "사업자등록번호"
         },
 
-        oepnDate: {
-            type: DataTypes.DATE,
+        openDate: {
+            type: DataTypes.INTEGER,
             comment: "개업일자"
         },
 

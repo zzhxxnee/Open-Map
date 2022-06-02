@@ -9,20 +9,48 @@
     </div>
     <form name="cafeRegistForm" id="restRegistForm" action="/compRegist/registComp/finished" method="post">
         <div>
-            <label for="openTime">오픈시각</label>
-            <input type="time" class="timepicker" name="openTime" id="openTime" value="00:00:00" />
-            <label for="openTime">마감시각</label>
-            <input type="time" class="timepicker" name="closedTime" id="closedTime" value="00:00:00" />
+            <div>
+                <select name="openTime" class="runtime">오픈시각(시)
+                    <% for(var i=0; i < 24; i++){ %>
+                        <option value="<%=i%>">
+                            <%=i%>
+                        </option>
+                        <% } %>
+                </select>
+                <select name="openTime" class="runtime">오픈시각(분)
+                    <% for(var i=0; i < 60; i+=10){ %>
+                        <option value="<%=i%>">
+                            <%=i%>
+                        </option>
+                        <% } %>
+                </select>
+            </div>
+            <div>
+                <select name="closedTime" class="runtime">마감시각(시)
+                    <% for(var i=0; i < 24; i++){ %>
+                        <option value="<%=i%>">
+                            <%=i%>
+                        </option>
+                        <% } %>
+                </select>
+                <select name="closedTime" class="runtime">마감시각(분)
+                    <% for(var i=0; i < 60; i+=10){ %>
+                        <option value="<%=i%>">
+                            <%=i%>
+                        </option>
+                        <% } %>
+                </select>
+            </div>
             <input type="checkbox" name="tomorrow" id="tomorrow" value="true" />익일
-            <input type="checkbox" name="24hours" id="24hours" value="true" onclick='get24hoursValue(event)' />24시간 영업
+            <input type="checkbox" name="alldays" id="alldays" value="true" />24시간 영업
         </div>
         <div>
-            <label for="restType">업종(선택 필수)</label>
-            <select name="restType" , id="restType" required>
+            <label for="cafeType">업종(선택 필수)</label>
+            <select name="cafeType" , id="cafeType" required>
                 <option value="">업종</option>
-                <option value="korea">커피숍</option>
-                <option value="china">편의점</option>
-                <option value="Japan">패스트푸드</option>
+                <option value="커피숍">커피숍</option>
+                <option value="편의점">편의점</option>
+                <option value="패스트푸드">패스트푸드</option>
             </select>
         </div>
 
@@ -31,8 +59,8 @@
             <input type="button" value="메뉴 추가하기" onclick="addMenu()">
             <br>
             <div id="menuBox">
-                <input type="text" name="menu" id="menu" placeholder="메뉴명" required/>
-                <input type="number" name="price" id="price" placeholder="가격" required/>원
+                <input type="text" name="menu" id="menu" placeholder="메뉴명" required />
+                <input type="number" name="price" id="price" placeholder="가격" required />원
                 <input type="button" value="삭제" onclick="removeMenu(this)">
             </div>
             <div id="field"></div>

@@ -8,24 +8,75 @@
         <h2>STEP 2</h2>
     </div>
     <form name="hospRegistForm" id="restRegistForm" action="/compRegist/registComp/finished" method="post">
-        <input type="checkbox" name="24hours" id="24hours" value="true" onclick="get24hoursValue(event)" />24시간 영업
-        <input type="checkbox" name="noBreak" id="noBreak" value="true" onclick="getNoBreakValue(event)" />점심시간 없음 <%
+        <select name="hospType" required>
+            <option value="">병원유형</option>
+            <option value="의원">병의원</option>
+            <option value="치과의원">치과</option>
+            <option value="한의원">한의원</option>
+        </select>
+
+        <input type="checkbox" name="alldays" id="alldays" value="true" />24시간 영업
+        <input type="checkbox" name="noBreak" id="noBreak" value="true"/>점심시간 없음 <%
             var day=["월요일", "화요일" , "수요일" , "목요일" , "금요일" , "토요일" , "일요일" , "공휴일" , "점심시간" ] %>
-            <% for(var i=0; i < 9; i++){ %>
+            <% for(var d=0; d < 9; d++){ %>
                 <p>
-                    <%=day[i]%>
+                    <%=day[d]%>
                 </p>
                 <div>
-                    <% if (i==8) { %>
-                        <label for="openTime">점심시간 시작</label>
-                        <input type="time" class="timepicker" name="openTime" id="openTime" value="00:00:00" />
-                        <label for="openTime">점심시간 끝</label>
-                        <input type="time" class="timepicker" name="closedTime" id="closedTime" value="00:00:00" />
+                    <% if (d==8) { %>
+                        <div>
+                            <select name="breakStart">브레이크 시작시각(시)
+                                브레이크 시작(시)
+                                <% for(var i=0; i < 24; i++){ %>
+                                    <option value="<%=i%>"><%=i%></option>
+                                    <% } %>
+                            </select>
+                            <select name="breakStart">브레이크 시작시각(분)
+                                브레이크 시작(분)
+                                <% for(var i=0; i < 60; i+=10){ %>
+                                    <option value="<%=i%>"><%=i%></option>
+                                    <% } %>
+                            </select>
+                        </div>
+                        <div>
+                            <select name="breakEnd">브레이크 마감시각(시)
+                                브레이크 끝(시)
+                                <% for(var i=0; i < 24; i++){ %>
+                                    <option value="<%=i%>"><%=i%></option>
+                                    <% } %>
+                            </select>
+                            <select name="breakEnd">브레이크 시작시각(분)
+                                브레이크 끝(분)
+                                <% for(var i=0; i < 60; i+=10){ %>
+                                    <option value="<%=i%>"><%=i%></option>
+                                    <% } %>
+                            </select>
+                        </div>
                         <% }else{ %>
-                            <label for="openTime">오픈시각</label>
-                            <input type="time" class="timepicker" name="openTime" id="openTime" value="00:00:00" />
-                            <label for="openTime">마감시각</label>
-                            <input type="time" class="timepicker" name="closedTime" id="closedTime" value="00:00:00" />
+                            <div>
+                                <select name="openTime" class="runtime">오픈시각(시)
+                                    <% for(var i=0; i < 24; i++){ %>
+                                        <option value="<%=i%>"><%=i%></option>
+                                        <% } %>
+                                </select>
+                                <select name="openTime" class="runtime">오픈시각(분)
+                                    <% for(var i=0; i < 60; i+=10){ %>
+                                        <option value="<%=i%>"><%=i%></option>
+                                        <% } %>
+                                </select>
+                            </div>
+                            <div>
+                                <select name="closedTime" class="runtime">마감시각(시)
+                                    <% for(var i=0; i < 24; i++){ %>
+                                        <option value="<%=i%>"><%=i%></option>
+                                        <% } %>
+                                </select>
+                                <select name="closedTime" class="runtime">마감시각(분)
+                                    <% for(var i=0; i < 60; i+=10){ %>
+                                        <option value="<%=i%>"><%=i%></option>
+                                        <% } %>
+                                </select>
+                            </div>
                             <% } %>
                 </div>
                 <% } %>
