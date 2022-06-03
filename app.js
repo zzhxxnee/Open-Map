@@ -61,7 +61,7 @@ app.use(function(req, res, next) {
 
 
 
-sequelize.sync({alter:false})
+sequelize.sync()
 .then(() => {
     console.log('데이터베이스 연결 성공');
 })
@@ -80,9 +80,9 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-// app.listen(port, () => {
-//   console.log(`Example app listening on port ${port}`)
-// })
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
+})
 
 module.exports = app;
 
