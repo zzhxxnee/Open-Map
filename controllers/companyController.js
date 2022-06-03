@@ -80,11 +80,6 @@ let hospitalInfo = {
     breakEnd: "",
 };
 
-let menuInfo = {
-    price: "",
-    menuName: "",
-    compId: "",
-};
 
 // 업체등록 1 - 이미 존재하는지 확인
 exports.checkExistComp = (req, res) => {
@@ -133,7 +128,7 @@ exports.registCompNext = async (req, res) => {
     });
 
     compInfo.address = req.body.addr;
-    compInfo.userId = "defaultID"; //로그인 구현되면 수정하기
+    compInfo.userId = req.session.user_id; //로그인 구현되면 수정하기
     compInfo.image = req.body.image;
     compInfo.compName = req.body.compName; //not null
     compInfo.bNo = req.body.compNum;

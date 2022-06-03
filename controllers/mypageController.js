@@ -16,7 +16,7 @@ var upload = multer({ storage: _storage });
 
 exports.showMyplaceList = async(req, res) => {
     //let userid = req.user.id;
-    let userid = 'hhs535'
+    let userid = req.session.user_id;
    
     myCafe = await sequelize.query(`SELECT * FROM company C JOIN cafe CA ON C.type = 'C' where C.compId in (SELECT CompanyCompId FROM myplace where UserId = '${userid}') AND CA.CompId = C.compId`, { type: QueryTypes.SELECT });
     myHosp = await sequelize.query(`SELECT * FROM company C JOIN hospital H ON C.type = 'H' where C.compId in (SELECT CompanyCompId FROM myplace where UserId = '${userid}') AND H.CompId = C.compId`, { type: QueryTypes.SELECT });
@@ -470,8 +470,8 @@ exports.configHosp = async(req, res) => {
 }
 
 exports.settingEmail = async(req, res) => {
-  //let userid = req.user.id;
-  let userid = 'hhs535';
+  let userid = req.user.id;
+  //let userid = 'hhs535';
   
   let result = await models.Users.findOne({
     where:{
@@ -494,8 +494,8 @@ exports.settingEmail = async(req, res) => {
 }
 
 exports.settingEmail2 = async(req, res) => {
-  //let userid = req.user.id;
-  let userid = 'hhs535';
+  let userid = req.user.id;
+  //let userid = 'hhs535';
   await sequelize.query(`UPDATE users SET email = ? WHERE id = '${userid}'`, {replacements:[`${req.body.new_email}`], type: QueryTypes.UPDATE });
   res.redirect('/users/MyPage');
 }
