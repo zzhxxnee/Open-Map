@@ -83,7 +83,11 @@ let hospitalInfo = {
 
 // 업체등록 1 - 이미 존재하는지 확인
 exports.checkExistComp = (req, res) => {
-    res.render("checkExistComp");
+    if(!req.session.user_id){
+        res.redirect("/users/login");
+    }else{
+        res.render("checkExistComp");
+    }
 };
 
 exports.searchExistComp = (req, res, next) => {
@@ -115,7 +119,11 @@ exports.searchExistComp = (req, res, next) => {
 
 // 일단 업체 공통 정보 입력 페이지, 여기서 업체 유형 선택하도록 하기
 exports.registComp = (req, res) => {
-    res.render("registComp");
+    if(!req.session.user_id){
+        res.redirect("/users/login");
+    }else{
+        res.render("registComp");   
+    }
 };
 
 exports.registCompNext = async (req, res) => {
