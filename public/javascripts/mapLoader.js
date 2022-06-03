@@ -769,6 +769,11 @@ function removeAllChildNods(el) {
 }
 
 function getClosedRestarantItem(place) {
+    let closeTime = parseInt((place.restClosed).substr(0, 2));
+    if(closeTime >= 24){
+        closeTime -= 24;
+        closeTime = '익일 ' + closeTime;
+    }
 
     let heart='';
 
@@ -784,7 +789,7 @@ function getClosedRestarantItem(place) {
 
     itemStr += '    <span>' + place.address + '</span>';
     itemStr += '    <span>' +  (place.restOpen).substr(0, 2) + ':'+ (place.restOpen).substr(2, 2)   + '</span>'+
-        '   <span> ~ ' +  (place.restClosed).substr(0, 2)  + ':'+ (place.restClosed).substr(2, 2) + '</span>'; 
+        '   <span> ~ ' +  closeTime  + ':'+ (place.restClosed).substr(2, 2) + '</span>'; 
 
     itemStr += '  <span class="tel"> 오늘 마감 </span>' +
         '</div>';           
@@ -796,6 +801,12 @@ function getClosedRestarantItem(place) {
 }
 
 function getClosedCafeItem(place) {
+
+    let closeTime = parseInt((place.cafeClosed).substr(0, 2));
+    if(closeTime > 24){
+        closeTime -= 24;
+        closeTime = '익일 ' + closeTime;
+    }
 
     let heart='';
 
@@ -810,7 +821,7 @@ function getClosedCafeItem(place) {
         '   <h5>' + place.compName + heart +'</h5>';
     itemStr += '    <span>' + place.address + '</span>';
     itemStr += '    <span>' +  (place.cafeOpen).substr(0, 2) + ':'+ (place.cafeOpen).substr(2, 2)  + '</span>'+
-        '   <span> ~ ' +  (place.cafeClosed).substr(0, 2) + ':'+ (place.cafeClosed).substr(2, 2)  + '</span>'; 
+        '   <span> ~ ' +  closeTime + ':'+ (place.cafeClosed).substr(2, 2)  + '</span>'; 
 
     itemStr += '  <span class="tel"> 오늘 마감 </span>' +
         '</div>';           
@@ -822,6 +833,12 @@ function getClosedCafeItem(place) {
 }
 
 function getClosedHospitalItem(place) {
+
+    let closeTime = parseInt((place.hospitalClosed).substr(0, 2));
+    if(closeTime > 24){
+        closeTime -= 24;
+        closeTime = '익일 ' + closeTime;
+    }
 
     let heart='';
 
@@ -836,7 +853,7 @@ function getClosedHospitalItem(place) {
         '   <h5>' + place.compName + heart +'</h5>';
     itemStr += '    <span>' + place.address + '</span>';
     itemStr += '    <span>' +  (place.hospitalOpen).substr(0, 2) + ':'+ (place.hospitalOpen).substr(2, 2)  + '</span>'+
-        '   <span> ~ ' +  (place.hospitalClosed).substr(0, 2) + ':'+ (place.hospitalClosed).substr(2, 2)  + '</span>'; 
+        '   <span> ~ ' +  closeTime + ':'+ (place.hospitalClosed).substr(2, 2)  + '</span>'; 
 
     itemStr += '  <span class="tel"> 오늘 마감 </span>' +
         '</div>';           
@@ -925,6 +942,12 @@ function getTodayClosedHospitalItem(place) {
 
 function getOpenedRestarantItem(place) {
 
+    let closeTime = parseInt((place.restClosed).substr(0, 2));
+    if(closeTime > 24){
+        closeTime -= 24;
+        closeTime = '익일 ' + closeTime;
+    }
+
     let heart='';
 
     if(isLogin  == 'true' && place.isMyPlace == false){
@@ -939,7 +962,7 @@ function getOpenedRestarantItem(place) {
 
     itemStr += '    <span>' + place.address + '</span>';
     itemStr += '    <span>' +  (place.restOpen).substr(0, 2)+ ':'+ (place.restOpen).substr(2, 2)   + '</span>'+
-        '   <span> ~ ' +  (place.restClosed).substr(0, 2)  + ':'+ (place.restClosed).substr(2, 2) + '</span>'; 
+        '   <span> ~ ' +  closeTime  + ':'+ (place.restClosed).substr(2, 2) + '</span>'; 
 
     itemStr += '  <span class="tel"> 영업중 </span>' +
         '</div>';           
@@ -951,6 +974,12 @@ function getOpenedRestarantItem(place) {
 }
 
 function getOpenedCafeItem(place) {
+
+    let closeTime = parseInt((place.cafeClosed).substr(0, 2));
+    if(closeTime > 24){
+        closeTime -= 24;
+        closeTime = '익일 ' + closeTime;
+    }
 
     let heart='';
 
@@ -965,7 +994,7 @@ function getOpenedCafeItem(place) {
         '   <h5>' + place.compName + heart +'</h5>';
     itemStr += '    <span>' + place.address + '</span>';
     itemStr += '    <span>' +  (place.cafeOpen).substr(0, 2) + ':'+ (place.cafeOpen).substr(2, 2)  + '</span>'+
-        '   <span> ~ ' +  (place.cafeClosed).substr(0, 2) + ':'+ (place.cafeClosed).substr(2, 2)  + '</span>'; 
+        '   <span> ~ ' +  closeTime + ':'+ (place.cafeClosed).substr(2, 2)  + '</span>'; 
 
     itemStr += '  <span class="tel"> 영업중 </span>' +
         '</div>';           
@@ -977,6 +1006,12 @@ function getOpenedCafeItem(place) {
 }
 
 function getOpenedHospitalItem(place) {
+
+    let closeTime = parseInt((place.hospitalClosed).substr(0, 2));
+    if(closeTime > 24){
+        closeTime -= 24;
+        closeTime = '익일 ' + closeTime;
+    }
 
     let heart='';
 
@@ -991,7 +1026,7 @@ function getOpenedHospitalItem(place) {
         '   <h5>' + place.compName + heart +'</h5>';
     itemStr += '    <span>' + place.address + '</span>';
     itemStr += '    <span>' +  (place.hospitalOpen).substr(0, 2) + ':'+ (place.hospitalOpen).substr(2, 2)  + '</span>'+
-        '   <span> ~ ' +  (place.hospitalClosed).substr(0, 2) + ':'+ (place.hospitalClosed).substr(2, 2)  + '</span>'; 
+        '   <span> ~ ' +  closeTime + ':'+ (place.hospitalClosed).substr(2, 2)  + '</span>'; 
 
     itemStr += '  <span class="tel"> 영업중 </span>' +
         '</div>';           
