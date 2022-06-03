@@ -21,9 +21,9 @@ exports.showMyplaceList = async(req, res) => {
       res.redirect("/users/login");
     }
 
-    myCafe = await sequelize.query(`SELECT * FROM company C JOIN cafe CA ON C.type = 'C' where C.compId in (SELECT CompanyCompId FROM myplace where UserId = '${userid}') AND CA.CompId = C.compId`, { type: QueryTypes.SELECT });
-    myHosp = await sequelize.query(`SELECT * FROM company C JOIN hospital H ON C.type = 'H' where C.compId in (SELECT CompanyCompId FROM myplace where UserId = '${userid}') AND H.CompId = C.compId`, { type: QueryTypes.SELECT });
-    myRest = await sequelize.query(`SELECT * FROM company C JOIN restaurant R ON C.type = 'R' where C.compId in (SELECT CompanyCompId FROM myplace where UserId = '${userid}') AND R.CompId = C.compId`, { type: QueryTypes.SELECT });
+    myCafe = await sequelize.query(`SELECT * FROM company C JOIN cafe CA ON C.type = 'C' where C.compId in (SELECT CompanyCompId FROM myplace where UserId = '${userid}') AND CA.CompanyCompId = C.compId`, { type: QueryTypes.SELECT });
+    myHosp = await sequelize.query(`SELECT * FROM company C JOIN hospital H ON C.type = 'H' where C.compId in (SELECT CompanyCompId FROM myplace where UserId = '${userid}') AND H.CompanyCompId = C.compId`, { type: QueryTypes.SELECT });
+    myRest = await sequelize.query(`SELECT * FROM company C JOIN restaurant R ON C.type = 'R' where C.compId in (SELECT CompanyCompId FROM myplace where UserId = '${userid}') AND R.CompanyCompId = C.compId`, { type: QueryTypes.SELECT });
   
     let now = moment().format('Hmm') * 1;
     let today = moment().format('ddd').toLowerCase;
@@ -129,17 +129,21 @@ exports.showMypage = async(req, res) => {
   if(!userid){
     res.redirect("/users/login");
   }
-  let isOwner = await models.Users.findOne({
-    attributes: ['isOwner'],
-    where:{
-      id:userid
+  else{
+    let isOwner =  {isOwner:undefined}
+    isOwner = await models.Users.findOne({
+      attributes: ['isOwner'],
+      where:{
+        id:userid
+      }
+    });
+    let myComp=[];
+    if(Boolean(isOwner.isOwner)){
+      myComp = await sequelize.query(`SELECT * FROM company where userId = '${userid}'`, { type: QueryTypes.SELECT });
     }
-  });
-  let myComp=[];
-  if(isOwner.isOwner){
-    myComp = await sequelize.query(`SELECT * FROM company where userId = '${userid}'`, { type: QueryTypes.SELECT });
+    res.render('MyPage',{user:userid, myComp:myComp, isOwner:isOwner.isOwner});
   }
-  res.render('MyPage',{user:userid, myComp:myComp, isOwner:isOwner.isOwner});
+
 }
 
 exports.configcomp = async(req, res) => {

@@ -56,7 +56,7 @@ router.post("/existCompNext", async (req, res) => {
       Company.update({
         bNo: req.body.compNum,
         openDate: req.body.openDate,
-        UserId: "defaultID",
+        UserId: req.session.user_id,
         tel: req.body.tel,
         mon: req.body.mon,
         tue: req.body.tue,

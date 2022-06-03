@@ -80,15 +80,14 @@ let hospitalInfo = {
     breakEnd: "",
 };
 
-let menuInfo = {
-    price: "",
-    menuName: "",
-    compId: "",
-};
 
 // 업체등록 1 - 이미 존재하는지 확인
 exports.checkExistComp = (req, res) => {
-    res.render("checkExistComp");
+    if(!req.session.user_id){
+        res.redirect("/users/login");
+    }else{
+        res.render("checkExistComp");
+    }
 };
 
 exports.searchExistComp = (req, res, next) => {
@@ -120,7 +119,11 @@ exports.searchExistComp = (req, res, next) => {
 
 // 일단 업체 공통 정보 입력 페이지, 여기서 업체 유형 선택하도록 하기
 exports.registComp = (req, res) => {
-    res.render("registComp");
+    if(!req.session.user_id){
+        res.redirect("/users/login");
+    }else{
+        res.render("registComp");   
+    }
 };
 
 exports.registCompNext = async (req, res) => {
@@ -133,7 +136,7 @@ exports.registCompNext = async (req, res) => {
     });
 
     compInfo.address = req.body.addr;
-    compInfo.userId = "defaultID"; //로그인 구현되면 수정하기
+    compInfo.userId = req.session.user_id; //로그인 구현되면 수정하기
     compInfo.image = req.body.image;
     compInfo.compName = req.body.compName; //not null
     compInfo.bNo = req.body.compNum;
