@@ -1,20 +1,22 @@
 (function(){
     var current;
     if(location.pathname === '/'){
-        current = '/'
         document.querySelector('.map').classList.add('active');
         document.querySelector('.navbar__togglebtn').style.display = "flex";
-    } else {
-        current = location.pathname.split('/')[1];
-        var menuItems = document.querySelectorAll('nav li a');
-        var menuList = document.querySelectorAll('nav li');
-        for(let i = 0; i<menuItems.length; i++){
-            if(menuItems[i].getAttribute("href").indexOf(current) !== -1){
-                menuList[i].classList.add('active');
-            }
-        }
+    } 
+    else if((location.pathname).indexOf("users/login") !== -1){
+        document.querySelector('.login').classList.add('active');
     }
-    
+    else if((location.pathname).indexOf("users/sign_up") !== -1){
+        document.querySelector('.signup').classList.add('active');
+    }
+    else if((location.pathname).indexOf("favorite") !== -1){
+        document.querySelector('.favorite').classList.add('active');
+    }
+    else if(((location.pathname).indexOf("mypage") !== -1)
+            || ((location.pathname).indexOf("compRegist") !== -1)){
+        document.querySelector('.mypage').classList.add('active');
+    }
 })();
 
 const togglebtn = document.querySelector('.navbar__togglebtn');

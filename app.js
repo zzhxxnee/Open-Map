@@ -42,7 +42,7 @@ app.use('/node_modules', express.static(path.join(__dirname+'/node_modules')));
 app.use(express.static(path.join(__dirname, 'uploads')));
 
 app.use(function (req, res, next) {
-  res.locals.islogin = req.user;
+  res.locals.islogin = req.session.user_id;
   next();
 });/////////// app.use 라우터들 위에 있어야 함!
 
@@ -79,9 +79,9 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+ app.listen(port, () => {
+   console.log(`Example app listening on port ${port}`)
+ })
 
 module.exports = app;
 
