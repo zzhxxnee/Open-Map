@@ -6,13 +6,13 @@
     <body>
 
         <div class="top">
-            <a href = "/mypage"><i class="fa-solid fa-arrow-left back"></i></a>
+            <a href ="/mypage/leave"><i class="fa-solid fa-arrow-left back"></i></a>
             <div class="right">
-                <div class="title">비밀번호를 확인하세요</div>
-                <div class="note">이메일 주소를 변경하려면 비밀번호를 입력하여 계속하세요.</div>
+                <div class="title">회원 탈퇴</div>
+                <div class="note">회원 탈퇴를 하게되면 회원님과 관련된 모든 데이터가 영구 삭제되며 복구가 불가능합니다.
+                    정말로 탈퇴하시겠습니까?</div>
 
-                <form action="/mypage/settings/email" method="post">
-                    <p><input type="password" name="password" placeholder="비밀번호"></p>
+                <form action="/mypage/leave/completed" method="post">
                     <p><input type="submit" value="확인"></p>
                 </form>
 

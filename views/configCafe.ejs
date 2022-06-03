@@ -6,19 +6,19 @@
 <body>
         <div class="config">
             <form action = "/mypage/config/cafe"  method="post" enctype="multipart/form-data">
-                <input type="hidden" name="comp_id" value=<%= myCafe.compId %> >
+                <input type="hidden" name="comp_id" value="<%= myCafe.compId %>" >
 
                 <label for="compName">업체이름</label>
                 <br>
-                <input name="compName" id="compName" type="text" value = <%= myCafe.compName %> disabled >
+                <input name="compName" id="compName" type="text" value = "<%= myCafe.compName %>" disabled >
                 <br>
                 <label for="addr">도로명주소</label>
                 <br>
-                <input name="addr" id="addr" type="text" required placeholder=<%= myCafe.address %> /disabled >
+                <input name="addr" id="addr" type="text" required placeholder="<%= myCafe.address %>" disabled >
                 <br>
                 <label for="telNum">전화번호</label>
                 <br>
-                <input name="telNum" id="telNum" type="tel" placeholder=<%= myCafe.tel %> >
+                <input name="telNum" id="telNum" type="tel" placeholder="<%= myCafe.tel %>" >
                 <br>
                 <label for="picture">업체사진</label>
                 <br>
