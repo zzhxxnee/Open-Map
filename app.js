@@ -11,7 +11,6 @@ var usersRouter = require('./routes/users');
 const compRouter = require('./routes/compRegist');
 const myPageRouter = require('./routes/mypage');
 var sequelize = require('./models').sequelize; // mysql 시퀄라이즈 모델
-
 var app = express();
 const port = 3000;
 
@@ -43,7 +42,7 @@ app.use('/node_modules', express.static(path.join(__dirname+'/node_modules')));
 app.use(express.static(path.join(__dirname, 'uploads')));
 
 app.use(function (req, res, next) {
-  res.locals.islogin = req.user;
+  res.locals.islogin = req.session.user_id;
   next();
 });/////////// app.use 라우터들 위에 있어야 함!
 
