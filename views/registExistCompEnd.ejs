@@ -1,0 +1,18 @@
+<head>
+    <style>
+        body{
+            margin: 100px;
+        }
+    </style>
+    <script type="text/javascript">
+        window.history.forward();
+        function noBack(){window.history.forward();}
+       </script>
+       
+</head>
+
+<body onload="noBack();" onpageshow="if(event.persisted) noBack();" onunload="">
+    등록이 완료되었습니다.<br>
+    <a href="/users/mypage">마이페이지</a>에서 확인해보세요.
+    <br>
+</body>

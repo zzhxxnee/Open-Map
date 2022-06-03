@@ -11,7 +11,6 @@ var usersRouter = require('./routes/users');
 const compRouter = require('./routes/compRegist');
 const myPageRouter = require('./routes/mypage');
 var sequelize = require('./models').sequelize; // mysql 시퀄라이즈 모델
-
 var app = express();
 const port = 3000;
 
