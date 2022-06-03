@@ -1,5 +1,6 @@
 <head>
-    <script language="javascript" src="/javascripts/registComp.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.js"
+        integrity="sha256-HwWONEZrpuoh951cQD1ov2HUK5zA5DwJ1DNUXaM6FsY=" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -8,31 +9,58 @@
     <form name="checkExistForm" id="checkExistForm" action="/compRegist/search" method="post">
         <label for="compName"></label>
         <br>
-        <input type="text" name="compName" id="compName" placeholder="업체명을 검색해주세요." required/>
-        <input type="button" value="검색하기"/>
+        <input type="text" name="compName" id="compName" placeholder="업체명을 검색해주세요." required />
+        <input type="submit" value="검색하기" />
     </form>
 
     <div>
-        <table>
-            <tr>
-                <td>업체명 --</td>
-                <td>주소</td>
-            </tr>
-            <% for(let post of searchComp) { %>
-                <tr class="clickedComp">
-                    <td>
-                        <%= post.compName %>
-                    </td>
-                    <td>
-                        <%= post.address %>
-                    </td>
+        <form name="searchForm" action="/compRegist/existCompRegist" method="post">
+            <table id="example-table-1">
+                <tr>
+                    <td>업체명 --</td>
+                    <td>주소</td>
                 </tr>
-                <% } %>
-        </table>
+                <% for(let post of searchComp) { %>
+                    <tr class="clickedComp">
+                        <td>
+                            <%= post.compName %>
+                        </td>
+                        <td>
+                            <%= post.address %>
+                        </td>
+                        <script>
+                            // 테이블의 Row 클릭시 값 가져오기
+                            $("#example-table-1 tr").click(function () {
+
+                                var str = ""
+
+                                // 현재 클릭된 Row(<tr>)
+                                var tr = $(this);
+                                var td = tr.children();
+                                cname = td.eq(0).text().trim();
+                                caddr = td.eq(1).text().trim();
+                                console.log(cname);
+                                console.log(caddr);
+                                document.getElementById("searchCompName").value = cname;
+                                document.getElementById("searchCompAddr").value = caddr;
+
+
+                                var form = document.searchForm;
+                                form.submit();
+                            });
+                        </script>
+
+                        <input type="hidden" id="searchCompName" name="searchCompName">
+                        <input type="hidden" id="searchCompAddr" name="searchCompAddr">
+                    </tr>
+                    <% } %>
+
+            </table>
+        </form>
     </div>
 
 
     <div>
-        <input type="button" value="내 업체가 없어요" onclick="location.href='/compRegist/registComp'"/>
+        <input type="button" value="내 업체가 없어요" onclick="location.href='/compRegist/registComp'" />
     </div>
 </body>

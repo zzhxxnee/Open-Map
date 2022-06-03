@@ -1,7 +1,7 @@
 require("dotenv").config();
 const db = require("../models/index"),
+    Company = db.company;
     User = db.users,
-    Company = db.company,
     Rest = db.restaurant,
     Cafe = db.cafe,
     Hosp = db.hospital,
@@ -98,6 +98,7 @@ exports.searchExistComp = (req, res, next) => {
             compName: {
                 [Op.like]: "%" + searchWord + "%",
             },
+            UserId : null //업체에 userid가 등록되지 않은 것만 출력
         },
     })
         .then((result) => {
@@ -108,6 +109,7 @@ exports.searchExistComp = (req, res, next) => {
             console.log(err);
         });
 };
+
 
 // 여기서 있으면 그 업체 클릭 -> 이미등록된업체로..(?)
 
@@ -161,7 +163,7 @@ exports.registCompNext = async (req, res) => {
 };
 
 exports.registFinished = async (req, res) => {
-    res.send(req.body);
+    res.send("mypage");
     Company.create({
         image: compInfo.image,
         compName: compInfo.compName,

@@ -18,16 +18,16 @@
             <form name="compRegistForm" id="compRegistForm" method="post">
                 <label for="name">대표자명</label>
                 <br>
-                <input type="text" name="name" id="name" placeholder="사업자등록증에 적힌 성명을 입력해주세요." />
+                <input type="text" class="input_text" name="name" id="name" placeholder="사업자등록증에 적힌 성명을 입력해주세요." />
                 <br />
                 <label for="compNum">사업자 등록번호</label>
                 <br>
-                <input type="text" name="compNum" id="compNum" placeholder="- 없이 10자리 숫자만 입력해주세요." />
+                <input type="text" class="input_text" name="compNum" id="compNum" placeholder="- 없이 10자리 숫자만 입력해주세요." />
                 <br />
                 <label for="openDate">개업일자</label>
                 <br>
-                <input type="text" name="openDate" id="openDate" placeholder="YYYYMMDD 형식으로 입력해주세요. (예: 20220514)" />
-                <input type="button" value="사업자 등록정보 확인" onclick="gocheckComp()" />
+                <input type="text" class="input_text" name="openDate" id="openDate" placeholder="YYYYMMDD 형식으로 입력해주세요. (예: 20220514)" />
+                <input type="button" class="btn" value="사업자 등록정보 확인" onclick="gocheckComp()" />
                 <br>
 
                 <label for="compType">업체 종류 (선택 필수)</label>
@@ -41,18 +41,18 @@
                 <br/>
                 <label for="compName">업체이름 (필수)</label>
                 <br>
-                <input name="compName" id="compName" type="text" required placeholder="오픈맵에 표시할 업체의 이름을 입력해주세요" />
+                <input name="compName" class="input_text" id="compName" type="text" required placeholder="오픈맵에 표시할 업체의 이름을 입력해주세요" />
                 <br>
                 <label for="addr">도로명주소 (필수)</label>
                 <br>
-                <input name="addr" id="addr" type="text" required placeholder="도로명주소" readonly/>
+                <input name="addr" class="input_text" id="addr" type="text" required placeholder="도로명주소" readonly/>
                 <!-- <input name="addrDetail" type="text" placeholder="고객입력 상세주소" />
             <input name="zipNo" type="text" placeholder="우편번호" /> -->
-                <input type="button" value="주소검색" onclick="goPopup()" />
+                <input type="button" class="btn" value="주소검색" onclick="goPopup()" />
                 <br>
                 <label for="telNum">전화번호</label>
                 <br>
-                <input name="telNum" id="telNum" type="tel" />
+                <input name="telNum" class="input_text" id="telNum" type="tel" />
                 <br>
                 <label for="image">업체사진</label>
                 <br>
@@ -76,7 +76,7 @@
                 </div>
                 <br>
 
-                <input type="button" value="NEXT" onclick="goNext()"/>
+                <input type="button" class="btn" value="NEXT" onclick="goNext()"/>
             </form>
         </div>
 </body>
