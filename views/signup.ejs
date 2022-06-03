@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Document</title>
-    <script type="text/javascript" src="../public/javascripts/idCheck.js" defer></script>
+    <script type="text/javascript" src="../javascripts/validation.js" defer></script>
 </head>
 <body>
 <h3>회원 가입</h3>
@@ -12,7 +12,7 @@
         <tr>
             <td>아이디 : </td>
             <td><input type="text" name="userid" id="userid"></td>
-            <td><input type="submit" id = "idcheck_btn" value="중복확인"></td>
+            <td><input type="button" onclick="idCheck()" value="중복확인"></td>
             <span id="msg"></span>
         </tr>
         <tr>

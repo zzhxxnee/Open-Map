@@ -1,0 +1,113 @@
+<head>
+    <title>openMap</title>
+    <meta charset="utf-8">
+</head>
+
+<body>
+        <div class="config">
+            <form action = "/mypage/config/cafe"  method="post" enctype="multipart/form-data">
+                <input type="hidden" name="comp_id" value="<%= myCafe.compId %>" >
+
+                <label for="compName">업체이름</label>
+                <br>
+                <input name="compName" id="compName" type="text" value = "<%= myCafe.compName %>" disabled >
+                <br>
+                <label for="addr">도로명주소</label>
+                <br>
+                <input name="addr" id="addr" type="text" required placeholder="<%= myCafe.address %>" disabled >
+                <br>
+                <label for="telNum">전화번호</label>
+                <br>
+                <input name="telNum" id="telNum" type="tel" placeholder="<%= myCafe.tel %>" >
+                <br>
+                <label for="picture">업체사진</label>
+                <br>
+                <input name="picture" id="picture" type="file" accept="image/png, image/jpeg">
+                <br>
+                <p>외부사진 혹은 내부사진을 업로드 해주세요.</p>
+                <div class="leave">
+                    <input type='checkbox' name="todayClosed" id="todayClosed" value="true" <% if(myCafe.todayClosed){ %> checked <% } %> />오늘휴무
+                    <input type='checkbox' name="earlyClosed" id="earlyClosed" value="true" <% if(myCafe.earlyClosed){ %> checked <% } %> />조기마감
+                    <input type='checkbox' name="vacation" id="vacation" value="true" <% if(myCafe.vacation){ %> checked <% } %> />단기휴무
+                </div>
+                <br>
+                <label for="name">정기휴무</label>
+                <br>
+                <div class="closeDay">
+                    <input type='checkbox' name="mon" id="mon" value="true" <% if(myCafe.mon){ %> checked <% } %> />월요일
+                    <input type='checkbox' name="tue" id="tue" value="true" <% if(myCafe.tue){ %> checked <% } %> />화요일
+                    <input type='checkbox' name="wed" id="wed" value="true" <% if(myCafe.wed){ %> checked <% } %> />수요일
+                    <input type='checkbox' name="thu" id="thu" value="true" <% if(myCafe.thu){ %> checked <% } %> />목요일
+                    <input type='checkbox' name="fri" id="fri" value="true" <% if(myCafe.fri){ %> checked <% } %> />금요일
+                    <input type='checkbox' name="sat" id="sat" value="true" <% if(myCafe.sat){ %> checked <% } %> />토요일
+                    <input type='checkbox' name="sun" id="sun" value="true" <% if(myCafe.sun){ %> checked <% } %> />일요일
+                    <br>
+                </div>
+                <br>
+                <div>
+                    <label for="openTime">오픈시각</label>
+                    <input type="time" class="timepicker" name="openTime" id="openTime" min="00:00" max="23:59" value=<%= myCafe.cafeOpen %> />
+                    <label for="openTime">마감시각</label>
+                    <input type="time" class="timepicker" name="closedTime" id="closedTime" min="00:00" max="23:59" value=<%= myCafe.cafeClosed %> />
+                    <input type="checkbox" name="tomorrow" id="tomorrow" value="true" />익일
+                    <input type="checkbox" name="24hours" id="24hours" value="true" onclick='get24hoursValue(event)' />24시간 영업
+                </div>
+                <div>
+                    <label for="cafeType">업종(선택 필수)</label>
+                    <select name="cafeType" , id="restType" required>
+                        <option value="">업종</option>
+                        <option value="커피숍" <% if(myCafe.cafeType == '커피숍'){ %> selected <% } %> >커피숍  </option>
+                        <option value="편의점"  <% if(myCafe.cafeType == '편의점'){ %> selected <% } %> >편의점 </option>
+                        <option value="패스트푸드" <% if(myCafe.cafeType == '패스트푸드'){ %> selected <% } %> >패스트푸드 </option>
+                    </select>
+                </div>
+        
+                <div>
+                    <label for="menu">주요메뉴</label>
+                    <input type="button" value="메뉴 추가하기" onclick="addMenu()">
+                    <br>
+                    <div id="menuBox">
+                        <% menu.forEach(m => { %> 
+                        <div>
+                            <input type="text" name="menu" id="menu" placeholder="메뉴명" value=<%= m.menuName%>>
+                            <input type="number" name="price" id="price" placeholder="가격" value=<%= m.price%>>원
+                        </div>
+                        <% }); %>
+                    </div>
+                    <div id="field"></div>
+                </div>
+        
+                <input type="submit" value="업체 정보 수정하기" />
+            </form>
+        </div>
+</body>
+
+
+<script>
+    function get24hoursValue(event) {
+    const openForm = document.getElementById('openTime');
+    const closedForm = document.getElementById('closedTime');
+    const tomorrowForm = document.getElementById('tomorrow');
+
+        if (event.target.checked) {
+            openForm.disabled = true;
+            closedForm.disabled = true;
+            tomorrowForm.disabled = true;
+            tomorrowForm.checked = false;
+            document.getElementById('openTime').value="00:00";
+            document.getElementById('closedTime').value="23:59";
+        } else {
+            openForm.disabled = false;
+            closedForm.disabled = false;
+            tomorrowForm.disabled = false;
+        }
+    };
+
+    function addMenu(){
+    var newMenu = document.createElement('div');
+    newMenu.innerHTML = `<input type="text" name="menu" id="menu" placeholder="메뉴명">
+                        <input type="number" name="price" id="price" placeholder="가격">원`;
+    document.getElementById('menuBox').append(newMenu);
+    };
+
+</script>

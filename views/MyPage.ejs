@@ -1,0 +1,113 @@
+<html>
+    <head>
+        <script src="https://kit.fontawesome.com/e2c07342b0.js" crossorigin="anonymous"></script>
+    </head>
+
+    <body>
+        <div class = "helloUser_box">
+            <h1><%= user %>님, 안녕하세요!</h1>
+        </div>
+
+        <div class = "config_box">
+            <div class = "account_config">
+                <div class="category_name">
+                    <h3>계정 정보</h3>
+                </div>
+                <ul>
+                    <li><a href="/mypage/settings/email">이메일 변경</a></li>
+                    <li><a href="#">비밀번호 변경</a></li>
+                </ul>
+                <a href="/mypage/leave">회원 탈퇴하기</a>
+            </div>
+            <% if(isOwner) { %>
+            <div class = "company_config">
+                <div class="category_name">
+                    <h3>내 업체</h3>
+                    <a href="/compRegist"><i class="fa-solid fa-plus"></i></a>
+                </div>
+                <div class="my_company_list">
+                    <% if(Object.keys(myComp).length == 0) { %>
+                        <div>아직 등록한 업체가 없어요!</div>
+                    <% } else { %>
+                        <% myComp.forEach( c => { %>
+                            <div class="content">
+                                <image class="image" src=<%= c.image%> width="80px" height="80px">
+                                <span class="compName"><%=c.compName%></span>
+                                <span class="address"><%=c.address%></span>
+                                <form action="/mypage/config/comp" method="post">
+                                    <input type="submit" value="수정">
+                                    <input type="hidden" name="comp_type" value= <%= c.type %> >
+                                    <input type="hidden" name="comp_id" value=<%= c.compId %> >
+                                </form>
+                                <form action="/mypage/delete/comp" method="post">
+                                    <input type="submit" value="삭제">
+                                    <input type="hidden" name="comp_type" value= <%= c.type %> >
+                                    <input type="hidden" name="comp_id" value=<%= c.compId %> >
+                                </form>
+                            </div>
+                        <% }); %>
+                    <% } %>
+                </div>
+            </div>
+            <% } %>
+        </div>
+    <body>
+
+</html>
+
+<style>
+    :root {
+        --main-bg-color: #FBF9FC;
+        --text-color: rgb(165, 165, 165);
+        --openmap-orange: #FE8201;
+        --openmap-orange-light: #ffcf9d;
+        --openmap-purple: #894AFF;
+        --openmap-green: #77C3CA;
+    }
+
+    .config_box{
+        width: 1200px;
+        height: 450px;
+        display:flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+    }
+
+    .category_name{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .my_company_list {
+        overflow-y: scroll;
+        width: 546px;
+        height: 360px;
+    }
+
+    .content{
+        display: flex;
+        flex-direction: column;
+        align-items:flex-start;
+        justify-content: center;
+        margin-bottom: 19px;
+        width: 500px;
+        height: 130px;
+        background-color: var(--main-bg-color);
+        border-radius: 20px;
+        line-height:150%;
+    }
+
+    .compName{
+        display: block;
+        font-size: 20px;
+        font-weight: 600;
+        line-height:180%;
+    }
+
+    .address{
+        display:block;
+        color:rgb(107, 107, 107);
+        font-size: 13px;
+    }
+</style>
