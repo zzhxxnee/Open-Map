@@ -26,9 +26,9 @@ exports.Initialize = async (req, res) => {
         });
 
         if(req.session.user_id){
-            res.render("index", {myPlaces : myPlaceId, apikey : process.env.KAKAO_JS_KEY, isLogin: 'true'});
+            res.render("main/index", {myPlaces : myPlaceId, apikey : process.env.KAKAO_JS_KEY, isLogin: 'true'});
         }else{
-            res.render("index", {myPlaces : myPlaceId, apikey : process.env.KAKAO_JS_KEY, isLogin: 'false'});
+            res.render("main/index", {myPlaces : myPlaceId, apikey : process.env.KAKAO_JS_KEY, isLogin: 'false'});
         }
 
     }catch(err){
