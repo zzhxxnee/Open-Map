@@ -4,10 +4,35 @@ let init = 0;
 const closedMarkerImageSrc = "//localhost:3000/images/closed.png";  // 마커이미지의 주소입니다. 스프라이트 이미지 입니다
 const holidayMarkerImageSrc = "//localhost:3000/images/holiday.png";
 const opendMarkerImageSrc = "//localhost:3000/images/open.png";
-let companyTotal = closedCafe.concat(openedCafe, todayClosedCafe, closedRestaurant, openedRestaurant, todayClosedRestaurant, closedHospital, openedHospital, todayClosedHospital);
 const listEl = document.getElementById('placesList');
 const menuEl = document.getElementById('slideNav');
 let selectedPlace;
+let companyTotal;
+let currentBounds;
+let swLat;
+let swLng;
+let neLat;
+let neLng;
+
+let closedRestaurantMarkers = [];
+let closedCafeMarkers = [];
+let closedHospitalMarkers = [];
+let todayClosedRestaurantMarkers = [];
+let todayClosedCafeMarkers = [];
+let todayClosedHospitalMarkers = [];
+let openedRestaurantMarkers = [];
+let openedCafeMarkers = [];
+let openedHospitalMarkers = [];
+
+let closedRestaurant = []; // 오늘 마감 식당 객체를 가지고 있을 배열입니다
+let closedCafe = []; // 오늘 마감 휴게음식점 객체를 가지고 있을 배열입니다
+let closedHospital = []; // 오늘 마감 병원 객체를 가지고 있을 배열입니다
+let todayClosedRestaurant = []; // 오늘 휴무 식당 객체를 가지고 있을 배열입니다
+let todayClosedCafe = []; // 오늘 휴무 휴게음식점 객체를 가지고 있을 배열입니다
+let todayClosedHospital = []; // 오늘 휴무 병원 객체를 가지고 있을 배열입니다
+let openedRestaurant = []; // 영업중인 식당 객체를 가지고 있을 배열입니다
+let openedCafe = []; // 영업중인 휴게음식점 객체를 가지고 있을 배열입니다
+let openedHospital = []; // 영업중인 병원 객체를 가지고 있을 배열입니다
 
 let closedRestaurantMarkers = [];
 let closedCafeMarkers = [];
@@ -41,25 +66,143 @@ if(init === 0){
     init++;
 }
 
-createClosedRestaurantMarkers(); 
-setClosedRestaurantMarkers(map);
-createClosedCafeMarkers();
-setClosedCafeMarkers(map);
-createClosedHospitalMarkers();
-setClosedHospitalMarkers(map);
-createTodayClosedRestaurantMarkers();
-setTodayClosedRestaurantMarkers(map);
-createTodayClosedCafeMarkers();
-setTodayClosedCafeMarkers(map);
-createTodayClosedHospitalMarkers();
-setTodayClosedHospitalMarkers(map);
-createOpenedRestaurantMarkers();
-setOpenedRestaurantMarkers(map);
-createOpenedCafeMarkers();
-setOpenedCafeMarkers(map);
-createOpenedHospitalMarkers();
-setOpenedHospitalMarkers(map)
 
+// 지도가 이동, 확대, 축소로 인해 지도영역이 변경되면 마지막 파라미터로 넘어온 함수를 호출하도록 이벤트를 등록합니다
+kakao.maps.event.addListener(map, 'bounds_changed', function() {             
+    
+    // 지도 영역정보를 얻어옵니다 
+    currentBounds = map.getBounds();
+    
+    // 영역정보의 남서쪽 정보를 얻어옵니다 
+    swLat = currentBounds.getSouthWest().getLat();
+    swLng = currentBounds.getSouthWest().getLng();
+    
+    // 영역정보의 북동쪽 정보를 얻어옵니다 
+    neLat = currentBounds.getNorthEast().getLat();
+    neLng = currentBounds.getNorthEast().getLng();
+
+    const inputdata = {'swLat' : swLat, 'swLng' : swLng, 'neLat' : neLat, 'neLng' : neLng};
+    sendBoundAjax('http://localhost:3000/setbound-ajax', inputdata)
+});
+
+//send함수 'http://localhost:3000/setbound-ajax'주소에 inputdata를 보냅니다
+function sendBoundAjax(url, data) {
+
+    let ajaxData = data;
+    ajaxData = JSON.stringify(ajaxData);
+    
+    //data에 inputdata를 json형식으로 넣고 이를 xmlhttprequest를 통해 post방식으로 보냅니다
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', url);
+    xhr.setRequestHeader('Content-type', "application/json");
+    xhr.send(ajaxData);
+    
+    xhr.addEventListener('load', function () {
+        const result =  JSON.parse(xhr.responseText);
+        closedRestaurant = result.closedRestaurantTotal;
+        for(let i = 0; i < closedRestaurant.length; i++){
+            for(let j=0; j < MyPlaces.length; j++){
+                if(MyPlaces.includes(closedRestaurant[i].compId)){
+                    closedRestaurant[i].isMyPlace = true;
+                }
+                closedRestaurant[i].isMyPlace = false;
+            }
+        }
+        closedCafe = result.closedCafeTotal;
+        for(let i = 0; i < closedCafe.length; i++){
+            for(let j=0; j < MyPlaces.length; j++){
+                if(MyPlaces.includes(closedCafe[i].compId)){
+                    closedCafe[i].isMyPlace = true;
+                }
+                closedCafe[i].isMyPlace = false;
+            }
+        }
+        closedHospital = result.closedHospitalTotal;
+        for(let i = 0; i < closedHospital.length; i++){
+            for(let j=0; j < MyPlaces.length; j++){
+                if(MyPlaces.includes(closedHospital[i].compId)){
+                    closedHospital[i].isMyPlace = true;
+                }
+                closedHospital[i].isMyPlace = false;
+            }
+        }
+        todayClosedRestaurant = result.todayClosedRestaurant;
+        for(let i = 0; i < todayClosedRestaurant.length; i++){
+            for(let j=0; j < MyPlaces.length; j++){
+                if(MyPlaces.includes(todayClosedRestaurant[i].compId)){
+                    todayClosedRestaurant[i].isMyPlace = true;
+                }
+                todayClosedRestaurant[i].isMyPlace = false;
+            }
+        }
+        todayClosedCafe = result.todayClosedCafe;
+        for(let i = 0; i < todayClosedCafe.length; i++){
+            for(let j=0; j < MyPlaces.length; j++){
+                if(MyPlaces.includes(todayClosedCafe[i].compId)){
+                    todayClosedCafe[i].isMyPlace = true;
+                }
+                todayClosedCafe[i].isMyPlace = false;
+            }
+        }
+        todayClosedHospital = result.todayClosedHospital;
+        for(let i = 0; i < todayClosedHospital.length; i++){
+            for(let j=0; j < MyPlaces.length; j++){
+                if(MyPlaces.includes(todayClosedHospital[i].compId)){
+                    todayClosedHospital[i].isMyPlace = true;
+                }
+                todayClosedHospital[i].isMyPlace = false;
+            }
+        }
+        openedRestaurant = result.openedRestaurant;
+        for(let i = 0; i < openedRestaurant.length; i++){
+            for(let j=0; j < MyPlaces.length; j++){
+                if(MyPlaces.includes(openedRestaurant[i].compId)){
+                    openedRestaurant[i].isMyPlace = true;
+                }
+                openedRestaurant[i].isMyPlace = false;
+            }
+        }
+        openedCafe = result.openedCafe;
+        for(let i = 0; i < openedCafe.length; i++){
+            for(let j=0; j < MyPlaces.length; j++){
+                if(MyPlaces.includes(openedCafe[i].compId)){
+                    openedCafe[i].isMyPlace = true;
+                }
+                openedCafe[i].isMyPlace = false;
+            }
+        }
+        openedHospital = result.openedHospital;
+        for(let i = 0; i < openedHospital.length; i++){
+            for(let j=0; j < MyPlaces.length; j++){
+                if(MyPlaces.includes(openedHospital[i].compId)){
+                    openedHospital[i].isMyPlace = true;
+                }
+                openedHospital[i].isMyPlace = false;
+            }
+        }
+        companyTotal = closedCafe.concat(openedCafe, todayClosedCafe, closedRestaurant, openedRestaurant, todayClosedRestaurant, closedHospital, openedHospital, todayClosedHospital);
+        removeAllChildNods(listEl);
+        removeMarker();
+        createClosedRestaurantMarkers(); 
+        setClosedRestaurantMarkers(map);
+        createClosedCafeMarkers();
+        setClosedCafeMarkers(map);
+        createClosedHospitalMarkers();
+        setClosedHospitalMarkers(map);
+        createTodayClosedRestaurantMarkers();
+        setTodayClosedRestaurantMarkers(map);
+        createTodayClosedCafeMarkers();
+        setTodayClosedCafeMarkers(map);
+        createTodayClosedHospitalMarkers();
+        setTodayClosedHospitalMarkers(map);
+        createOpenedRestaurantMarkers();
+        setOpenedRestaurantMarkers(map);
+        createOpenedCafeMarkers();
+        setOpenedCafeMarkers(map);
+        createOpenedHospitalMarkers();
+        setOpenedHospitalMarkers(map);
+    });
+}
 
 // 장소 검색 객체를 생성합니다
 const ps = new kakao.maps.services.Places(); 
@@ -769,7 +912,7 @@ function removeAllChildNods(el) {
 }
 
 function getClosedRestarantItem(place) {
-    let closeTime = parseInt((place.restClosed).substr(0, 2));
+    let closeTime = (place.restClosed)/100;
     if(closeTime >= 24){
         closeTime -= 24;
         closeTime = '익일 ' + closeTime;
@@ -788,8 +931,8 @@ function getClosedRestarantItem(place) {
         '   <h5>' + place.compName + heart +'</h5>';
 
     itemStr += '    <span>' + place.address + '</span>';
-    itemStr += '    <span>' +  (place.restOpen).substr(0, 2) + ':'+ (place.restOpen).substr(2, 2)   + '</span>'+
-        '   <span> ~ ' +  closeTime  + ':'+ (place.restClosed).substr(2, 2) + '</span>'; 
+    itemStr += '    <span>' +  (place.restOpen)/100 + ':'+ (place.restOpen)%100   + '</span>'+
+        '   <span> ~ ' +  closeTime  + ':'+ (place.restClosed)%100 + '</span>'; 
 
     itemStr += '  <span class="tel"> 오늘 마감 </span>' +
         '</div>';           
@@ -802,7 +945,7 @@ function getClosedRestarantItem(place) {
 
 function getClosedCafeItem(place) {
 
-    let closeTime = parseInt((place.cafeClosed).substr(0, 2));
+    let closeTime = (place.cafeClosed)/100;
     if(closeTime > 24){
         closeTime -= 24;
         closeTime = '익일 ' + closeTime;
@@ -820,8 +963,8 @@ function getClosedCafeItem(place) {
     itemStr = '<div class="info">' +
         '   <h5>' + place.compName + heart +'</h5>';
     itemStr += '    <span>' + place.address + '</span>';
-    itemStr += '    <span>' +  (place.cafeOpen).substr(0, 2) + ':'+ (place.cafeOpen).substr(2, 2)  + '</span>'+
-        '   <span> ~ ' +  closeTime + ':'+ (place.cafeClosed).substr(2, 2)  + '</span>'; 
+    itemStr += '    <span>' +  (place.cafeOpen)/100 + ':'+ (place.cafeOpen)%100  + '</span>'+
+        '   <span> ~ ' +  closeTime + ':'+ (place.cafeClosed)%100  + '</span>'; 
 
     itemStr += '  <span class="tel"> 오늘 마감 </span>' +
         '</div>';           
@@ -834,7 +977,7 @@ function getClosedCafeItem(place) {
 
 function getClosedHospitalItem(place) {
 
-    let closeTime = parseInt((place.hospitalClosed).substr(0, 2));
+    let closeTime = (place.hospitalClosed)/100;
     if(closeTime > 24){
         closeTime -= 24;
         closeTime = '익일 ' + closeTime;
@@ -852,8 +995,8 @@ function getClosedHospitalItem(place) {
     itemStr = '<div class="info">' +
         '   <h5>' + place.compName + heart +'</h5>';
     itemStr += '    <span>' + place.address + '</span>';
-    itemStr += '    <span>' +  (place.hospitalOpen).substr(0, 2) + ':'+ (place.hospitalOpen).substr(2, 2)  + '</span>'+
-        '   <span> ~ ' +  closeTime + ':'+ (place.hospitalClosed).substr(2, 2)  + '</span>'; 
+    itemStr += '    <span>' +  (place.hospitalOpen)/100 + ':'+ (place.hospitalOpen)%100  + '</span>'+
+        '   <span> ~ ' +  closeTime + ':'+ (place.hospitalClosed)%100  + '</span>'; 
 
     itemStr += '  <span class="tel"> 오늘 마감 </span>' +
         '</div>';           
@@ -942,7 +1085,7 @@ function getTodayClosedHospitalItem(place) {
 
 function getOpenedRestarantItem(place) {
 
-    let closeTime = parseInt((place.restClosed).substr(0, 2));
+    let closeTime = (place.restClosed)/100;
     if(closeTime > 24){
         closeTime -= 24;
         closeTime = '익일 ' + closeTime;
@@ -961,8 +1104,8 @@ function getOpenedRestarantItem(place) {
         '   <h5>' + place.compName + heart +'</h5>';
 
     itemStr += '    <span>' + place.address + '</span>';
-    itemStr += '    <span>' +  (place.restOpen).substr(0, 2)+ ':'+ (place.restOpen).substr(2, 2)   + '</span>'+
-        '   <span> ~ ' +  closeTime  + ':'+ (place.restClosed).substr(2, 2) + '</span>'; 
+    itemStr += '    <span>' +  (place.restOpen)/100+ ':'+ (place.restOpen)%100   + '</span>'+
+        '   <span> ~ ' +  closeTime  + ':'+ (place.restClosed)%100 + '</span>'; 
 
     itemStr += '  <span class="tel"> 영업중 </span>' +
         '</div>';           
@@ -975,7 +1118,7 @@ function getOpenedRestarantItem(place) {
 
 function getOpenedCafeItem(place) {
 
-    let closeTime = parseInt((place.cafeClosed).substr(0, 2));
+    let closeTime = (place.cafeClosed)/100;
     if(closeTime > 24){
         closeTime -= 24;
         closeTime = '익일 ' + closeTime;
@@ -993,8 +1136,8 @@ function getOpenedCafeItem(place) {
     itemStr = '<div class="info">' +
         '   <h5>' + place.compName + heart +'</h5>';
     itemStr += '    <span>' + place.address + '</span>';
-    itemStr += '    <span>' +  (place.cafeOpen).substr(0, 2) + ':'+ (place.cafeOpen).substr(2, 2)  + '</span>'+
-        '   <span> ~ ' +  closeTime + ':'+ (place.cafeClosed).substr(2, 2)  + '</span>'; 
+    itemStr += '    <span>' +  (place.cafeOpen)/100 + ':'+ (place.cafeOpen)%100  + '</span>'+
+        '   <span> ~ ' +  closeTime + ':'+ (place.cafeClosed)%100  + '</span>'; 
 
     itemStr += '  <span class="tel"> 영업중 </span>' +
         '</div>';           
@@ -1007,7 +1150,7 @@ function getOpenedCafeItem(place) {
 
 function getOpenedHospitalItem(place) {
 
-    let closeTime = parseInt((place.hospitalClosed).substr(0, 2));
+    let closeTime = (place.hospitalClosed)/100;
     if(closeTime > 24){
         closeTime -= 24;
         closeTime = '익일 ' + closeTime;
@@ -1025,8 +1168,8 @@ function getOpenedHospitalItem(place) {
     itemStr = '<div class="info">' +
         '   <h5>' + place.compName + heart +'</h5>';
     itemStr += '    <span>' + place.address + '</span>';
-    itemStr += '    <span>' +  (place.hospitalOpen).substr(0, 2) + ':'+ (place.hospitalOpen).substr(2, 2)  + '</span>'+
-        '   <span> ~ ' +  closeTime + ':'+ (place.hospitalClosed).substr(2, 2)  + '</span>'; 
+    itemStr += '    <span>' +  (place.hospitalOpen)/100 + ':'+ (place.hospitalOpen)%100  + '</span>'+
+        '   <span> ~ ' +  closeTime + ':'+ (place.hospitalClosed)%100  + '</span>'; 
 
     itemStr += '  <span class="tel"> 영업중 </span>' +
         '</div>';           
@@ -1069,10 +1212,10 @@ function setOverlay(place, marker){
                     place.tel +
     '            </div>' +
     '            <span class="desc">' + 
-                    (place.restOpen).substr(0, 2)+ ':'+ (place.restOpen).substr(2, 2) +
+                    (place.restOpen)/100+ ':'+ (place.restOpen)%100 +
     '            </span>' + 
     '            <span class="desc"> ~ ' + 
-                    (place.restClosed).substr(0, 2)  + ':'+ (place.restClosed).substr(2, 2) +
+                    (place.restClosed)/100  + ':'+ (place.restClosed)%100 +
     '            </span>' + 
     '            <span class="desc"> 오늘 마감 </span>' + 
     '            <div><button class="menu">메뉴판 보기</a></div>' + 
@@ -1100,10 +1243,10 @@ function setOverlay(place, marker){
                         place.tel +
         '            </div>' +
         '            <span class="desc">' + 
-                        (place.cafeOpen).substr(0, 2)+ ':'+ (place.cafeOpen).substr(2, 2) +
+                        (place.cafeOpen)/100+ ':'+ (place.cafeOpen)%100 +
         '            </span>' + 
         '            <span class="desc"> ~ ' + 
-                        (place.cafeClosed).substr(0, 2)  + ':'+ (place.cafeClosed).substr(2, 2) +
+                        (place.cafeClosed)/100  + ':'+ (place.cafeClosed)%100 +
         '            </span>' + 
         '            <span class="desc"> 오늘 마감 </span>' + 
         '            <div><button class="menu">메뉴판 보기</button></div>' + 
@@ -1131,10 +1274,10 @@ function setOverlay(place, marker){
                         place.tel +
         '            </div>' +
         '            <span class="desc">' + 
-                        (place.hospitalOpen).substr(0, 2)+ ':'+ (place.hospitalOpen).substr(2, 2) +
+                        (place.hospitalOpen)/100+ ':'+ (place.hospitalOpen)%100 +
         '            </span>' + 
         '            <span class="desc"> ~ ' + 
-                        (place.hospitalClosed).substr(0, 2)  + ':'+ (place.hospitalClosed).substr(2, 2) +
+                        (place.hospitalClosed)/100 + ':'+ (place.hospitalClosed)%100 +
         '            </span>' + 
         '            <span class="desc"> 오늘 마감 </span>' +
         '            <div class="desc">' + 
@@ -1235,10 +1378,10 @@ function setOverlay(place, marker){
                         place.tel +
         '            </div>' +
         '            <span class="desc">' + 
-                        (place.restOpen).substr(0, 2)+ ':'+ (place.restOpen).substr(2, 2) +
+                        (place.restOpen)/100+ ':'+ (place.restOpen)%100 +
         '            </span>' + 
         '            <span class="desc"> ~ ' + 
-                        (place.restClosed).substr(0, 2)  + ':'+ (place.restClosed).substr(2, 2) +
+                        (place.restClosed)/100  + ':'+ (place.restClosed)%100 +
         '            </span>' + 
         '            <span class="desc"> 영업중 </span>' + 
         '            <div><button class="menu">메뉴판 보기</button></div>' + 
@@ -1266,10 +1409,10 @@ function setOverlay(place, marker){
                         place.tel +
         '            </div>' +
         '            <span class="desc">' + 
-                        (place.cafeOpen).substr(0, 2)+ ':'+ (place.cafeOpen).substr(2, 2) +
+                        (place.cafeOpen)/100+ ':'+ (place.cafeOpen)%100 +
         '            </span>' + 
         '            <span class="desc"> ~ ' + 
-                        (place.cafeClosed).substr(0, 2)  + ':'+ (place.cafeClosed).substr(2, 2) +
+                        (place.cafeClosed)/100  + ':'+ (place.cafeClosed)%100 +
         '            </span>' + 
         '            <span class="desc"> 영업중 </span>' + 
         '            <div><button class="menu">메뉴판 보기</button></div>' + 
@@ -1297,10 +1440,10 @@ function setOverlay(place, marker){
                         place.tel +
         '            </div>' +
         '            <span class="desc">' + 
-                        (place.hospitalOpen).substr(0, 2)+ ':'+ (place.hospitalOpen).substr(2, 2) +
+                        (place.hospitalOpen)/100+ ':'+ (place.hospitalOpen)%100 +
         '            </span>' + 
         '            <span class="desc"> ~ ' + 
-                        (place.hospitalClosed).substr(0, 2)  + ':'+ (place.hospitalClosed).substr(2, 2) +
+                        (place.hospitalClosed)/100  + ':'+ (place.hospitalClosed)%100 +
         '            </span>' + 
         '            <span class="desc"> 영업중 </span>' +
         '            <div class="desc">' + 
