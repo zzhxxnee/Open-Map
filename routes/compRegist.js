@@ -46,7 +46,7 @@ router.post("/existCompRegist", async (req, res) => {
     });
 })
 
-router.get("/existCompNext", (req, res)=>{
+router.get("/existCompNext", (req, res) => {
   res.render("registExistCompEnd");
 })
 
@@ -72,7 +72,7 @@ router.post("/existCompNext", async (req, res) => {
             address: req.body.addr
           }
         })
-    }).then(() => { res.render("registExistCompEnd", { compInfo: req.body });})
+    }).then(() => { res.render("registExistCompEnd", { compInfo: req.body }); })
     .catch((err) => {
       console.log(err);
     })
@@ -88,13 +88,13 @@ router.get("/registComp", companyController.registComp);
 router.post("/registComp", companyController.registCompNext);
 
 router.get("/registComp/popup/jusoPopup", (req, res) => {
-  res.render("jusoPopup");
+  res.render("jusoPopup", { addrkey: process.env.ADDRESS_API_KEY });
 });
 
 router.post("/registComp/popup/jusoPopup", (req, res) => {
   res.locals = req.body;
   res.locals.islogin = req.user;
-  res.render("jusoPopup");
+  res.render("jusoPopup", { addrkey: process.env.ADDRESS_API_KEY });
 });
 
 // router.get("/registRest", companyController.registRest);
