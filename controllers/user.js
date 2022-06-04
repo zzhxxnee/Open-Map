@@ -1,0 +1,292 @@
+const models = require('./../models');
+const crypto = require('crypto');
+let session = require('express-session');
+const nodemailer = require('nodemailer');
+
+exports.getUsers = function(req, res, next) {
+    res.send('respond with a resource');
+};
+
+exports.getSignup = function(req, res, next) {
+    res.render("signup.ejs");
+  };
+
+exports.postSignup = async function(req,res,next){
+    let body = req.body;
+  
+    if(!body.userid){
+      res.status(400).send(`<script>alert('내용을 모두 입력하세요');history.go(-1);</script>`);
+      return;
+    }
+    
+    let exUser = await models.Users.findOne({ // 아이디 중복여부 체크
+      where:{
+        id : body.userid
+      }
+    })
+  
+    if(exUser){
+      res.status(500).send(`<script>alert('중복된 아이디입니다');history.go(-1);</script>`);
+      return;
+    }
+  
+    let inputPassword = body.password; // 비밀번호 암호화 저장 유저 정보가 저장된 salt 사용
+    let salt = Math.round((new Date().valueOf() * Math.random())) + "";
+    let hashPassword = crypto.createHash("sha512").update(inputPassword + salt).digest("hex");
+  
+    const userInfo = ({
+      id : body.userid,
+      name: body.username,
+      password: hashPassword,
+      email: body.email,
+      salt: salt
+    })
+  
+    models.Users.create(userInfo)
+    .then( result => {
+      res.status(200).send(`<script>alert('회원가입 성공!');window.location.href='/users';</script>`);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while creating the Tutorial."
+      });
+    });
+  };
+
+  exports.postCheckID = async function(req, res, next){
+    let body = req.body;
+  
+    if(!body.userid){
+      res.status(400).send({
+        message : "Content can not be empty!"
+      });
+      return;
+    }
+    
+    let exUser = await models.Users.findOne({ // 아이디 중복여부 체크
+      where:{
+        id : body.userid
+      }
+    })
+  
+    if (exUser) {
+      res.send({
+        code: "success",
+        message: "중복된 아이디입니다!",
+      });
+      return;
+    } else {
+      res.send({
+        code: "error",
+        message: "사용 가능한 아이디입니다",
+      });
+      return;
+    }
+  }
+
+  exports.getLogin = function(req, res, next) {
+    let session = req.session;
+  
+      res.render("login.ejs", {
+        session : session
+    });
+  };
+
+  exports.postLogin = async function(req,res,next){
+    let body = req.body;
+  
+    if(!body.userid){
+      res.status(500).send(`<script>alert('아이디가 입력되지 않았습니다');history.go(-1);</script>`);
+      return;
+    }
+  
+    try { // 에러가 나도 무조건 실행
+      let result = await models.Users.findOne({
+        where: {
+          id: body.userid,
+        },
+      });
+    
+      let dbPassword = result.dataValues.password;
+      let inputPassword = body.password;
+      let salt = result.dataValues.salt;
+      let hashPassword = crypto.createHash("sha512").update(inputPassword + salt).digest("hex");
+    
+      if (dbPassword === hashPassword) {
+        console.log("비밀번호 일치");
+        req.session.user_id = body.userid;
+        res.redirect("/users");
+      } else {
+        res.status(500).send(`<script>alert('잘못된 비밀번호입니다');history.go(-1);</script>`);
+        return;
+      }
+      
+    } catch (error) {
+      res.status(500).send({
+        message: error.message,
+      });
+    }
+  }
+
+exports.getLogout = (req, res, next)=>{
+    req.session.destroy();
+    res.clearCookie('sid');
+  
+    res.redirect('/users');
+  }
+
+exports.getFindID =  (req, res, next) =>{
+  res.render('findID.ejs');
+}
+
+exports.getFindIDResult = (req, res, next) =>{
+  res.render('findIDResult.ejs');
+}
+
+exports.postFindIDResult = async(req, res, next)=>{
+  var uemail = req.body.email;
+
+  try {
+    const user = await models.Users.findOne({ where: { email: uemail }, raw: true }); // User 이외의 interface 값이 안들어오고 실제 데이터 값만 raw :true
+    
+    if (user) {
+      res.render("findIDResult", {
+        FindID: user.id,
+      });
+
+    } else {
+      console.log("cannot findID");
+      res.send(`
+      <a href='/users/findID'>Back</a>
+      <h1>cannot find id</h1>`);
+    }
+  } catch (error) {
+    console.log(`findIdResult Error -> ${error}`);
+      res.send(`
+      <a href='/users/findID'>Back</a>
+      <h1>server error</h1>`);
+  }
+}
+
+exports.getFindPassword = async(req, res, next)=>{
+  res.render('findPassword.ejs');
+};
+
+exports.postFindPassword = async (req, res, next) => {
+  const { userid } = req.body;
+  try {
+    const user = await models.Users.findOne({ // 1. 유저가 존재하면 유저 정보를 가져옴
+      where: { id: userid }, raw:true,
+    });
+    if (user) { // 2. 유저가 있다면?
+      const token = crypto.randomBytes(20).toString('hex'); // 3. token 생성(인증코드)
+      const data = {
+        // 4. 인증코드 테이블에 넣을 데이터 정리
+        token,
+        userid: user.id,
+        ttl: 300, // ttl 값 설정 (5분) email 인증에 대한 유효시간
+      };
+      
+      models.EmailAuth.create(data); // 5. 인증 코드 테이블에 데이터 입력
+
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        port: 465,
+        secure: true, // true for 465, false for other ports
+        auth: {
+          // 이메일을 보낼 계정 데이터 입력
+          user: process.env.GOOGLE_ID,
+          pass: process.env.GOOGLE_PASSWORD,
+          // .env에 따로 관리해야함
+        },
+        tls : { rejectUnauthorized: false }
+
+      });
+
+      const mailOptions = {
+        from: process.env.GOOGLE_ID, // 발송 메일 주소 (위에서 작성한 gmail 계정 아이디)
+        to: user.email, // 수신 메일 주소
+        subject: 'Password search authentication code transmission', // 제목
+        text: 'This is the authentication code to find the password!', // 내용
+        html:
+          `<p>비밀번호 초기화를 위해서는 아래의 URL을 클릭하여 주세요.<p>` +
+          `<a href='http://localhost:3000/users/changePassword?token=${token}'>비밀번호 새로 입력하기</a>`,
+      };
+
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Email sent: ' + info.response);
+        }
+      });
+      return res.json(result);
+    } else {
+      return res.status(403).send('This account does not exist');
+    }
+
+  } catch (e) {
+    // try에서 result 결과값이 null일때 catch에서 에러로 잡지 않음 이유는?..
+    res.send(e);
+  }
+};
+
+exports.getChangePassword = async(req, res, next)=>{
+  res.render("changePassword", {
+    Token: req.query.token,
+  });
+};
+
+exports.postChangePassword = async(req, res, next)=>{
+  var password = req.body.newpassword;
+  var token = req.body.token;
+
+  console.log(token);
+  console.log(password);
+
+
+  try {
+    const emailAuth = await models.EmailAuth.findOne({ where: { token:token }, raw: true }); 
+    
+    if (emailAuth) {
+      const savedDate = emailAuth.created_at;
+      const now = new Date();
+      const diff = now - savedDate;
+      const diffMin = Math.floor(diff / 1000 / 60);
+      if (diffMin > 5) {
+        // 5분 초과
+        res.send(`
+          <script>alert('토큰이 만료되었습니다')</script>`);
+        return;
+      }
+    
+      const user = await models.Users.findOne({ where: { id: emailAuth.userid } }); // 실제 있는 유저인지 조회
+
+    
+      if (user.dataValues) {
+        let inputPassword = password; // 비밀번호 암호화 저장 유저 정보가 저장된 salt 사용
+        let salt = Math.round((new Date().valueOf() * Math.random())) + "";
+        let hashPassword = crypto.createHash("sha512").update(inputPassword + salt).digest("hex");
+        
+        await user.update({ // password 업데이트
+          password: hashPassword,
+        });
+        res.send(`
+            <script>alert('비밀번호가 변경 되었습니다'); window.location.href="/users/login"</script>`);
+            
+      } else {
+        res.send(`
+          <script>alert('일치하는 계정이 없습니다.')</script>`);
+      }
+    }
+  } catch (error) {
+    console.log(`findIdResult Error -> ${error}`);
+      res.send(`
+      <a href='/users/findID'>Back</a>
+      <h1>server error</h1>`);
+  }
+};
+
+
+

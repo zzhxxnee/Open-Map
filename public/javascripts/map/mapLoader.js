@@ -34,6 +34,16 @@ let openedRestaurant = []; // 영업중인 식당 객체를 가지고 있을 배
 let openedCafe = []; // 영업중인 휴게음식점 객체를 가지고 있을 배열입니다
 let openedHospital = []; // 영업중인 병원 객체를 가지고 있을 배열입니다
 
+let closedRestaurantMarkers = [];
+let closedCafeMarkers = [];
+let closedHospitalMarkers = [];
+let todayClosedRestaurantMarkers = [];
+let todayClosedCafeMarkers = [];
+let todayClosedHospitalMarkers = [];
+let openedRestaurantMarkers = [];
+let openedCafeMarkers = [];
+let openedHospitalMarkers = [];
+
 function setCenter() {            
     // 이동할 위도 경도 위치를 생성합니다 
     navigator.geolocation.getCurrentPosition((position) => {
@@ -55,6 +65,7 @@ if(init === 0){
     setCenter();
     init++;
 }
+
 
 // 지도가 이동, 확대, 축소로 인해 지도영역이 변경되면 마지막 파라미터로 넘어온 함수를 호출하도록 이벤트를 등록합니다
 kakao.maps.event.addListener(map, 'dragend', function() {             
