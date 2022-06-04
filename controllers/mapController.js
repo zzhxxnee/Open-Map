@@ -807,6 +807,12 @@ exports.getAllPositions = async (req, res) => {
                 }
             });
         }
+        let myPlaces = await sequelize.query(`SELECT * FROM myplace WHERE UserId='${req.session.user_id}';`, { type: QueryTypes.SELECT });
+        let myPlaceId = [];
+        myPlaces.forEach(p => {
+            myPlaceId.push(p.CompanyCompId);
+        });
+        console.log(myPlaceId);
 
     let closedRestaurantPositionTotal = new Array(earlyClosedRestaurantPosition);
     closedRestaurantPositionTotal = [...closedRestaurant];

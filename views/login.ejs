@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Document</title>
+    <title>Openmap</title>
+    <link rel="stylesheet" href="/stylesheets/login.css" />
 </head>
 <body>
 <% if(session.user_id){ %>
@@ -13,19 +14,18 @@
 
     
 <% } else{ %>
-<h3>로그인</h3>
+<section class="login-form">
+<h3>LOGIN</h3>
     <form action="/users/login" method="post">
-            <tr>
-                <td>아이디 : </td>
-                <td><input type="text" name="userid"></td>
-            </tr>
-            <tr>
-                <td>비밀번호 : </td>
-                <td><input type="password" name="password"></td>
-            </tr>
-            <tr>
-                <td><input type="submit" value="로그인"></td>
-            </tr>
+            <div class="int-area">
+                <td><input type="text" name="userid" placeholder="Username"></td>
+            </div>
+            <div class="int-area">
+                <td><input type="password" name="password" placeholder="Password"></td>
+            </div>
+            <div class="btn-area">
+                <button type="submit">로그인</button>
+            </div>
     </form>
     <form action="/users/findID" mehtod="post">
         <button type="submit">아이디 찾기</button>
@@ -33,6 +33,7 @@
     <form action="/users/findPassword" mehtod="post">
         <button type="submit">비밀번호 찾기</button>
     </form>
+</section>
 <% } %>
 </body>
 </html>
