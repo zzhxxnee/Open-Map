@@ -15,12 +15,15 @@ var _storage = multer.diskStorage({
 var upload = multer({ storage: _storage });
 
 exports.showMyplaceList = async(req, res) => {
-    //let userid = req.user.id;
-    let userid = 'hhs535'
+    let userid = req.session.user_id;
    
-    myCafe = await sequelize.query(`SELECT * FROM company C JOIN cafe CA ON C.type = 'C' where C.compId in (SELECT CompanyCompId FROM myplace where UserId = '${userid}') AND CA.CompId = C.compId`, { type: QueryTypes.SELECT });
-    myHosp = await sequelize.query(`SELECT * FROM company C JOIN hospital H ON C.type = 'H' where C.compId in (SELECT CompanyCompId FROM myplace where UserId = '${userid}') AND H.CompId = C.compId`, { type: QueryTypes.SELECT });
-    myRest = await sequelize.query(`SELECT * FROM company C JOIN restaurant R ON C.type = 'R' where C.compId in (SELECT CompanyCompId FROM myplace where UserId = '${userid}') AND R.CompId = C.compId`, { type: QueryTypes.SELECT });
+    if(!userid){
+      res.redirect("/users/login");
+    }
+
+    myCafe = await sequelize.query(`SELECT * FROM company C JOIN cafe CA ON C.type = 'C' where C.compId in (SELECT CompanyCompId FROM myplace where UserId = '${userid}') AND CA.CompanyCompId = C.compId`, { type: QueryTypes.SELECT });
+    myHosp = await sequelize.query(`SELECT * FROM company C JOIN hospital H ON C.type = 'H' where C.compId in (SELECT CompanyCompId FROM myplace where UserId = '${userid}') AND H.CompanyCompId = C.compId`, { type: QueryTypes.SELECT });
+    myRest = await sequelize.query(`SELECT * FROM company C JOIN restaurant R ON C.type = 'R' where C.compId in (SELECT CompanyCompId FROM myplace where UserId = '${userid}') AND R.CompanyCompId = C.compId`, { type: QueryTypes.SELECT });
   
     let now = moment().format('Hmm') * 1;
     let today = moment().format('ddd').toLowerCase;
@@ -122,19 +125,25 @@ exports.deleteMyPlace = async(req, res) => {
 
 
 exports.showMypage = async(req, res) => {
-  //let userid = req.user.id;
-  let userid = 'hhs535';
-  let isOwner = await models.Users.findOne({
-    attributes: ['isOwner'],
-    where:{
-      id:userid
-    }
-  });
-  let myComp=[];
-  if(isOwner.isOwner){
-    myComp = await sequelize.query(`SELECT * FROM company where userId = '${userid}'`, { type: QueryTypes.SELECT });
+  let userid = req.session.user_id;
+  if(!userid){
+    res.redirect("/users/login");
   }
-  res.render('MyPage',{user:userid, myComp:myComp, isOwner:isOwner.isOwner});
+  else{
+    let isOwner =  {isOwner:undefined}
+    isOwner = await models.Users.findOne({
+      attributes: ['isOwner'],
+      where:{
+        id:userid
+      }
+    });
+    let myComp=[];
+    if(Boolean(isOwner.isOwner)){
+      myComp = await sequelize.query(`SELECT * FROM company where userId = '${userid}'`, { type: QueryTypes.SELECT });
+    }
+    res.render('MyPage',{user:userid, myComp:myComp, isOwner:isOwner.isOwner});
+  }
+
 }
 
 exports.configcomp = async(req, res) => {
@@ -470,8 +479,10 @@ exports.configHosp = async(req, res) => {
 }
 
 exports.settingEmail = async(req, res) => {
-  //let userid = req.user.id;
-  let userid = 'hhs535';
+  let userid = req.session.user_id;
+  if(!userid){
+    res.redirect("/users/login");
+  }
   
   let result = await models.Users.findOne({
     where:{
@@ -494,8 +505,59 @@ exports.settingEmail = async(req, res) => {
 }
 
 exports.settingEmail2 = async(req, res) => {
-  //let userid = req.user.id;
-  let userid = 'hhs535';
+  let userid = req.session.user_id;
+  if(!userid){
+    res.redirect("/users/login");
+  }
   await sequelize.query(`UPDATE users SET email = ? WHERE id = '${userid}'`, {replacements:[`${req.body.new_email}`], type: QueryTypes.UPDATE });
   res.redirect('/users/MyPage');
+}
+
+exports.leave_confirmPwd = async(req, res) => {
+  let userid = req.session.user_id;
+  if(!userid){
+    res.redirect("/users/login");
+  }
+  
+  let result = await models.Users.findOne({
+    where:{
+      id:userid
+    }
+  });
+
+  let dbPassword = result.dataValues.password;
+  let inputPassword = req.body.password;
+  let salt = result.dataValues.salt;
+  let hashPassword = crypto.createHash("sha512").update(inputPassword + salt).digest("hex");
+
+  if(dbPassword === hashPassword){
+    res.render('leaveMember2',{oldEmail:result.dataValues.email});
+  }
+  else{
+      res.render('leaveMember');
+    
+  }
+
+}
+exports.leave_thanks = async(req, res) => {
+  let userid = req.session.user_id;
+  if(!userid){
+    res.redirect("/users/login");
+  }
+
+  try {
+    await sequelize.query(`DELETE FROM users WHERE id = '${userid}'`, { type: QueryTypes.DELETE });
+  } catch (e) {
+    res.redirect("/");
+  }
+  req.session.destroy();
+  res.clearCookie('sid');
+
+  res.render('leaveMemberConfirm');
+}
+
+exports.delete_comp = async(req,res) => {
+  let compId = req.body.comp_id;
+  await sequelize.query(`DELETE FROM company WHERE compId = '${compId}'`, { type: QueryTypes.DELETE });
+  res.redirect('/mypage');
 }

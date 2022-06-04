@@ -11,6 +11,7 @@ const nodemailer = require('nodemailer');
 const { resourceLimits } = require('worker_threads');
 const User = require("../controllers/user");
 
+var router = express.Router();
 /* GET users listing. */
 router.get('/', User.getUsers);
 

@@ -1,11 +1,12 @@
 require("dotenv").config();
 const db = require("../models/index"),
-    Company = db.company,
+    Company = db.company;
+    User = db.users,
     Rest = db.restaurant,
     Cafe = db.cafe,
     Hosp = db.hospital,
     Menu = db.menu,
-    Op = db.Sequelize.Op,
+    Op = db.Sequelize.Op, 
     geocoder = require("google-geocoder"),
     geo = geocoder({
         key: process.env.GOOGLE_API_KEY,
@@ -79,15 +80,14 @@ let hospitalInfo = {
     breakEnd: "",
 };
 
-let menuInfo = {
-    price: "",
-    menuName: "",
-    compId: "",
-};
 
 // 업체등록 1 - 이미 존재하는지 확인
 exports.checkExistComp = (req, res) => {
-    res.render("checkExistComp");
+    if(!req.session.user_id){
+        res.redirect("/users/login");
+    }else{
+        res.render("checkExistComp");
+    }
 };
 
 exports.searchExistComp = (req, res, next) => {
@@ -97,6 +97,7 @@ exports.searchExistComp = (req, res, next) => {
             compName: {
                 [Op.like]: "%" + searchWord + "%",
             },
+            UserId : null //업체에 userid가 등록되지 않은 것만 출력
         },
     })
         .then((result) => {
@@ -108,6 +109,7 @@ exports.searchExistComp = (req, res, next) => {
         });
 };
 
+
 // 여기서 있으면 그 업체 클릭 -> 이미등록된업체로..(?)
 
 // // 없으면 업체 유형 선택 페이지 -> 안하는 게 나을 것 같음..
@@ -117,7 +119,11 @@ exports.searchExistComp = (req, res, next) => {
 
 // 일단 업체 공통 정보 입력 페이지, 여기서 업체 유형 선택하도록 하기
 exports.registComp = (req, res) => {
-    res.render("registComp");
+    if(!req.session.user_id){
+        res.redirect("/users/login");
+    }else{
+        res.render("registComp");   
+    }
 };
 
 exports.registCompNext = async (req, res) => {
@@ -130,7 +136,7 @@ exports.registCompNext = async (req, res) => {
     });
 
     compInfo.address = req.body.addr;
-    compInfo.userId = "defaultID";
+    compInfo.userId = req.session.user_id; //로그인 구현되면 수정하기
     compInfo.image = req.body.image;
     compInfo.compName = req.body.compName; //not null
     compInfo.bNo = req.body.compNum;
@@ -160,7 +166,7 @@ exports.registCompNext = async (req, res) => {
 };
 
 exports.registFinished = async (req, res) => {
-    res.send(req.body);
+    res.send("mypage");
     Company.create({
         image: compInfo.image,
         compName: compInfo.compName,
@@ -177,17 +183,18 @@ exports.registFinished = async (req, res) => {
         mon: compInfo.mon,
         tue: compInfo.tue,
         wed: compInfo.wed,
-        thu: compInfo.tue,
+        thu: compInfo.thu,
         fri: compInfo.fri,
         sat: compInfo.sat,
         sun: compInfo.sun,
-        userId: compInfo.userId,
+        UserId: compInfo.userId,
     }).then(() => {
         Company.findAll({
             attributes: ['compId'],
             where: {
                 compName: compInfo.compName,
-                bNo: compInfo.bNo
+                address : compInfo.address,
+                UserId: compInfo.userId
             }
         })
             .then((result) => {
@@ -214,7 +221,7 @@ exports.registFinished = async (req, res) => {
                             restType: req.body.restType, //not null
                             breakStart: null,
                             breakEnd: null,
-                            compId: compInfo.compId,
+                            CompanyCompId: compInfo.compId,
                         });
                     } else {
                         Rest.create({
@@ -223,7 +230,7 @@ exports.registFinished = async (req, res) => {
                             restType: req.body.restType, //not null
                             breakStart: req.body.breakStart[0] * 100 + req.body.breakStart[1] * 1,
                             breakEnd: req.body.breakEnd[0] * 100 + req.body.breakEnd[1] * 1,
-                            compId: compInfo.compId,
+                            CompanyCompId: compInfo.compId,
                         });
                     }
                     //메뉴 해결하기
@@ -235,9 +242,11 @@ exports.registFinished = async (req, res) => {
                     //     console.log(req.body.menu[i]);
                     //     console.log(req.body.price[i]);
                     // }
-                    // Menu.create({
-                    //     menuName : req.body.menu,
-                    //     price : req.body.price
+                    Menu.create({
+                        menuName : req.body.menu,
+                        price : req.body.price,
+                        CompanyCompId : compInfo.compId
+                    });
                 } else if (compInfo.type == "C") {
                     if (req.body.allDays == "true") {
                         cafeInfo.cafeOpen = 0;
@@ -253,10 +262,13 @@ exports.registFinished = async (req, res) => {
                         cafeOpen: cafeInfo.cafeOpen,
                         cafeClosed: cafeInfo.cafeClosed,
                         cafeType: req.body.cafeType, //not null
-                        compId: compInfo.compId,
+                        CompanyCompId: compInfo.compId,
                     });
-                    //compId null로 추가되는중..
-                    //메뉴 추가 코드...식당부터 해결하면 됨..ㅠㅠ
+                    Menu.create({
+                        menuName : req.body.menu,
+                        price : req.body.price,
+                        CompanyCompId : compInfo.compId
+                    });
             
             
                     ///////병원///////////////////////////
@@ -265,13 +277,29 @@ exports.registFinished = async (req, res) => {
                     hospitalInfo.content = req.body.content;
             
                     if (req.body.allDays == "true") {
-                        for (var i = 0; i < 16; i++) {
-                            if (i % 2 == 0) {
-                                hospitalInfo[i] = 0;
-                            } else {
-                                hospitalInfo[i] = 4000;
-                            }
-                        }
+                        hospitalInfo.HospOpenMon = 0;
+                        hospitalInfo.HospCloseMon= 4000;
+
+                        hospitalInfo.HospOpenTue = 0;
+                        hospitalInfo.HospCloseTue = 4000;
+                        
+                        hospitalInfo.HospOpenWed = 0;
+                        hospitalInfo.HospCloseWed = 4000;
+
+                        hospitalInfo.HospOpenThu = 0;
+                        hospitalInfo.HospCloseThu = 4000;
+
+                        hospitalInfo.HospOpenFri = 0;
+                        hospitalInfo.HospCloseFri = 4000;
+
+                        hospitalInfo.HospOpenSat = 0;
+                        hospitalInfo.HospCloseSat= 4000;
+
+                        hospitalInfo.HospOpenSun = 0;
+                        hospitalInfo.HospCloseSun = 4000;
+
+                        hospitalInfo.HospOpenVac = 0;
+                        hospitalInfo.HospCloseVac = 4000
                     } else {
                         hospitalInfo.HospOpenMon = req.body.openTime[0]*100+req.body.openTime[1]*1;
                         hospitalInfo.HospCloseMon= req.body.closedTime[0]*100+req.body.closedTime[1]*1;
@@ -296,6 +324,7 @@ exports.registFinished = async (req, res) => {
 
                         hospitalInfo.HospOpenVac = req.body.openTime[14]*100+req.body.openTime[15]*1;
                         hospitalInfo.HospCloseVac = req.body.closedTime[14]*100+req.body.closedTime[15]*1;
+
                     }
             
                     if (req.body.noBreak == "true") {
@@ -309,13 +338,18 @@ exports.registFinished = async (req, res) => {
                 }
             
                 else {
-                    res.send("뭔가 잘못됨...!");
+                    res.send("compType 에러");
                 }
             })
             .then(()=>{
                 if(compInfo.type=="H"){
                     createHospital();
                 }
+                // 등록완료되면 업주 여부 true로 변경
+                ownerTrue();
+            })
+            .catch((err)=>{
+                company.destroy({where: {compId : compInfo.compId}}); // 업체별 정보 db 저장 에러 시 company 정보도 삭제
             })
     }).catch((err) => {
         console.log(err);
@@ -356,6 +390,10 @@ function createHospital() {
         breakStart: hospitalInfo.breakStart,
         breakEnd: hospitalInfo.breakEnd,
 
-        compId : hospitalInfo.compId
+        CompanyCompId : hospitalInfo.compId
     });
+}
+
+function ownerTrue(){
+    User.update({isOwner: 1}, {where: {id : compInfo.userId}});
 }

@@ -15,15 +15,15 @@
                 </div>
                 <ul>
                     <li><a href="/mypage/settings/email">이메일 변경</a></li>
-                    <li><a href="/mypage/MyPage/password_config">비밀번호 변경</a></li>
+                    <li><a href="#">비밀번호 변경</a></li>
                 </ul>
-                <a href="">회원 탈퇴하기</a>
+                <a href="/mypage/leave">회원 탈퇴하기</a>
             </div>
             <% if(isOwner) { %>
             <div class = "company_config">
                 <div class="category_name">
                     <h3>내 업체</h3>
-                    <a href="#"><i class="fa-solid fa-plus"></i></a>
+                    <a href="/compRegist"><i class="fa-solid fa-plus"></i></a>
                 </div>
                 <div class="my_company_list">
                     <% if(Object.keys(myComp).length == 0) { %>
@@ -36,6 +36,11 @@
                                 <span class="address"><%=c.address%></span>
                                 <form action="/mypage/config/comp" method="post">
                                     <input type="submit" value="수정">
+                                    <input type="hidden" name="comp_type" value= <%= c.type %> >
+                                    <input type="hidden" name="comp_id" value=<%= c.compId %> >
+                                </form>
+                                <form action="/mypage/delete/comp" method="post">
+                                    <input type="submit" value="삭제">
                                     <input type="hidden" name="comp_type" value= <%= c.type %> >
                                     <input type="hidden" name="comp_id" value=<%= c.compId %> >
                                 </form>

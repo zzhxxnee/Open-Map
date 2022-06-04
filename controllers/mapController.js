@@ -5,6 +5,17 @@ const Company = db.company;
 const CompanyRestaurantView = db.companyRestaurantView;
 const CompanyCafeView = db.CompanyCafeView;
 const CompanyHospitalView = db.companyHospitalView;
+const Sequelize = require('sequelize');
+const env = process.env.NODE_ENV || 'development';
+const config = require(__dirname + '/../config/config.json')[env];
+const { QueryTypes } = require('sequelize');
+
+let sequelize;
+if (config.use_env_variable) {
+  sequelize = new Sequelize(process.env[config.use_env_variable], config);
+} else {
+  sequelize = new Sequelize(config.database, config.username, config.password, config);
+}
 
 let today = new Date();
 const day = today.getDay();
@@ -682,6 +693,12 @@ exports.getAllPositions = async (req, res) => {
                 }
             });
         }
+        let myPlaces = await sequelize.query(`SELECT * FROM myplace WHERE UserId='${req.session.user_id}';`, { type: QueryTypes.SELECT });
+        let myPlaceId = [];
+        myPlaces.forEach(p => {
+            myPlaceId.push(p.CompanyCompId);
+        });
+        console.log(myPlaceId);
 
         let closedRestaurantPositionTotal = new Array(earlyClosedRestaurantPosition);
         closedRestaurantPositionTotal = [...closedRestaurant];
@@ -691,18 +708,18 @@ exports.getAllPositions = async (req, res) => {
         closedHospitalPositionTotal = [...closedHospital];
 
 
-        if(req.session.user){
+        if(req.session.user_id){
             res.render("index", {
                 todayClosedRestaurant : todayClosedRestaurantPosition, todayClosedCafe :  todayClosedCafePosition, todayClosedHospital : todayClosedHospitalPosition , 
                 openedRestaurant : openedRestaurant, openedCafe : openedCafe, openedHospital : openedHospital,
                 closedRestaurantTotal : closedRestaurantPositionTotal, closedCafeTotal : closedCafePositionTotal, closedHospitalTotal : closedHospitalPositionTotal,
-                apikey : process.env.KAKAO_JS_KEY, isLogin: 'true'});
+                myPlaces : myPlaceId, apikey : process.env.KAKAO_JS_KEY, isLogin: 'true'});
         }else{
             res.render("index", {
                 todayClosedRestaurant : todayClosedRestaurantPosition, todayClosedCafe :  todayClosedCafePosition, todayClosedHospital : todayClosedHospitalPosition , 
                 openedRestaurant : openedRestaurant, openedCafe : openedCafe, openedHospital : openedHospital,
                 closedRestaurantTotal : closedRestaurantPositionTotal, closedCafeTotal : closedCafePositionTotal, closedHospitalTotal : closedHospitalPositionTotal,
-                apikey : process.env.KAKAO_JS_KEY, isLogin: 'false'});
+                myPlaces : myPlaceId, apikey : process.env.KAKAO_JS_KEY, isLogin: 'false'});
         }
 
     }catch(err){
