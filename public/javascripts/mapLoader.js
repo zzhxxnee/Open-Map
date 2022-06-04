@@ -9,6 +9,16 @@ const listEl = document.getElementById('placesList');
 const menuEl = document.getElementById('slideNav');
 let selectedPlace;
 
+let closedRestaurantMarkers = [];
+let closedCafeMarkers = [];
+let closedHospitalMarkers = [];
+let todayClosedRestaurantMarkers = [];
+let todayClosedCafeMarkers = [];
+let todayClosedHospitalMarkers = [];
+let openedRestaurantMarkers = [];
+let openedCafeMarkers = [];
+let openedHospitalMarkers = [];
+
 function setCenter() {            
     // 이동할 위도 경도 위치를 생성합니다 
     navigator.geolocation.getCurrentPosition((position) => {
@@ -30,6 +40,25 @@ if(init === 0){
     setCenter();
     init++;
 }
+
+createClosedRestaurantMarkers(); 
+setClosedRestaurantMarkers(map);
+createClosedCafeMarkers();
+setClosedCafeMarkers(map);
+createClosedHospitalMarkers();
+setClosedHospitalMarkers(map);
+createTodayClosedRestaurantMarkers();
+setTodayClosedRestaurantMarkers(map);
+createTodayClosedCafeMarkers();
+setTodayClosedCafeMarkers(map);
+createTodayClosedHospitalMarkers();
+setTodayClosedHospitalMarkers(map);
+createOpenedRestaurantMarkers();
+setOpenedRestaurantMarkers(map);
+createOpenedCafeMarkers();
+setOpenedCafeMarkers(map);
+createOpenedHospitalMarkers();
+setOpenedHospitalMarkers(map)
 
 
 // 장소 검색 객체를 생성합니다
@@ -359,16 +388,6 @@ function createInfowindowEvent(itemEl, marker, place) {
 function closeOverlay() {
     overlay.setMap(null);     
 }
-
-let closedRestaurantMarkers = [];
-let closedCafeMarkers = [];
-let closedHospitalMarkers = [];
-let todayClosedRestaurantMarkers = [];
-let todayClosedCafeMarkers = [];
-let todayClosedHospitalMarkers = [];
-let openedRestaurantMarkers = [];
-let openedCafeMarkers = [];
-let openedHospitalMarkers = [];
 
 // 지도 위에 표시되고 있는 마커를 모두 제거합니다
 function removeMarker() {
@@ -750,20 +769,27 @@ function removeAllChildNods(el) {
 }
 
 function getClosedRestarantItem(place) {
+    let closeTime = parseInt((place.restClosed).substr(0, 2));
+    if(closeTime >= 24){
+        closeTime -= 24;
+        closeTime = '익일 ' + closeTime;
+    }
 
     let heart='';
 
-    if(isLogin  == 'true'){
-        heart = `</h5><span class="heart" onclick="setMyPlace(${place.compId})"><i class="fa-light fa-heart"></i></span>`;
+    if(isLogin  == 'true' && place.isMyPlace == false){
+        heart = `<span class="heart-${place.compId}" onclick="setMyPlace(${place.compId})"><i class="fa-regular fa-heart"></i></i></span>`;
+    }else if(isLogin  == 'true' && place.isMyPlace == true){
+        heart = `<span class="heart-${place.compId}" onclick="setMyPlace(${place.compId})"><i class="fa-solid fa-heart"></i></i></span>`;
     }
 
     let el = document.createElement('li'),
     itemStr = '<div class="info">' +
-        '   <h5>' + place.compName + heart;
+        '   <h5>' + place.compName + heart +'</h5>';
 
     itemStr += '    <span>' + place.address + '</span>';
     itemStr += '    <span>' +  (place.restOpen).substr(0, 2) + ':'+ (place.restOpen).substr(2, 2)   + '</span>'+
-        '   <span> ~ ' +  (place.restClosed).substr(0, 2)  + ':'+ (place.restClosed).substr(2, 2) + '</span>'; 
+        '   <span> ~ ' +  closeTime  + ':'+ (place.restClosed).substr(2, 2) + '</span>'; 
 
     itemStr += '  <span class="tel"> 오늘 마감 </span>' +
         '</div>';           
@@ -776,18 +802,26 @@ function getClosedRestarantItem(place) {
 
 function getClosedCafeItem(place) {
 
+    let closeTime = parseInt((place.cafeClosed).substr(0, 2));
+    if(closeTime > 24){
+        closeTime -= 24;
+        closeTime = '익일 ' + closeTime;
+    }
+
     let heart='';
 
-    if(isLogin == 'true'){
-        heart = `</h5><span class="heart" onclick="setMyPlace(${place.compId})"><i class="fa-light fa-heart"></i></span>`;
+    if(isLogin  == 'true' && place.isMyPlace == false){
+        heart = `<span class="heart-${place.compId}" onclick="setMyPlace(${place.compId})"><i class="fa-regular fa-heart"></i></i></span>`;
+    }else if(isLogin  == 'true' && place.isMyPlace == true){
+        heart = `<span class="heart-${place.compId}" onclick="setMyPlace(${place.compId})"><i class="fa-solid fa-heart"></i></i></span>`;
     }
 
     let el = document.createElement('li'),
     itemStr = '<div class="info">' +
-        '   <h5>' + place.compName + heart;
+        '   <h5>' + place.compName + heart +'</h5>';
     itemStr += '    <span>' + place.address + '</span>';
     itemStr += '    <span>' +  (place.cafeOpen).substr(0, 2) + ':'+ (place.cafeOpen).substr(2, 2)  + '</span>'+
-        '   <span> ~ ' +  (place.cafeClosed).substr(0, 2) + ':'+ (place.cafeClosed).substr(2, 2)  + '</span>'; 
+        '   <span> ~ ' +  closeTime + ':'+ (place.cafeClosed).substr(2, 2)  + '</span>'; 
 
     itemStr += '  <span class="tel"> 오늘 마감 </span>' +
         '</div>';           
@@ -800,18 +834,26 @@ function getClosedCafeItem(place) {
 
 function getClosedHospitalItem(place) {
 
+    let closeTime = parseInt((place.hospitalClosed).substr(0, 2));
+    if(closeTime > 24){
+        closeTime -= 24;
+        closeTime = '익일 ' + closeTime;
+    }
+
     let heart='';
 
-    if(isLogin == 'true'){
-        heart = `</h5><span class="heart" onclick="setMyPlace(${place.compId})"><i class="fa-light fa-heart"></i></span>`;
+    if(isLogin  == 'true' && place.isMyPlace == false){
+        heart = `<span class="heart-${place.compId}" onclick="setMyPlace(${place.compId})"><i class="fa-regular fa-heart"></i></i></span>`;
+    }else if(isLogin  == 'true' && place.isMyPlace == true){
+        heart = `<span class="heart-${place.compId}" onclick="setMyPlace(${place.compId})"><i class="fa-solid fa-heart"></i></i></span>`;
     }
 
     let el = document.createElement('li'),
     itemStr = '<div class="info">' +
-        '   <h5>' + place.compName + heart;
+        '   <h5>' + place.compName + heart +'</h5>';
     itemStr += '    <span>' + place.address + '</span>';
     itemStr += '    <span>' +  (place.hospitalOpen).substr(0, 2) + ':'+ (place.hospitalOpen).substr(2, 2)  + '</span>'+
-        '   <span> ~ ' +  (place.hospitalClosed).substr(0, 2) + ':'+ (place.hospitalClosed).substr(2, 2)  + '</span>'; 
+        '   <span> ~ ' +  closeTime + ':'+ (place.hospitalClosed).substr(2, 2)  + '</span>'; 
 
     itemStr += '  <span class="tel"> 오늘 마감 </span>' +
         '</div>';           
@@ -826,13 +868,15 @@ function getTodayClosedRestarantItem(place) {
 
     let heart='';
 
-    if(isLogin == 'true'){
-        heart = `</h5><span class="heart" onclick="setMyPlace(${place.compId})"><i class="fa-light fa-heart"></i></span>`;
+    if(isLogin  == 'true' && place.isMyPlace == false){
+        heart = `<span class="heart-${place.compId}" onclick="setMyPlace(${place.compId})"><i class="fa-regular fa-heart"></i></i></span>`;
+    }else if(isLogin  == 'true' && place.isMyPlace == true){
+        heart = `<span class="heart-${place.compId}" onclick="setMyPlace(${place.compId})"><i class="fa-solid fa-heart"></i></i></span>`;
     }
 
     let el = document.createElement('li'),
     itemStr = '<div class="info">' +
-        '   <h5>' + place.compName + heart;
+        '   <h5>' + place.compName + heart +'</h5>';
 
     itemStr += '    <span>' + place.address + '</span>';
     itemStr += '    <span> 휴무 </span>'
@@ -850,13 +894,15 @@ function getTodayClosedCafeItem(place) {
 
     let heart='';
 
-    if(isLogin == 'true'){
-        heart = `</h5><span class="heart" onclick="setMyPlace(${place.compId})"><i class="fa-light fa-heart"></i></span>`;
+    if(isLogin  == 'true' && place.isMyPlace == false){
+        heart = `<span class="heart-${place.compId}" onclick="setMyPlace(${place.compId})"><i class="fa-regular fa-heart"></i></i></span>`;
+    }else if(isLogin  == 'true' && place.isMyPlace == true){
+        heart = `<span class="heart-${place.compId}" onclick="setMyPlace(${place.compId})"><i class="fa-solid fa-heart"></i></i></span>`;
     }
 
     let el = document.createElement('li'),
     itemStr = '<div class="info">' +
-        '   <h5>' + place.compName + heart;
+        '   <h5>' + place.compName + heart +'</h5>';
     itemStr += '    <span>' + place.address + '</span>';
     itemStr += '    <span> 휴무 </span>'
 
@@ -873,13 +919,15 @@ function getTodayClosedHospitalItem(place) {
 
     let heart='';
 
-    if(isLogin == 'true'){
-        heart = `</h5><span class="heart" onclick="setMyPlace(${place.compId})"><i class="fa-light fa-heart"></i></span>`;
+    if(isLogin  == 'true' && place.isMyPlace == false){
+        heart = `<span class="heart-${place.compId}" onclick="setMyPlace(${place.compId})"><i class="fa-regular fa-heart"></i></i></span>`;
+    }else if(isLogin  == 'true' && place.isMyPlace == true){
+        heart = `<span class="heart-${place.compId}" onclick="setMyPlace(${place.compId})"><i class="fa-solid fa-heart"></i></i></span>`;
     }
 
     let el = document.createElement('li'),
     itemStr = '<div class="info">' +
-        '   <h5>' + place.compName + heart;
+        '   <h5>' + place.compName + heart +'</h5>';
     itemStr += '    <span>' + place.address + '</span>';
     itemStr += '    <span> 휴무 </span>'
 
@@ -894,19 +942,27 @@ function getTodayClosedHospitalItem(place) {
 
 function getOpenedRestarantItem(place) {
 
+    let closeTime = parseInt((place.restClosed).substr(0, 2));
+    if(closeTime > 24){
+        closeTime -= 24;
+        closeTime = '익일 ' + closeTime;
+    }
+
     let heart='';
 
-    if(isLogin == 'true'){
-        heart = `</h5><span class="heart" onclick="setMyPlace(${place.compId})"><i class="fa-light fa-heart"></i></span>`;
+    if(isLogin  == 'true' && place.isMyPlace == false){
+        heart = `<span class="heart-${place.compId}" onclick="setMyPlace(${place.compId})"><i class="fa-regular fa-heart"></i></i></span>`;
+    }else if(isLogin  == 'true' && place.isMyPlace == true){
+        heart = `<span class="heart-${place.compId}" onclick="setMyPlace(${place.compId})"><i class="fa-solid fa-heart"></i></i></span>`;
     }
 
     let el = document.createElement('li'),
     itemStr = '<div class="info">' +
-        '   <h5>' + place.compName + heart;
+        '   <h5>' + place.compName + heart +'</h5>';
 
     itemStr += '    <span>' + place.address + '</span>';
     itemStr += '    <span>' +  (place.restOpen).substr(0, 2)+ ':'+ (place.restOpen).substr(2, 2)   + '</span>'+
-        '   <span> ~ ' +  (place.restClosed).substr(0, 2)  + ':'+ (place.restClosed).substr(2, 2) + '</span>'; 
+        '   <span> ~ ' +  closeTime  + ':'+ (place.restClosed).substr(2, 2) + '</span>'; 
 
     itemStr += '  <span class="tel"> 영업중 </span>' +
         '</div>';           
@@ -919,18 +975,26 @@ function getOpenedRestarantItem(place) {
 
 function getOpenedCafeItem(place) {
 
+    let closeTime = parseInt((place.cafeClosed).substr(0, 2));
+    if(closeTime > 24){
+        closeTime -= 24;
+        closeTime = '익일 ' + closeTime;
+    }
+
     let heart='';
 
-    if(isLogin == 'true'){
-        heart = `</h5><span class="heart" onclick="setMyPlace(${place.compId})"><i class="fa-light fa-heart"></i></span>`;
+    if(isLogin  == 'true' && place.isMyPlace == false){
+        heart = `<span class="heart-${place.compId}" onclick="setMyPlace(${place.compId})"><i class="fa-regular fa-heart"></i></i></span>`;
+    }else if(isLogin  == 'true' && place.isMyPlace == true){
+        heart = `<span class="heart-${place.compId}" onclick="setMyPlace(${place.compId})"><i class="fa-solid fa-heart"></i></i></span>`;
     }
 
     let el = document.createElement('li'),
     itemStr = '<div class="info">' +
-        '   <h5>' + place.compName + heart;
+        '   <h5>' + place.compName + heart +'</h5>';
     itemStr += '    <span>' + place.address + '</span>';
     itemStr += '    <span>' +  (place.cafeOpen).substr(0, 2) + ':'+ (place.cafeOpen).substr(2, 2)  + '</span>'+
-        '   <span> ~ ' +  (place.cafeClosed).substr(0, 2) + ':'+ (place.cafeClosed).substr(2, 2)  + '</span>'; 
+        '   <span> ~ ' +  closeTime + ':'+ (place.cafeClosed).substr(2, 2)  + '</span>'; 
 
     itemStr += '  <span class="tel"> 영업중 </span>' +
         '</div>';           
@@ -943,18 +1007,26 @@ function getOpenedCafeItem(place) {
 
 function getOpenedHospitalItem(place) {
 
+    let closeTime = parseInt((place.hospitalClosed).substr(0, 2));
+    if(closeTime > 24){
+        closeTime -= 24;
+        closeTime = '익일 ' + closeTime;
+    }
+
     let heart='';
 
-    if(isLogin == 'true'){
-        heart = `</h5><span class="heart" onclick="setMyPlace(${place.compId})"><i class="fa-light fa-heart"></i></span>`;
+    if(isLogin  == 'true' && place.isMyPlace == false){
+        heart = `<span class="heart-${place.compId}" onclick="setMyPlace(${place.compId})"><i class="fa-regular fa-heart"></i></i></span>`;
+    }else if(isLogin  == 'true' && place.isMyPlace == true){
+        heart = `<span class="heart-${place.compId}" onclick="setMyPlace(${place.compId})"><i class="fa-solid fa-heart"></i></i></span>`;
     }
 
     let el = document.createElement('li'),
     itemStr = '<div class="info">' +
-        '   <h5>' + place.compName + heart;
+        '   <h5>' + place.compName + heart +'</h5>';
     itemStr += '    <span>' + place.address + '</span>';
     itemStr += '    <span>' +  (place.hospitalOpen).substr(0, 2) + ':'+ (place.hospitalOpen).substr(2, 2)  + '</span>'+
-        '   <span> ~ ' +  (place.hospitalClosed).substr(0, 2) + ':'+ (place.hospitalClosed).substr(2, 2)  + '</span>'; 
+        '   <span> ~ ' +  closeTime + ':'+ (place.hospitalClosed).substr(2, 2)  + '</span>'; 
 
     itemStr += '  <span class="tel"> 영업중 </span>' +
         '</div>';           

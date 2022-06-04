@@ -4,6 +4,7 @@
     <link rel="stylesheet" href="/stylesheets/main.css" />
     <link rel="stylesheet" href="/stylesheets/map.css" />
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=<%=apikey%>&libraries=services,clusterer,drawing"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" rel="stylesheet">
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="//code.jquery.com/jquery-3.4.1.min.js"></script>
   </head>
@@ -57,7 +58,13 @@
     let openedCafe = []; // 영업중인 휴게음식점 객체를 가지고 있을 배열입니다
     let openedHospital = []; // 영업중인 병원 객체를 가지고 있을 배열입니다
     const isLogin = "<%= isLogin %>";
+    let MyPlaces = [];
   </script>
+  <% myPlaces.forEach( p => {%>
+    <script>
+      MyPlaces.push("<%= p %>");
+    </script>
+  <%});%>
   <% const day = new Date().getDay(); %>
   <% closedRestaurantTotal.forEach(r => { %>
     <script>
@@ -73,9 +80,15 @@
         breakStart: '<%= r.dataValues.breakStart %>',
         breakEnd: '<%= r.dataValues.breakEnd %>',
         image: '<%= r.dataValues.image %>',
-        type: 'cr'
+        type: 'cr',
+        isMyPlace: false
       };
-      closedRestaurant.push(closedRestaurantObject);
+      if(MyPlaces.includes("<%= r.dataValues.compId %>")){
+        closedRestaurantObject.isMyPlace = true;
+        closedRestaurant.push(closedRestaurantObject);
+      }else{
+        closedRestaurant.push(closedRestaurantObject);
+      }
     </script>
   <% }); %>
   <% closedCafeTotal.forEach(c => { %>
@@ -91,9 +104,15 @@
         cafeClosed: '<%= c.dataValues.cafeClosed %>',
         cafeType: '<%= c.dataValues.cafeType %>',
         image: '<%= c.dataValues.image %>',
-        type: 'cc'
+        type: 'cc',
+        isMyPlace: false
       };
-      closedCafe.push(closedCafeObject);
+      if(MyPlaces.includes("<%= c.dataValues.compId %>")){
+        closedCafeObject.isMyPlace = true;
+        closedCafe.push(closedCafeObject);
+      }else{
+        closedCafe.push(closedCafeObject);
+      }
     </script>
   <% }); %>
   <% if(day == 0){closedHospitalTotal.forEach(h => { %>
@@ -110,9 +129,15 @@
         image: '<%= h.dataValues.image %>',
         HospType: '<%= h.dataValues.HospType %>',
         content: '<%= h.dataValues.content %>',
-        type: 'ch'
+        type: 'ch',
+        isMyPlace: false
       };
-      closedHospital.push(closedHospitalObject);
+      if(MyPlaces.includes("<%= h.dataValues.compId %>")){
+        closedHospitalObject.isMyPlace = true;
+        closedHospital.push(closedHospitalObject);
+      }else{
+        closedHospital.push(closedHospitalObject);
+      }
     </script>
   <% })}else if(day == 1){closedHospitalTotal.forEach(h => { %>
     <script>
@@ -128,9 +153,15 @@
         image: '<%= h.dataValues.image %>',
         HospType: '<%= h.dataValues.HospType %>',
         content: '<%= h.dataValues.content %>',
-        type: 'ch'
+        type: 'ch',
+        isMyPlace: false
       };
-      closedHospital.push(closedHospitalObject);
+      if(MyPlaces.includes("<%= h.dataValues.compId %>")){
+        closedHospitalObject.isMyPlace = true;
+        closedHospital.push(closedHospitalObject);
+      }else{
+        closedHospital.push(closedHospitalObject);
+      }
     </script>
   <% })}else if(day == 2){closedHospitalTotal.forEach(h => { %>
     <script>
@@ -146,9 +177,15 @@
         image: '<%= h.dataValues.image %>',
         HospType: '<%= h.dataValues.HospType %>',
         content: '<%= h.dataValues.content %>',
-        type: 'ch'
+        type: 'ch',
+        isMyPlace: false
       };
-      closedHospital.push(closedHospitalObject);
+      if(MyPlaces.includes("<%= h.dataValues.compId %>")){
+        closedHospitalObject.isMyPlace = true;
+        closedHospital.push(closedHospitalObject);
+      }else{
+        closedHospital.push(closedHospitalObject);
+      }
     </script>
   <% })}else if(day == 3){closedHospitalTotal.forEach(h => { %>
     <script>
@@ -164,9 +201,15 @@
         image: '<%= h.dataValues.image %>',
         HospType: '<%= h.dataValues.HospType %>',
         content: '<%= h.dataValues.content %>',
-        type: 'ch'
+        type: 'ch',
+        isMyPlace: false
       };
-      closedHospital.push(closedHospitalObject);
+      if(MyPlaces.includes("<%= h.dataValues.compId %>")){
+        closedHospitalObject.isMyPlace = true;
+        closedHospital.push(closedHospitalObject);
+      }else{
+        closedHospital.push(closedHospitalObject);
+      }
     </script>
   <% })}else if(day == 4){closedHospitalTotal.forEach(h => { %>
     <script>
@@ -182,9 +225,15 @@
         image: '<%= h.dataValues.image %>',
         HospType: '<%= h.dataValues.HospType %>',
         content: '<%= h.dataValues.content %>',
-        type: 'ch'
+        type: 'ch',
+        isMyPlace: false
       };
-      closedHospital.push(closedHospitalObject);
+      if(MyPlaces.includes("<%= h.dataValues.compId %>")){
+        closedHospitalObject.isMyPlace = true;
+        closedHospital.push(closedHospitalObject);
+      }else{
+        closedHospital.push(closedHospitalObject);
+      }
     </script>
   <% })}else if(day == 5){closedHospitalTotal.forEach(h => { %>
     <script>
@@ -200,9 +249,15 @@
         image: '<%= h.dataValues.image %>',
         HospType: '<%= h.dataValues.HospType %>',
         content: '<%= h.dataValues.content %>',
-        type: 'ch'
+        type: 'ch',
+        isMyPlace: false
       };
-      closedHospital.push(closedHospitalObject);
+      if(MyPlaces.includes("<%= h.dataValues.compId %>")){
+        closedHospitalObject.isMyPlace = true;
+        closedHospital.push(closedHospitalObject);
+      }else{
+        closedHospital.push(closedHospitalObject);
+      }
     </script>
   <% })}else if(day == 6){closedHospitalTotal.forEach(h => { %>
     <script>
@@ -218,9 +273,15 @@
         image: '<%= h.dataValues.image %>',
         HospType: '<%= h.dataValues.HospType %>',
         content: '<%= h.dataValues.content %>',
-        type: 'ch'
+        type: 'ch',
+        isMyPlace: false
       };
-      closedHospital.push(closedHospitalObject);
+      if(MyPlaces.includes("<%= h.dataValues.compId %>")){
+        closedHospitalObject.isMyPlace = true;
+        closedHospital.push(closedHospitalObject);
+      }else{
+        closedHospital.push(closedHospitalObject);
+      }
     </script>
   <% })}; %>
   <% todayClosedRestaurant.forEach(r => { %>
@@ -233,9 +294,15 @@
         longitude: '<%= r.dataValues.longitude %>',
         tel: '<%= r.dataValues.tel %>',
         image: '<%= r.dataValues.image %>',
-        type: 'tcr'
+        type: 'tcr',
+        isMyPlace: false
       };
-      todayClosedRestaurant.push(todayClosedRestaurantObject);
+      if(MyPlaces.includes("<%= r.dataValues.compId %>")){
+        todayClosedRestaurantObject.isMyPlace = true;
+        todayClosedRestaurant.push(todayClosedRestaurantObject);
+      }else{
+        todayClosedRestaurant.push(todayClosedRestaurantObject);
+      }
     </script>
   <% }); %>
   <% todayClosedCafe.forEach(c => { %>
@@ -249,9 +316,15 @@
         tel: '<%= c.dataValues.tel %>',
         cafeType: '<%= c.dataValues.cafeType %>',
         image: '<%= c.dataValues.image %>',
-        type: 'tcc'
+        type: 'tcc',
+        isMyPlace: false
       };
-      todayClosedCafe.push(todayClosedCafeObject);
+      if(MyPlaces.includes("<%= c.dataValues.compId %>")){
+        todayClosedCafeObject.isMyPlace = true;
+        todayClosedCafe.push(todayClosedCafeObject);
+      }else{
+        todayClosedCafe.push(todayClosedCafeObject);
+      }
     </script>
   <% }); %>
   <% todayClosedHospital.forEach(h => { %>
@@ -266,9 +339,15 @@
         image: '<%= h.dataValues.image %>',
         HospType: '<%= h.dataValues.HospType %>',
         content: '<%= h.dataValues.content %>',
-        type: 'tch'
+        type: 'tch',
+        isMyPlace: false
       };
-      todayClosedHospital.push(todayClosedHospitalObject);
+      if(MyPlaces.includes("<%= h.dataValues.compId %>")){
+        todayClosedHospitalObject.isMyPlace = true;
+        todayClosedHospital.push(todayClosedHospitalObject);
+      }else{
+        todayClosedHospital.push(todayClosedHospitalObject);
+      }
     </script>
   <% }); %>
   <% openedRestaurant.forEach(r => { %>
@@ -285,9 +364,15 @@
         breakStart: '<%= r.dataValues.breakStart %>',
         breakEnd: '<%= r.dataValues.breakEnd %>',
         image: '<%= r.dataValues.image %>',
-        type: 'or'
+        type: 'or',
+        isMyPlace: false
       };
-      openedRestaurant.push(openedRestaurantObject);
+      if(MyPlaces.includes("<%= r.dataValues.compId %>")){
+        openedRestaurantObject.isMyPlace = true;
+        openedRestaurant.push(openedRestaurantObject);
+      }else{
+        openedRestaurant.push(openedRestaurantObject);
+      }
     </script>
   <% }); %>
   <% openedCafe.forEach(c => { %>
@@ -303,9 +388,15 @@
         cafeClosed: '<%= c.dataValues.cafeClosed %>',
         cafeType: '<%= c.dataValues.cafeType %>',
         image: '<%= c.dataValues.image %>',
-        type: 'oc'
+        type: 'oc',
+        isMyPlace: false
       };
-      openedCafe.push(openedCafeObject);
+      if(MyPlaces.includes("<%= c.dataValues.compId %>")){
+        openedCafeObject.isMyPlace = true;
+        openedCafe.push(openedCafeObject);
+      }else{
+        openedCafe.push(openedCafeObject);
+      }
     </script>
   <% }); %>
   <% if(day == 0){openedHospital.forEach(h => { %>
@@ -322,9 +413,15 @@
         image: '<%= h.dataValues.image %>',
         HospType: '<%= h.dataValues.HospType %>',
         content: '<%= h.dataValues.content %>',
-        type: 'oh'
+        type: 'oh',
+        isMyPlace: false
       };
-      openedHospital.push(openedHospitalObject);
+      if(MyPlaces.includes("<%= h.dataValues.compId %>")){
+        openedHospitalObject.isMyPlace = true;
+        openedHospital.push(openedHospitalObject);
+      }else{
+        openedHospital.push(openedHospitalObject);
+      }
     </script>
   <% })}else if(day == 1){openedHospital.forEach(h => { %>
     <script>
@@ -340,9 +437,15 @@
         image: '<%= h.dataValues.image %>',
         HospType: '<%= h.dataValues.HospType %>',
         content: '<%= h.dataValues.content %>',
-        type: 'oh'
+        type: 'oh',
+        isMyPlace: false
       };
-      openedHospital.push(openedHospitalObject);
+      if(MyPlaces.includes("<%= h.dataValues.compId %>")){
+        openedHospitalObject.isMyPlace = true;
+        openedHospital.push(openedHospitalObject);
+      }else{
+        openedHospital.push(openedHospitalObject);
+      }
     </script>
   <% })}else if(day == 2){openedHospital.forEach(h => { %>
     <script>
@@ -358,9 +461,15 @@
         image: '<%= h.dataValues.image %>',
         HospType: '<%= h.dataValues.HospType %>',
         content: '<%= h.dataValues.content %>',
-        type: 'oh'
+        type: 'oh',
+        isMyPlace: false
       };
-      openedHospital.push(openedHospitalObject);
+      if(MyPlaces.includes("<%= h.dataValues.compId %>")){
+        openedHospitalObject.isMyPlace = true;
+        openedHospital.push(openedHospitalObject);
+      }else{
+        openedHospital.push(openedHospitalObject);
+      }
     </script>
   <% })}else if(day == 3){openedHospital.forEach(h => { %>
     <script>
@@ -376,9 +485,15 @@
         image: '<%= h.dataValues.image %>',
         HospType: '<%= h.dataValues.HospType %>',
         content: '<%= h.dataValues.content %>',
-        type: 'oh'
+        type: 'oh',
+        isMyPlace: false
       };
-      openedHospital.push(openedHospitalObject);
+      if(MyPlaces.includes("<%= h.dataValues.compId %>")){
+        openedHospitalObject.isMyPlace = true;
+        openedHospital.push(openedHospitalObject);
+      }else{
+        openedHospital.push(openedHospitalObject);
+      }
     </script>
   <% })}else if(day == 4){openedHospital.forEach(h => { %>
     <script>
@@ -394,9 +509,15 @@
         image: '<%= h.dataValues.image %>',
         HospType: '<%= h.dataValues.HospType %>',
         content: '<%= h.dataValues.content %>',
-        type: 'oh'
+        type: 'oh',
+        isMyPlace: false
       };
-      openedHospital.push(openedHospitalObject);
+      if(MyPlaces.includes("<%= h.dataValues.compId %>")){
+        openedHospitalObject.isMyPlace = true;
+        openedHospital.push(openedHospitalObject);
+      }else{
+        openedHospital.push(openedHospitalObject);
+      }
     </script>
   <% })}else if(day == 5){openedHospital.forEach(h => { %>
     <script>
@@ -412,9 +533,15 @@
         image: '<%= h.dataValues.image %>',
         HospType: '<%= h.dataValues.HospType %>',
         content: '<%= h.dataValues.content %>',
-        type: 'oh'
+        type: 'oh',
+        isMyPlace: false
       };
-      openedHospital.push(openedHospitalObject);
+      if(MyPlaces.includes("<%= h.dataValues.compId %>")){
+        openedHospitalObject.isMyPlace = true;
+        openedHospital.push(openedHospitalObject);
+      }else{
+        openedHospital.push(openedHospitalObject);
+      }
     </script>
   <% })}else if(day == 6){openedHospital.forEach(h => { %>
     <script>
@@ -430,9 +557,15 @@
         image: '<%= h.dataValues.image %>',
         HospType: '<%= h.dataValues.HospType %>',
         content: '<%= h.dataValues.content %>',
-        type: 'oh'
+        type: 'oh',
+        isMyPlace: false
       };
-      openedHospital.push(openedHospitalObject);
+      if(MyPlaces.includes("<%= h.dataValues.compId %>")){
+        openedHospitalObject.isMyPlace = true;
+        openedHospital.push(openedHospitalObject);
+      }else{
+        openedHospital.push(openedHospitalObject);
+      }
     </script>
   <% })}; %>
   <script src="/javascripts/mapLoader.js"></script>
