@@ -9,6 +9,7 @@ const Sequelize = require('sequelize');
 const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/config.json')[env];
 const { QueryTypes } = require('sequelize');
+const request = require('request');
 
 let sequelize;
 if (config.use_env_variable) {
@@ -16,9 +17,10 @@ if (config.use_env_variable) {
 } else {
   sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
-
+let holiday_date = [];
 let today = new Date();
 const day = today.getDay();
+const date = today.getDate();
 let hour = today.getHours();
 if(hour < 6){
     hour += 24;
@@ -29,12 +31,24 @@ if(minute < 10){
 }
 let now = String(hour) + minute;
 
+request({
+    url: `http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo?serviceKey=${process.env.HOLIDAY_APIKEY}&solYear=${today.getFullYear()}&solMonth=0${today.getMonth()+1}&_type=json`,
+    method: 'GET'
+}, async function (error, response, body) {
+    const result = JSON.parse(body).response.body.items.item;
+    for(let i=0; i < result.length; i++){
+        holiday_date.push(result[i].locdate%100);
+    }
+});
+
 exports.getAllPositions = async (req, res) => {
     try{
         if(day == 0){
             todayClosedRestaurantPosition = await CompanyRestaurantView.findAll({
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
                 where:{
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     [Op.or]: [
                         { todayClosed:1 },
                         { sun:1 },
@@ -46,6 +60,8 @@ exports.getAllPositions = async (req, res) => {
             todayClosedCafePosition = await CompanyCafeView.findAll({
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'cafeOpen', 'cafeClosed', 'cafeType', 'latitude', 'longitude'],
                 where:{
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     [Op.or]: [
                         { todayClosed:1},
                         { sun:1 },
@@ -55,10 +71,10 @@ exports.getAllPositions = async (req, res) => {
                 }
             });
             todayClosedHospitalPosition = await CompanyHospitalView.findAll({
-                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', 
-                'HospOpenMon', 'HospCloseMon', 'HospOpenTue', 'HospCloseTue', 'HospOpenWed', 'HospCloseWed', 'HospOpenThu', 'HospCloseThu', 
-                'HospOpenFri', 'HospCloseFri', 'HospOpenSat', 'HospCloseSat', 'HospOpenSun', 'HospCloseSun', 'HospOpenVac', 'HospCloseVac', 'breakStart', 'breakEnd'],
+                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', 'breakStart', 'breakEnd'],
                 where:{
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     [Op.or]: [
                         { todayClosed:1 },
                         { sun:1 },
@@ -81,6 +97,8 @@ exports.getAllPositions = async (req, res) => {
             todayClosedRestaurantPosition = await CompanyRestaurantView.findAll({
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
                 where:{
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     [Op.or]: [
                         { todayClosed:1 },
                         { mon:1 },
@@ -92,6 +110,8 @@ exports.getAllPositions = async (req, res) => {
             todayClosedCafePosition = await CompanyCafeView.findAll({
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'cafeOpen', 'cafeClosed', 'cafeType', 'latitude', 'longitude'],
                 where:{
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     [Op.or]: [
                         { todayClosed:1 },
                         { mon:1 },
@@ -101,10 +121,10 @@ exports.getAllPositions = async (req, res) => {
                 }
             });
             todayClosedHospitalPosition = await CompanyHospitalView.findAll({
-                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', 
-                'HospOpenMon', 'HospCloseMon', 'HospOpenTue', 'HospCloseTue', 'HospOpenWed', 'HospCloseWed', 'HospOpenThu', 'HospCloseThu', 
-                'HospOpenFri', 'HospCloseFri', 'HospOpenSat', 'HospCloseSat', 'HospOpenSun', 'HospCloseSun', 'HospOpenVac', 'HospCloseVac', 'breakStart', 'breakEnd'],
+                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', 'breakStart', 'breakEnd'],
                 where:{
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     [Op.or]: [
                         { todayClosed:1 },
                         { mon:1 },
@@ -116,6 +136,8 @@ exports.getAllPositions = async (req, res) => {
             todayOpened = await Company.findAll({
                 attributes: ['compId'],
                 where:{
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     [Op.and]: [
                         { todayClosed:0 },
                         { mon:0 },
@@ -127,6 +149,8 @@ exports.getAllPositions = async (req, res) => {
             todayClosedRestaurantPosition = await CompanyRestaurantView.findAll({
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
                 where:{
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     [Op.or]: [
                         { todayClosed:1 },
                         { tue:1 },
@@ -138,6 +162,8 @@ exports.getAllPositions = async (req, res) => {
             todayClosedCafePosition = await CompanyCafeView.findAll({
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'cafeOpen', 'cafeClosed', 'cafeType', 'latitude', 'longitude'],
                 where:{
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     [Op.or]: [
                         { todayClosed:1 },
                         { tue:1 },
@@ -147,10 +173,10 @@ exports.getAllPositions = async (req, res) => {
                 }
             });
             todayClosedHospitalPosition = await CompanyHospitalView.findAll({
-                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', 
-                'HospOpenMon', 'HospCloseMon', 'HospOpenTue', 'HospCloseTue', 'HospOpenWed', 'HospCloseWed', 'HospOpenThu', 'HospCloseThu', 'HospOpenFri', 
-                'HospCloseFri', 'HospOpenSat', 'HospCloseSat', 'HospOpenSun', 'HospCloseSun', 'HospOpenVac', 'HospCloseVac', 'breakStart', 'breakEnd'],
+                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', 'breakStart', 'breakEnd'],
                 where:{
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     [Op.or]: [
                         { todayClosed:1 },
                         { tue:1 },
@@ -162,6 +188,8 @@ exports.getAllPositions = async (req, res) => {
             todayOpened = await Company.findAll({
                 attributes: ['compId'],
                 where:{
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     [Op.and]: [
                         { todayClosed:0 },
                         { tue:0 },
@@ -173,6 +201,8 @@ exports.getAllPositions = async (req, res) => {
             todayClosedRestaurantPosition = await CompanyRestaurantView.findAll({
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
                 where:{
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     [Op.or]: [
                         { todayClosed:1 },
                         { wed:1 },
@@ -184,6 +214,8 @@ exports.getAllPositions = async (req, res) => {
             todayClosedCafePosition = await CompanyCafeView.findAll({
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'cafeOpen', 'cafeClosed', 'cafeType', 'latitude', 'longitude'],
                 where:{
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     [Op.or]: [
                         { todayClosed:1 },
                         { wed:1 },
@@ -193,10 +225,10 @@ exports.getAllPositions = async (req, res) => {
                 }
             });
             todayClosedHospitalPosition = await CompanyHospitalView.findAll({
-                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', 'HospOpenMon', 'HospCloseMon', 
-                'HospOpenTue', 'HospCloseTue', 'HospOpenWed', 'HospCloseWed', 'HospOpenThu', 'HospCloseThu', 'HospOpenFri', 'HospCloseFri', 'HospOpenSat', 
-                'HospCloseSat', 'HospOpenSun', 'HospCloseSun', 'HospOpenVac', 'HospCloseVac', 'breakStart', 'breakEnd'],
+                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', 'HospOpenMon', 'HospCloseMon', 'breakStart', 'breakEnd'],
                 where:{
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     [Op.or]: [
                         { todayClosed:1 },
                         { wed:1 },
@@ -208,6 +240,8 @@ exports.getAllPositions = async (req, res) => {
             todayOpened = await Company.findAll({
                 attributes: ['compId'],
                 where:{
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     [Op.and]: [
                         { todayClosed:0 },
                         { wed:0 },
@@ -219,6 +253,8 @@ exports.getAllPositions = async (req, res) => {
             todayClosedRestaurantPosition = await CompanyRestaurantView.findAll({
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
                 where:{
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     [Op.or]: [
                         { todayClosed:1 },
                         { thu:1 },
@@ -230,6 +266,8 @@ exports.getAllPositions = async (req, res) => {
             todayClosedCafePosition = await CompanyCafeView.findAll({
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'cafeOpen', 'cafeClosed', 'cafeType', 'latitude', 'longitude'],
                 where:{
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     [Op.or]: [
                         { todayClosed:1 },
                         { thu:1 },
@@ -239,10 +277,10 @@ exports.getAllPositions = async (req, res) => {
                 }
             });
             todayClosedHospitalPosition = await CompanyHospitalView.findAll({
-                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', 'HospOpenMon', 'HospCloseMon', 
-                'HospOpenTue', 'HospCloseTue', 'HospOpenWed', 'HospCloseWed', 'HospOpenThu', 'HospCloseThu', 'HospOpenFri', 'HospCloseFri', 'HospOpenSat', 
-                'HospCloseSat', 'HospOpenSun', 'HospCloseSun', 'HospOpenVac', 'HospCloseVac', 'breakStart', 'breakEnd'],
+                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', 'breakStart', 'breakEnd'],
                 where:{
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     [Op.or]: [
                         { todayClosed:1 },
                         { thu:1 },
@@ -254,6 +292,8 @@ exports.getAllPositions = async (req, res) => {
             todayOpened = await Company.findAll({
                 attributes: ['compId'],
                 where:{
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     [Op.and]: [
                         { todayClosed:0 },
                         { thu:0 },
@@ -265,6 +305,8 @@ exports.getAllPositions = async (req, res) => {
             todayClosedRestaurantPosition = await CompanyRestaurantView.findAll({
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
                 where:{
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     [Op.or]: [
                         { todayClosed:1 },
                         { fri:1 },
@@ -276,6 +318,8 @@ exports.getAllPositions = async (req, res) => {
             todayClosedCafePosition = await CompanyCafeView.findAll({
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'cafeOpen', 'cafeClosed', 'cafeType', 'latitude', 'longitude'],
                 where:{
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     [Op.or]: [
                         { todayClosed:1 },
                         { fri:1 },
@@ -285,10 +329,10 @@ exports.getAllPositions = async (req, res) => {
                 }
             });
             todayClosedHospitalPosition = await CompanyHospitalView.findAll({
-                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', 
-                'HospOpenMon', 'HospCloseMon', 'HospOpenTue', 'HospCloseTue', 'HospOpenWed', 'HospCloseWed', 'HospOpenThu', 'HospCloseThu', 
-                'HospOpenFri', 'HospCloseFri', 'HospOpenSat', 'HospCloseSat', 'HospOpenSun', 'HospCloseSun', 'HospOpenVac', 'HospCloseVac', 'breakStart', 'breakEnd'],
+                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', 'breakStart', 'breakEnd'],
                 where:{
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     [Op.or]: [
                         { todayClosed:1 },
                         { fri:1 },
@@ -300,6 +344,8 @@ exports.getAllPositions = async (req, res) => {
             todayOpened = await Company.findAll({
                 attributes: ['compId'],
                 where:{
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     [Op.and]: [
                         { todayClosed:0 },
                         { fri:0 },
@@ -311,6 +357,8 @@ exports.getAllPositions = async (req, res) => {
             todayClosedRestaurantPosition = await CompanyRestaurantView.findAll({
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
                 where:{
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     [Op.or]: [
                         { todayClosed:1 },
                         { sat:1 },
@@ -322,6 +370,8 @@ exports.getAllPositions = async (req, res) => {
             todayClosedCafePosition = await CompanyCafeView.findAll({
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'cafeOpen', 'cafeClosed', 'cafeType', 'latitude', 'longitude'],
                 where:{
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     [Op.or]: [
                         { todayClosed:1 },
                         { sat:1 },
@@ -331,10 +381,10 @@ exports.getAllPositions = async (req, res) => {
                 }
             });
             todayClosedHospitalPosition = await CompanyHospitalView.findAll({
-                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'todayClosed', 'earlyClosed', 'vacation', 'latitude', 'longitude', 
-                'HospOpenMon', 'HospCloseMon', 'HospOpenTue', 'HospCloseTue', 'HospOpenWed', 'HospCloseWed', 'HospOpenThu', 'HospCloseThu', 'HospOpenFri', 
-                'HospCloseFri', 'HospOpenSat', 'HospCloseSat', 'HospOpenSun', 'HospCloseSun', 'HospOpenVac', 'HospCloseVac', 'breakStart', 'breakEnd'],
+                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'todayClosed', 'earlyClosed', 'vacation', 'latitude', 'longitude', 'breakStart', 'breakEnd'],
                 where:{
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     [Op.or]: [
                         { todayClosed:1 },
                         { sat:1 },
@@ -346,6 +396,8 @@ exports.getAllPositions = async (req, res) => {
             todayOpened = await Company.findAll({
                 attributes: ['compId'],
                 where:{
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     [Op.and]: [
                         { todayClosed:0 },
                         { sat:0 },
@@ -357,6 +409,8 @@ exports.getAllPositions = async (req, res) => {
         earlyClosedRestaurantPosition = await CompanyRestaurantView.findAll({
             attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
             where:{
+                latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                 earlyClosed:1,
                 type: 'R'
             }
@@ -364,19 +418,83 @@ exports.getAllPositions = async (req, res) => {
         earlyClosedCafePosition = await CompanyCafeView.findAll({
             attributes: ['compId', 'image', 'compName', 'address', 'tel', 'cafeOpen', 'cafeClosed', 'cafeType', 'latitude', 'longitude'],
             where:{
+                latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                 earlyClosed:1,
                 type: 'C'
             }
         });
-        earlyClosedHospitalPosition = await CompanyHospitalView.findAll({
-            attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', 
-                'HospOpenMon', 'HospCloseMon', 'HospOpenTue', 'HospCloseTue', 'HospOpenWed', 'HospCloseWed', 'HospOpenThu', 'HospCloseThu', 
-                'HospOpenFri', 'HospCloseFri', 'HospOpenSat', 'HospCloseSat', 'HospOpenSun', 'HospCloseSun', 'HospOpenVac', 'HospCloseVac', 'breakStart', 'breakEnd'],
-            where:{
-                earlyClosed:1,
-                type: 'H'
-            }
-        });
+        if(day == 0){
+            earlyClosedHospitalPosition = await CompanyHospitalView.findAll({
+                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenSun', 'hospitalOpen'], ['HospCloseSun', 'hospitalClosed'], 'breakStart', 'breakEnd'],
+                where:{
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
+                    earlyClosed:1,
+                    type: 'H'
+                }
+            });
+        }else if(day == 1){
+            earlyClosedHospitalPosition = await CompanyHospitalView.findAll({
+                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenMon', 'hospitalOpen'], ['HospCloseMon', 'hospitalClosed'], 'breakStart', 'breakEnd'],
+                where:{
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
+                    earlyClosed:1,
+                    type: 'H'
+                }
+            });
+        }else if(day == 2){
+            earlyClosedHospitalPosition = await CompanyHospitalView.findAll({
+                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenTue', 'hospitalOpen'], ['HospCloseTue', 'hospitalClosed'], 'breakStart', 'breakEnd'],
+                where:{
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
+                    earlyClosed:1,
+                    type: 'H'
+                }
+            });
+        }else if(day == 3){
+            earlyClosedHospitalPosition = await CompanyHospitalView.findAll({
+                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenWed', 'hospitalOpen'], ['HospCloseWed', 'hospitalClosed'], 'breakStart', 'breakEnd'],
+                where:{
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
+                    earlyClosed:1,
+                    type: 'H'
+                }
+            });
+        }else if(day == 4){
+            earlyClosedHospitalPosition = await CompanyHospitalView.findAll({
+                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenThu', 'hospitalOpen'], ['HospCloseThu', 'hospitalClosed'], 'breakStart', 'breakEnd'],
+                where:{
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
+                    earlyClosed:1,
+                    type: 'H'
+                }
+            });
+        }else if(day == 5){
+            earlyClosedHospitalPosition = await CompanyHospitalView.findAll({
+                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenFri', 'hospitalOpen'], ['HospCloseFri', 'hospitalClosed'], 'breakStart', 'breakEnd'],
+                where:{
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
+                    earlyClosed:1,
+                    type: 'H'
+                }
+            });
+        }else if(day == 6){
+            earlyClosedHospitalPosition = await CompanyHospitalView.findAll({
+                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenSat', 'hospitalOpen'], ['HospCloseSat', 'hospitalClosed'], 'breakStart', 'breakEnd'],
+                where:{
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
+                    earlyClosed:1,
+                    type: 'H'
+                }
+            });
+        }
         let openedCompany_R = new Array();
         let openedCompany_C = new Array();
         let openedCompany_H = new Array();
@@ -387,6 +505,8 @@ exports.getAllPositions = async (req, res) => {
         openedRestaurant = await CompanyRestaurantView.findAll({
             attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
             where: {
+                latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                 compId:{
                     [Op.or]: [...openedCompany_R],
                 },
@@ -401,6 +521,8 @@ exports.getAllPositions = async (req, res) => {
         closedRestaurant = await CompanyRestaurantView.findAll({
             attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
             where: {
+                latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                 compId:{
                     [Op.or]: [...openedCompany_R],
                 },
@@ -418,6 +540,8 @@ exports.getAllPositions = async (req, res) => {
         openedCafe = await CompanyCafeView.findAll({
             attributes: ['compId', 'image', 'compName', 'address', 'tel', 'cafeOpen', 'cafeClosed', 'cafeType', 'latitude', 'longitude'],
             where: {
+                latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                 compId:{
                     [Op.or]: [...openedCompany_C]
                 },
@@ -433,6 +557,8 @@ exports.getAllPositions = async (req, res) => {
         closedCafe = await CompanyCafeView.findAll({
             attributes: ['compId', 'image', 'compName', 'address', 'tel', 'cafeOpen', 'cafeClosed', 'cafeType', 'latitude', 'longitude'],
             where: {
+                latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                 compId:{
                     [Op.or]: [...openedCompany_C],
                 },
@@ -447,12 +573,12 @@ exports.getAllPositions = async (req, res) => {
             }
         });
 
-        if(day == 0){
+        if(holiday_date.includes(date)){
             openedHospital = await CompanyHospitalView.findAll({
-                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', 'HospOpenMon', 'HospCloseMon', 
-                'HospOpenTue', 'HospCloseTue', 'HospOpenWed', 'HospCloseWed', 'HospOpenThu', 'HospCloseThu', 'HospOpenFri', 'HospCloseFri', 'HospOpenSat', 
-                'HospCloseSat', 'HospOpenSun', 'HospCloseSun', 'HospOpenVac', 'HospCloseVac', 'breakStart', 'breakEnd'],
+                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenVac', 'hospitalOpen'], ['HospCloseVac', 'hospitalClosed'], 'breakStart', 'breakEnd'],
                 where: {
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
                         [Op.or]: [...openedCompany_H]
                     },
@@ -465,10 +591,45 @@ exports.getAllPositions = async (req, res) => {
                 }
             });
             closedHospital = await CompanyHospitalView.findAll({
-                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', 'HospOpenMon', 'HospCloseMon', 
-                'HospOpenTue', 'HospCloseTue', 'HospOpenWed', 'HospCloseWed', 'HospOpenThu', 'HospCloseThu', 'HospOpenFri', 'HospCloseFri', 'HospOpenSat', 
-                'HospCloseSat', 'HospOpenSun', 'HospCloseSun', 'HospOpenVac', 'HospCloseVac', 'breakStart', 'breakEnd'],
+                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenVac', 'hospitalOpen'], ['HospCloseVac', 'hospitalClosed'], 'breakStart', 'breakEnd'],
                 where: {
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
+                    compId:{
+                        [Op.or]: [...openedCompany_H],
+                    },
+                    [Op.or]:{
+                        HospOpenSun:{
+                            [Op.gt]: parseInt(now)
+                        },
+                        HospCloseSun:{
+                            [Op.lte]: parseInt(now)
+                        }
+                    }
+                }
+            });
+        }else if(day == 0){
+            openedHospital = await CompanyHospitalView.findAll({
+                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenSun', 'hospitalOpen'], ['HospCloseSun', 'hospitalClosed'], 'breakStart', 'breakEnd'],
+                where: {
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
+                    compId:{
+                        [Op.or]: [...openedCompany_H]
+                    },
+                    HospOpenSun:{
+                        [Op.lte]: parseInt(now)
+                    },
+                    HospCloseSun:{
+                        [Op.gt]: parseInt(now)
+                    }
+                }
+            });
+            closedHospital = await CompanyHospitalView.findAll({
+                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenSun', 'hospitalOpen'], ['HospCloseSun', 'hospitalClosed'], 'breakStart', 'breakEnd'],
+                where: {
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
                         [Op.or]: [...openedCompany_H],
                     },
@@ -484,10 +645,10 @@ exports.getAllPositions = async (req, res) => {
             });
         }else if(day == 1){
             openedHospital = await CompanyHospitalView.findAll({
-                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', 'HospOpenMon', 'HospCloseMon', 
-                'HospOpenTue', 'HospCloseTue', 'HospOpenWed', 'HospCloseWed', 'HospOpenThu', 'HospCloseThu', 'HospOpenFri', 'HospCloseFri', 'HospOpenSat', 
-                'HospCloseSat', 'HospOpenSun', 'HospCloseSun', 'HospOpenVac', 'HospCloseVac', 'breakStart', 'breakEnd'],
+                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenMon', 'hospitalOpen'], ['HospCloseMon', 'hospitalClosed'], 'breakStart', 'breakEnd'],
                 where: {
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
                         [Op.or]: [...openedCompany_H]
                     },
@@ -500,10 +661,10 @@ exports.getAllPositions = async (req, res) => {
                 }
             });
             closedHospital = await CompanyHospitalView.findAll({
-                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', 
-                'HospOpenMon', 'HospCloseMon', 'HospOpenTue', 'HospCloseTue', 'HospOpenWed', 'HospCloseWed', 'HospOpenThu', 'HospCloseThu', 'HospOpenFri', 
-                'HospCloseFri', 'HospOpenSat', 'HospCloseSat', 'HospOpenSun', 'HospCloseSun', 'HospOpenVac', 'HospCloseVac', 'breakStart', 'breakEnd'],
+                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenMon', 'hospitalOpen'], ['HospCloseMon', 'hospitalClosed'], 'breakStart', 'breakEnd'],
                 where: {
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
                         [Op.or]: [...openedCompany_H],
                     },
@@ -519,10 +680,10 @@ exports.getAllPositions = async (req, res) => {
             });
         }else if(day == 2){
             openedHospital = await CompanyHospitalView.findAll({
-                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', 'HospOpenMon', 'HospCloseMon', 
-                'HospOpenTue', 'HospCloseTue', 'HospOpenWed', 'HospCloseWed', 'HospOpenThu', 'HospCloseThu', 'HospOpenFri', 'HospCloseFri', 'HospOpenSat', 
-                'HospCloseSat', 'HospOpenSun', 'HospCloseSun', 'HospOpenVac', 'HospCloseVac', 'breakStart', 'breakEnd'],
+                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenTue', 'hospitalOpen'], ['HospCloseTue', 'hospitalClosed'], 'breakStart', 'breakEnd'],
                 where: {
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
                         [Op.or]: [...openedCompany_H]
                     },
@@ -535,10 +696,10 @@ exports.getAllPositions = async (req, res) => {
                 }
             });
             closedHospital = await CompanyHospitalView.findAll({
-                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', 'HospOpenMon', 'HospCloseMon', 
-                'HospOpenTue', 'HospCloseTue', 'HospOpenWed', 'HospCloseWed', 'HospOpenThu', 'HospCloseThu', 'HospOpenFri', 'HospCloseFri', 'HospOpenSat', 
-                'HospCloseSat', 'HospOpenSun', 'HospCloseSun', 'HospOpenVac', 'HospCloseVac', 'breakStart', 'breakEnd'],
+                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenTue', 'hospitalOpen'], ['HospCloseTue', 'hospitalClosed'], 'breakStart', 'breakEnd'],
                 where: {
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
                         [Op.or]: [...openedCompany_H],
                     },
@@ -554,10 +715,10 @@ exports.getAllPositions = async (req, res) => {
             });
         }else if(day == 3){
             openedHospital = await CompanyHospitalView.findAll({
-                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', 'HospOpenMon', 'HospCloseMon', 
-                'HospOpenTue', 'HospCloseTue', 'HospOpenWed', 'HospCloseWed', 'HospOpenThu', 'HospCloseThu', 'HospOpenFri', 'HospCloseFri', 'HospOpenSat', 
-                'HospCloseSat', 'HospOpenSun', 'HospCloseSun', 'HospOpenVac', 'HospCloseVac', 'breakStart', 'breakEnd'],
+                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenWed', 'hospitalOpen'], ['HospCloseWed', 'hospitalClosed'], 'breakStart', 'breakEnd'],
                 where: {
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
                         [Op.or]: [...openedCompany_H]
                     },
@@ -570,10 +731,10 @@ exports.getAllPositions = async (req, res) => {
                 }
             });
             closedHospital = await CompanyHospitalView.findAll({
-                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', 'HospOpenMon', 'HospCloseMon', 
-                'HospOpenTue', 'HospCloseTue', 'HospOpenWed', 'HospCloseWed', 'HospOpenThu', 'HospCloseThu', 'HospOpenFri', 'HospCloseFri', 'HospOpenSat', 
-                'HospCloseSat', 'HospOpenSun', 'HospCloseSun', 'HospOpenVac', 'HospCloseVac', 'breakStart', 'breakEnd'],
+                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenWed', 'hospitalOpen'], ['HospCloseWed', 'hospitalClosed'], 'breakStart', 'breakEnd'],
                 where: {
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
                         [Op.or]: [...openedCompany_H],
                     },
@@ -589,10 +750,10 @@ exports.getAllPositions = async (req, res) => {
             });
         }else if(day == 4){
             openedHospital = await CompanyHospitalView.findAll({
-                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', 'HospOpenMon', 'HospCloseMon', 
-                'HospOpenTue', 'HospCloseTue', 'HospOpenWed', 'HospCloseWed', 'HospOpenThu', 'HospCloseThu', 'HospOpenFri', 'HospCloseFri', 'HospOpenSat', 
-                'HospCloseSat', 'HospOpenSun', 'HospCloseSun', 'HospOpenVac', 'HospCloseVac', 'breakStart', 'breakEnd'],
+                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenThu', 'hospitalOpen'], ['HospCloseThu', 'hospitalClosed'], 'breakStart', 'breakEnd'],
                 where: {
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
                         [Op.or]: [...openedCompany_H]
                     },
@@ -605,10 +766,10 @@ exports.getAllPositions = async (req, res) => {
                 }
             });
             closedHospital = await CompanyHospitalView.findAll({
-                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', 'HospOpenMon', 'HospCloseMon', 
-                'HospOpenTue', 'HospCloseTue', 'HospOpenWed', 'HospCloseWed', 'HospOpenThu', 'HospCloseThu', 'HospOpenFri', 'HospCloseFri', 'HospOpenSat', 
-                'HospCloseSat', 'HospOpenSun', 'HospCloseSun', 'HospOpenVac', 'HospCloseVac', 'breakStart', 'breakEnd'],
+                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenThu', 'hospitalOpen'], ['HospCloseThu', 'hospitalClosed'], 'breakStart', 'breakEnd'],
                 where: {
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
                         [Op.or]: [...openedCompany_H],
                     },
@@ -624,10 +785,10 @@ exports.getAllPositions = async (req, res) => {
             });
         }else if(day == 5){
             openedHospital = await CompanyHospitalView.findAll({
-                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', 'HospOpenMon', 'HospCloseMon', 
-                'HospOpenTue', 'HospCloseTue', 'HospOpenWed', 'HospCloseWed', 'HospOpenThu', 'HospCloseThu', 'HospOpenFri', 'HospCloseFri', 'HospOpenSat', 
-                'HospCloseSat', 'HospOpenSun', 'HospCloseSun', 'HospOpenVac', 'HospCloseVac', 'breakStart', 'breakEnd'],
+                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenFri', 'hospitalOpen'], ['HospCloseFri', 'hospitalClosed'], 'breakStart', 'breakEnd'],
                 where: {
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
                         [Op.or]: [...openedCompany_H]
                     },
@@ -640,10 +801,10 @@ exports.getAllPositions = async (req, res) => {
                 }
             });
             closedHospital = await CompanyHospitalView.findAll({
-                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', 'HospOpenMon', 'HospCloseMon', 
-                'HospOpenTue', 'HospCloseTue', 'HospOpenWed', 'HospCloseWed', 'HospOpenThu', 'HospCloseThu', 'HospOpenFri', 'HospCloseFri', 'HospOpenSat', 
-                'HospCloseSat', 'HospOpenSun', 'HospCloseSun', 'HospOpenVac', 'HospCloseVac', 'breakStart', 'breakEnd'],
+                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenFri', 'hospitalOpen'], ['HospCloseFri', 'hospitalClosed'], 'breakStart', 'breakEnd'],
                 where: {
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
                         [Op.or]: [...openedCompany_H],
                     },
@@ -659,10 +820,10 @@ exports.getAllPositions = async (req, res) => {
             });
         }else if(day == 6){
             openedHospital = await CompanyHospitalView.findAll({
-                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', 'HospOpenMon', 'HospCloseMon', 
-                'HospOpenTue', 'HospCloseTue', 'HospOpenWed', 'HospCloseWed', 'HospOpenThu', 'HospCloseThu', 'HospOpenFri', 'HospCloseFri', 'HospOpenSat', 
-                'HospCloseSat', 'HospOpenSun', 'HospCloseSun', 'HospOpenVac', 'HospCloseVac', 'breakStart', 'breakEnd'],
+                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenSat', 'hospitalOpen'], ['HospCloseSat', 'hospitalClosed'], 'breakStart', 'breakEnd'],
                 where: {
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
                         [Op.or]: [...openedCompany_H]
                     },
@@ -675,10 +836,10 @@ exports.getAllPositions = async (req, res) => {
                 }
             });
             closedHospital = await CompanyHospitalView.findAll({
-                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', 'HospOpenMon', 'HospCloseMon', 
-                'HospOpenTue', 'HospCloseTue', 'HospOpenWed', 'HospCloseWed', 'HospOpenThu', 'HospCloseThu', 'HospOpenFri', 'HospCloseFri', 'HospOpenSat', 
-                'HospCloseSat', 'HospOpenSun', 'HospCloseSun', 'HospOpenVac', 'HospCloseVac', 'breakStart', 'breakEnd'],
+                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenSat', 'hospitalOpen'], ['HospCloseSat', 'hospitalClosed'], 'breakStart', 'breakEnd'],
                 where: {
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
                         [Op.or]: [...openedCompany_H],
                     },
@@ -698,29 +859,64 @@ exports.getAllPositions = async (req, res) => {
         myPlaces.forEach(p => {
             myPlaceId.push(p.CompanyCompId);
         });
-        console.log(myPlaceId);
 
-        let closedRestaurantPositionTotal = new Array(earlyClosedRestaurantPosition);
-        closedRestaurantPositionTotal = [...closedRestaurant];
-        let closedCafePositionTotal = new Array(earlyClosedCafePosition);
-        closedCafePositionTotal = [...closedCafe];
-        let closedHospitalPositionTotal = new Array(earlyClosedHospitalPosition);
-        closedHospitalPositionTotal = [...closedHospital];
+    let closedRestaurantPositionTotal = new Array(earlyClosedRestaurantPosition);
+    closedRestaurantPositionTotal = [...closedRestaurant];
+    let closedCafePositionTotal = new Array(earlyClosedCafePosition);
+    closedCafePositionTotal = [...closedCafe];
+    let closedHospitalPositionTotal = new Array(earlyClosedHospitalPosition);
+    closedHospitalPositionTotal = [...closedHospital];
 
+    for(let i=0; i < todayClosedRestaurantPosition.length; i++){
+        todayClosedRestaurantPosition[i].dataValues.type = 'tcr';
+        todayClosedRestaurantPosition[i].dataValues.isMyPlace = false;
+    }
 
-        if(req.session.user_id){
-            res.render("index", {
-                todayClosedRestaurant : todayClosedRestaurantPosition, todayClosedCafe :  todayClosedCafePosition, todayClosedHospital : todayClosedHospitalPosition , 
-                openedRestaurant : openedRestaurant, openedCafe : openedCafe, openedHospital : openedHospital,
-                closedRestaurantTotal : closedRestaurantPositionTotal, closedCafeTotal : closedCafePositionTotal, closedHospitalTotal : closedHospitalPositionTotal,
-                myPlaces : myPlaceId, apikey : process.env.KAKAO_JS_KEY, isLogin: 'true'});
-        }else{
-            res.render("index", {
-                todayClosedRestaurant : todayClosedRestaurantPosition, todayClosedCafe :  todayClosedCafePosition, todayClosedHospital : todayClosedHospitalPosition , 
-                openedRestaurant : openedRestaurant, openedCafe : openedCafe, openedHospital : openedHospital,
-                closedRestaurantTotal : closedRestaurantPositionTotal, closedCafeTotal : closedCafePositionTotal, closedHospitalTotal : closedHospitalPositionTotal,
-                myPlaces : myPlaceId, apikey : process.env.KAKAO_JS_KEY, isLogin: 'false'});
-        }
+    for(let i=0; i < todayClosedCafePosition.length; i++){
+        todayClosedCafePosition[i].dataValues.type = 'tcc';
+        todayClosedCafePosition[i].dataValues.isMyPlace = false;
+    }
+
+    for(let i=0; i < todayClosedHospitalPosition.length; i++){
+        todayClosedHospitalPosition[i].dataValues.type = 'tch';
+        todayClosedHospitalPosition[i].dataValues.isMyPlace = false;
+    }
+
+    for(let i=0; i < openedRestaurant.length; i++){
+        openedRestaurant[i].dataValues.type = 'or';
+        openedRestaurant[i].dataValues.isMyPlace = false;
+    }
+
+    for(let i=0; i < openedCafe.length; i++){
+        openedCafe[i].dataValues.type = 'oc';
+        openedCafe[i].dataValues.isMyPlace = false;
+    }
+
+    for(let i=0; i < openedHospital.length; i++){
+        openedHospital[i].dataValues.type = 'oh';
+        openedHospital[i].dataValues.isMyPlace = false;
+    }
+
+    for(let i=0; i < closedRestaurantPositionTotal.length; i++){
+        closedRestaurantPositionTotal[i].dataValues.type = 'cr';
+        closedRestaurantPositionTotal[i].dataValues.isMyPlace = false;
+    }
+
+    for(let i=0; i < closedCafePositionTotal.length; i++){
+        closedCafePositionTotal[i].dataValues.type = 'cc';
+        closedCafePositionTotal[i].dataValues.isMyPlace = false;
+    }
+
+    for(let i=0; i < closedHospitalPositionTotal.length; i++){
+        closedHospitalPositionTotal[i].dataValues.type = 'ch';
+        closedHospitalPositionTotal[i].dataValues.isMyPlace = false;
+    }
+
+    res.json({
+        todayClosedRestaurant : todayClosedRestaurantPosition, todayClosedCafe :  todayClosedCafePosition, todayClosedHospital : todayClosedHospitalPosition , 
+        openedRestaurant : openedRestaurant, openedCafe : openedCafe, openedHospital : openedHospital,
+        closedRestaurantTotal : closedRestaurantPositionTotal, closedCafeTotal : closedCafePositionTotal, closedHospitalTotal : closedHospitalPositionTotal,
+        });
 
     }catch(err){
         res.status(500).send({

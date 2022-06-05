@@ -1,0 +1,313 @@
+<head>
+    <title>openMap</title>
+</head>
+
+<body>
+        <div class="config">
+            <form action = "/mypage/config/hosp"  method="post" enctype="multipart/form-data">
+                <input type="hidden" name="comp_id" value=<%= myHosp.compId %> >
+                <input type="hidden" name="HospType" value=<%= myHosp.HospType%> >
+                <h1>업체 정보 수정 </h1>
+                <div class="controlbar">
+                    <div class="compinfo">
+                        <label for="compName">업체이름</label>
+                        <br>
+                        <input name="compName" id="compName" type="text" value = "<%= myHosp.compName %>" disabled >
+                        <br><br>
+                        <label for="addr">도로명주소</label>
+                        <br>
+                        <input name="addr" id="addr" type="text" required placeholder="<%= myHosp.address %>" disabled >
+                        <br><br>
+                        <label for="telNum">전화번호</label>
+                        <br>
+                        <input name="telNum" id="telNum" type="tel" value="<%= myHosp.tel %>" >
+                    </div>
+                    <br>
+                        <label for="picture">업체사진</label>
+                        <br>
+                        <input name="picture" id="picture" type="file" accept="image/png, image/jpeg" />
+                        <br>
+                        <p>외부사진 혹은 내부사진을 업로드 해주세요.</p>
+                    <div class="leave">
+                        <input type='checkbox' name="todayClosed" id="todayClosed" value="true" <% if(myHosp.todayClosed){ %> checked <% } %> />오늘휴무
+                        <input type='checkbox' name="earlyClosed" id="earlyClosed" value="true" <% if(myHosp.earlyClosed){ %> checked <% } %> />조기마감
+                        <input type='checkbox' name="vacation" id="vacation" value="true" <% if(myHosp.vacation){ %> checked <% } %> />단기휴무
+                    </div>
+                    <br>
+                    <div class="closeDay">
+                        <label for="name">정기휴무</label>
+                        <br>
+                        <input type='checkbox' name="mon" id="mon" value="true" <% if(myHosp.mon){ %> checked <% } %> />월요일
+                        <input type='checkbox' name="tue" id="tue" value="true" <% if(myHosp.tue){ %> checked <% } %> />화요일
+                        <input type='checkbox' name="wed" id="wed" value="true" <% if(myHosp.wed){ %> checked <% } %> />수요일
+                        <input type='checkbox' name="thu" id="thu" value="true" <% if(myHosp.thu){ %> checked <% } %> />목요일
+                        <input type='checkbox' name="fri" id="fri" value="true" <% if(myHosp.fri){ %> checked <% } %> />금요일
+                        <input type='checkbox' name="sat" id="sat" value="true" <% if(myHosp.sat){ %> checked <% } %> />토요일
+                        <input type='checkbox' name="sun" id="sun" value="true" <% if(myHosp.sun){ %> checked <% } %> />일요일
+                        <br>
+                    </div>
+                    <br>
+                    <div class="open_close">
+                        <div>
+                            월요일
+                            <span style="display:inline-block">
+                                <label for="openTime" style="display:block">오픈시각</label>
+                                <input type="time" class="timepicker openTime" name="openMon" id="openTime" min="00:00" max="23:59" value= <%= myHosp.HospOpenMon %>>
+                            </span>
+                            <span style="display:inline-block">
+                                <label for="closedTime" style="display:block">마감시각</label>
+                                <input type="time" class="timepicker closedTime" name="closedMon" id="closedTime" min="00:00" max="23:59" value= <%= myHosp.HospCloseMon %>>
+                            </span>
+                        </div>
+                        <div>
+                            화요일
+                            <span style="display:inline-block">
+                                <label for="openTime" style="display:block">오픈시각</label>
+                                <input type="time" class="timepicker openTime" name="openTue" id="openTime" min="00:00" max="23:59" value= <%= myHosp.HospOpenTue %>>
+                            </span>
+                            <span style="display:inline-block">
+                                <label for="closedTime" style="display:block">마감시각</label>
+                                <input type="time" class="timepicker closedTime" name="closedTue" id="closedTime" min="00:00" max="23:59" value= <%= myHosp.HospCloseTue %>>
+                            </span>
+                        </div>
+                        <div>
+                            수요일
+                            <span style="display:inline-block">
+                                <label for="openTime" style="display:block">오픈시각</label>
+                                <input type="time" class="timepicker openTime" name="openWed" id="openTime" min="00:00" max="23:59" value= <%= myHosp.HospOpenWed %>>
+                            </span>
+                            <span style="display:inline-block">
+                                <label for="closedTime" style="display:block">마감시각</label>
+                                <input type="time" class="timepicker closedTime" name="closedWed" id="closedTime" min="00:00" max="23:59" value= <%= myHosp.HospCloseWed %>>
+                            </span>
+                        </div>
+                        <div>
+                            목요일
+                            <span style="display:inline-block">
+                                <label for="openTime" style="display:block">오픈시각</label>
+                                <input type="time" class="timepicker openTime" name="openThu" id="openTime" min="00:00" max="23:59" value= <%= myHosp.HospOpenThu %>>
+                            </span>
+                            <span style="display:inline-block">
+                                <label for="closedTime" style="display:block">마감시각</label>
+                                <input type="time" class="timepicker closedTime" name="closedThu" id="closedTime" min="00:00" max="23:59" value= <%= myHosp.HospCloseThu %>>
+                            </span>
+                        </div>
+                        <div>
+                            금요일
+                            <span style="display:inline-block">
+                                <label for="openTime" style="display:block">오픈시각</label>
+                                <input type="time" class="timepicker openTime" name="openFri" id="openTime" min="00:00" max="23:59" value= <%= myHosp.HospOpenFri %>>
+                            </span>
+                            <span style="display:inline-block">
+                                <label for="closedTime" style="display:block">마감시각</label>
+                                <input type="time" class="timepicker closedTime" name="closedFri" id="closedTime" min="00:00" max="23:59" value= <%= myHosp.HospCloseFri %>>
+                            </span>
+                        </div>
+                        <div>
+                            토요일
+                            <span style="display:inline-block">
+                                <label for="openTime" style="display:block">오픈시각</label>
+                                <input type="time" class="timepicker openTime" name="openSat" id="openTime" min="00:00" max="23:59" value= <%= myHosp.HospOpenSat %>>
+                            </span>
+                            <span style="display:inline-block">
+                                <label for="closedTime" style="display:block">마감시각</label>
+                                <input type="time" class="timepicker closedTime" name="closedSat" id="closedTime" min="00:00" max="23:59" value= <%= myHosp.HospCloseSat %>>
+                            </span>
+                        </div>
+                        <div>
+                            일요일
+                            <span style="display:inline-block">
+                                <label for="openTime" style="display:block">오픈시각</label>
+                                <input type="time" class="timepicker openTime" name="openSun" id="openTime" min="00:00" max="23:59" value= <%= myHosp.HospOpenSun %>>
+                            </span>
+                            <span style="display:inline-block">
+                                <label for="closedTime" style="display:block">마감시각</label>
+                                <input type="time" class="timepicker closedTime" name="closedSun" id="closedTime" min="00:00" max="23:59" value= <%= myHosp.HospCloseSun %>>
+                            </span>
+                        </div>
+                        <div>공휴일
+                            <span style="display:inline-block">
+                                <label for="openTime" style="display:block">오픈시각</label>
+                                <input type="time" class="timepicker openTime" name="openVac" id="openTime" min="00:00" max="23:59" value= <%= myHosp.HospOpenVac%>>
+                            </span>
+                            <span style="display:inline-block">
+                                <label for="closedTime" style="display:block">마감시각</label>
+                                <input type="time" class="timepicker closedTime" name="closedVac" id="closedTime" min="00:00" max="23:59" value= <%= myHosp.HospCloseVac %>>
+                            </span>
+                        </div>
+
+                        
+                    </div>
+                    <div class="break">
+                        <span style="display:inline-block">
+                            <label for="breakStart" style="display:block">점심시간 시작</label>
+                            <input type="time" class="timepicker" name="breakStart" id="breakStart" value=<%= myHosp.breakStart %> />
+                        </span>
+                        <span style="display:inline-block">
+                            <label for="breakEnd" style="display:block">점심시간 끝</label>
+                            <input type="time" class="timepicker" name="breakEnd" id="breakEnd" value=<%= myHosp.breakEnd %> />
+                        </span>
+                        <input type="checkbox" name="noBreak" id="noBreak" value="true" onclick='getNoBreakValue(event)' />점심시간 없음
+                        <input type="checkbox" name="_24hours" id="24hours" value="true" onclick='get24hoursValue(event)' />24시간 영업
+                        <br>
+                        <label for="content">비고</label>
+                        <input type="text" class="content" name="content" id="content" value="<%= myHosp.content %>" placeholder="사람들이 특별히 참고해야 할 사항을 입력해주세요."/>
+                    </div>
+                </div>
+                <div class="submit">
+                    <input type="submit" value="업체 정보 수정하기" />
+                </div>
+            </form>
+        </div>
+</body>
+
+
+<script>
+    function get24hoursValue(event) {
+    const openForm = document.getElementsByClassName('openTime');
+    const closedForm = document.getElementsByClassName('closedTime');
+   
+
+        if (event.target.checked) {
+            for(i=0; i<openForm.length; i++){
+                openForm[i].disabled = true;
+                closedForm[i].disabled = true;
+                openForm[i].value="00:00";
+                closedForm[i].value="23:59";
+            }
+        } else {
+            for(i=0; i<openForm.length; i++){
+                openForm[i].disabled = false;
+                closedForm[i].disabled = false;
+            }
+
+        }
+    };
+    function getNoBreakValue(event){
+        const breakStartForm = document.getElementById('breakStart');
+        const breakEndForm = document.getElementById('breakEnd');
+        if (event.target.checked) {
+            breakStartForm.value=null;
+            breakEndForm.value=null;
+            breakStartForm.disabled = true;
+            breakEndForm.disabled = true;
+        }else{
+            breakStartForm.disabled = false;
+            breakEndForm.disabled = false;
+        }
+    }
+
+</script>
+
+
+<style>
+        :root {
+        --main-bg-color: #FBF9FC;
+        --text-color: rgb(165, 165, 165);
+        --openmap-orange: #FE8201;
+        --openmap-orange-light: #ffcf9d;
+        --openmap-purple: #894AFF;
+        --openmap-green: #77C3CA;
+    }
+    .config{
+        padding-left: 80px;
+        padding-top: 30px;
+    }
+    .controlbar{
+        overflow-y: scroll;
+        width: 780px;
+        height: 700px;
+    }
+   .compinfo input{
+       background-color: #F0F0F0;
+       width: 620px;
+       height:30px;
+       padding:5px; 
+       border: none;
+       cursor: pointer;
+       border-radius: 20px;
+   }
+
+   .leave{
+       padding-top: 30px;
+   }
+
+   .closeDay{
+       padding-top: 30px;
+   }
+
+   .open_close{
+       padding-top:30px;
+   }
+
+   .open_close input[type=time] {
+       background-color: #F0F0F0;
+       width: 150px;
+       height:30px;
+       padding:5px; 
+       border: none;
+       cursor: pointer;
+       border-radius: 20px;
+       font-size: 16px;
+   }
+
+   .break{
+    padding-top:30px;
+   }
+
+   .break input[type=time] {
+       background-color: #F0F0F0;
+       width: 150px;
+       height:30px;
+       padding:5px; 
+       border: none;
+       cursor: pointer;
+       border-radius: 20px;
+       font-size: 16px;
+   }
+
+   .typeSelect{
+    padding-top:30px;
+   }
+    select {
+        width: 150px;
+        padding: .8em .5em;
+        border: none;
+        background-color: #F0F0F0;
+        font-family: inherit; 
+        border-radius: 20px;
+    }
+
+    .submit{
+        padding-top: 30px;
+    }
+
+    .submit input{
+        background-color: var(--openmap-purple);
+        color:white;
+       width: 200px;
+       height:34px;
+       padding:5px; 
+       border: none;
+       cursor: pointer;
+       border-radius: 20px;
+       font-size: 16px;
+       box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
+    }
+    label{
+        font-weight: bold;
+    }
+
+    .content{
+        background-color: #F0F0F0;
+       width: 500px;
+       height:30px;
+       padding:5px; 
+       border: none;
+       cursor: pointer;
+       border-radius: 20px;
+       font-size: 16px;
+       margin-top: 30px;
+    }
+</style>

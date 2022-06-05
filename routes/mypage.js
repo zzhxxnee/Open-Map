@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const MypageController = require('../controllers/mypageController');
+const MypageController = require('../controllers/mypage/mypageController');
 var bodyParser = require("body-parser");
 var parser = bodyParser.urlencoded({extended:false});
 var multer = require('multer');
@@ -34,7 +34,7 @@ router.post('/delete/comp', MypageController.delete_comp);
 
 ////////////////////////////////////////////////////////이메일변경
 router.get('/settings/email', (req,res) => {
-    res.render('settingEmail');
+    res.render('mypage/settingEmail');
 });
 
 router.post('/settings/email', MypageController.settingEmail);
@@ -43,7 +43,7 @@ router.post('/settings/email2', MypageController.settingEmail2);
 
 ///////////////////////////////////////////////////////회원탈퇴
 router.get('/leave',(req,res) => {
-  res.render('leaveMember');
+  res.render('mypage/leaveMember');
 });
 
 router.post('/leave', MypageController.leave_confirmPwd);

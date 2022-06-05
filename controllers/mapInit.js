@@ -1,0 +1,33 @@
+require('dotenv').config();
+const Sequelize = require('sequelize');
+const env = process.env.NODE_ENV || 'development';
+const config = require(__dirname + '/../config/config.json')[env];
+const { QueryTypes } = require('sequelize');
+
+let sequelize;
+if (config.use_env_variable) {
+  sequelize = new Sequelize(process.env[config.use_env_variable], config);
+} else {
+  sequelize = new Sequelize(config.database, config.username, config.password, config);
+}
+
+exports.Initialize = async (req, res) => {
+    try{
+        let myPlaces = await sequelize.query(`SELECT * FROM myplace WHERE UserId='${req.session.user_id}';`, { type: QueryTypes.SELECT });
+        let myPlaceId = [];
+        myPlaces.forEach(p => {
+            myPlaceId.push(p.CompanyCompId);
+        });
+
+        if(req.session.user_id){
+            res.render("main/index", {myPlaces : myPlaceId, apikey : process.env.KAKAO_JS_KEY, isLogin: 'true'});
+        }else{
+            res.render("main/index", {myPlaces : myPlaceId, apikey : process.env.KAKAO_JS_KEY, isLogin: 'false'});
+        }
+
+    }catch(err){
+        res.status(500).send({
+            message: err.message
+        });
+    }
+};
