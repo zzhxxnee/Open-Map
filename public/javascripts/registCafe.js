@@ -15,15 +15,11 @@ function get24hoursValue(event) {
 
 function addMenu(){
     var div = document.createElement('div');
-    var menuCount = document.getElementById('menuCount');
-    menuCount.value = menuCount.value*1 +1;
     div.innerHTML = document.getElementById('menuBox').innerHTML;
     document.getElementById('field').appendChild(div);
     console.log(menuCount.value);
 }
 function removeMenu(obj){
-    var menuCount = document.getElementById('menuCount');
-    menuCount.value = menuCount.value*1 -1;
     document.getElementById('field').removeChild(obj.parentNode);
     console.log(menuCount.value);
 }

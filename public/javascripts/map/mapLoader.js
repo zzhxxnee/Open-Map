@@ -34,6 +34,7 @@ let openedRestaurant = []; // 영업중인 식당 객체를 가지고 있을 배
 let openedCafe = []; // 영업중인 휴게음식점 객체를 가지고 있을 배열입니다
 let openedHospital = []; // 영업중인 병원 객체를 가지고 있을 배열입니다
 
+
 function setCenter() {            
     // 이동할 위도 경도 위치를 생성합니다 
     navigator.geolocation.getCurrentPosition((position) => {

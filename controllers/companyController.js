@@ -1,20 +1,30 @@
 require("dotenv").config();
 const db = require("../models/index"),
-    Company = db.company;
+    Company = db.company,
     User = db.users,
     Rest = db.restaurant,
     Cafe = db.cafe,
     Hosp = db.hospital,
     Menu = db.menu,
-    Op = db.Sequelize.Op, 
+    Op = db.Sequelize.Op,
     geocoder = require("google-geocoder"),
     geo = geocoder({
         key: process.env.GOOGLE_API_KEY,
     });
 
+var multer = require('multer');
+var _storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/');
+    },
+    filename: function (req, file, cb) {
+        cb(null, `${Date.now()}-${file.originalname}`);
+    }
+});
+
 let compInfo = {
     compId: "",
-    userId: "",
+    userId: null,
     image: null,
     compName: "", //not null
     bNo: null,
@@ -83,13 +93,14 @@ let hospitalInfo = {
 
 // 업체등록 1 - 이미 존재하는지 확인
 exports.checkExistComp = (req, res) => {
-    if(!req.session.user_id){
+    if (!req.session.user_id) {
         res.redirect("/users/login");
-    }else{
+    } else {
         res.render("checkExistComp");
     }
 };
 
+// 업체 검색해서 데이터 불러오기
 exports.searchExistComp = (req, res, next) => {
     let searchWord = req.body.compName;
     Company.findAll({
@@ -97,7 +108,7 @@ exports.searchExistComp = (req, res, next) => {
             compName: {
                 [Op.like]: "%" + searchWord + "%",
             },
-            UserId : null //업체에 userid가 등록되지 않은 것만 출력
+            UserId: null //업체에 userid가 등록되지 않은 것만 출력
         },
     })
         .then((result) => {
@@ -110,19 +121,43 @@ exports.searchExistComp = (req, res, next) => {
 };
 
 
-// 여기서 있으면 그 업체 클릭 -> 이미등록된업체로..(?)
+// 존재하는 업체 클릭 시 해당 업체명과 주소를 서버로 보낸 뒤 그걸로 업체정보 받아옴
 
-// // 없으면 업체 유형 선택 페이지 -> 안하는 게 나을 것 같음..
-// exports.chooseCompType = (req, res) => {
-//     res.render("chooseCompType");
-// };
+exports.existCompRegist = async (req, res) => {
+    var cname = req.body.searchCompName;
+    var caddr = req.body.searchCompAddr;
+    if (typeof (cname) == "object") {
+        cname = cname[0];
+        caddr = caddr[0];
+    }
+    Company.findOne({
+        where: {
+            compName: {
+                [Op.like]: "%" + cname + "%",
+            },
+            address: {
+                [Op.like]: "%" + caddr + "%",
+            }
+        },
+    })
+        .then((result) => {
+            res.render("registExistComp", { compInfo: result });
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+}
 
-// 일단 업체 공통 정보 입력 페이지, 여기서 업체 유형 선택하도록 하기
+
+
+
+// 일단 업체 공통 정보 입력 페이지
 exports.registComp = (req, res) => {
-    if(!req.session.user_id){
+    if (!req.session.user_id) {
         res.redirect("/users/login");
-    }else{
-        res.render("registComp");   
+    } else {
+        compInfo.userId = req.session.user_id;
+        res.render("registComp", { compkey: process.env.COMPANY_CHECK_KEY });
     }
 };
 
@@ -135,9 +170,16 @@ exports.registCompNext = async (req, res) => {
         compInfo.longitude = res[0].location["lng"];
     });
 
+    if (req.file) {
+        imagepath = `/${req.file.filename}`;
+    }
+    else {
+        imagepath = "/images/baseimg.jpg";
+    }
+
     compInfo.address = req.body.addr;
-    compInfo.userId = req.session.user_id; //로그인 구현되면 수정하기
-    compInfo.image = req.body.image;
+    // compInfo.userId = req.session.user_id; //로그인 구현되면 수정하기
+    compInfo.image = imagepath;
     compInfo.compName = req.body.compName; //not null
     compInfo.bNo = req.body.compNum;
     compInfo.openDate = req.body.openDate;
@@ -166,7 +208,7 @@ exports.registCompNext = async (req, res) => {
 };
 
 exports.registFinished = async (req, res) => {
-    res.send("mypage");
+    res.render("registExistCompEnd");
     Company.create({
         image: compInfo.image,
         compName: compInfo.compName,
@@ -193,15 +235,15 @@ exports.registFinished = async (req, res) => {
             attributes: ['compId'],
             where: {
                 compName: compInfo.compName,
-                address : compInfo.address,
+                address: compInfo.address,
                 UserId: compInfo.userId
             }
         })
             .then((result) => {
                 //console.log(result[0].dataValues.compId);
-                compInfo.compId = result[0].dataValues.compId*1;
-                console.log("업체번호: "+compInfo.compId);
-            }).then((result)=>{
+                compInfo.compId = result[0].dataValues.compId * 1;
+                console.log("업체번호: " + compInfo.compId);
+            }).then(async () => {
                 if (compInfo.type == "R") {
                     if (req.body.allDays == "true") {
                         restInfo.restOpen = 0;
@@ -213,7 +255,7 @@ exports.registFinished = async (req, res) => {
                             restInfo.restClosed += 2400;
                         }
                     }
-            
+
                     if (req.body.noBreak == "true") {
                         Rest.create({
                             restOpen: restInfo.restOpen,
@@ -233,20 +275,33 @@ exports.registFinished = async (req, res) => {
                             CompanyCompId: compInfo.compId,
                         });
                     }
-                    //메뉴 해결하기
-                    // for (var i = 0; i < req.body.menu.length; i++) {
-                    //     // Menu.create({
-                    //     //     menuNmae : req.body.menu[i],
-                    //     //     price : req.body.price[i]
-                    //     // });
-                    //     console.log(req.body.menu[i]);
-                    //     console.log(req.body.price[i]);
-                    // }
-                    Menu.create({
-                        menuName : req.body.menu,
-                        price : req.body.price,
-                        CompanyCompId : compInfo.compId
-                    });
+
+                    if (req.body.menu && !(typeof (req.body.menu) == 'string')) {
+                        let menu = Object.values(req.body.menu);
+                        let price = Object.values(req.body.price);
+                        var menuAndPrice = menu.map(function (menu, i) {
+                            return [menu, price[i]];
+                        });
+
+                        for await (const e of menuAndPrice) {
+                            if (e[0] == "" || e[1] == "") { continue; }
+                            await Menu.create({
+                                menuName: e[0],
+                                price: e[1],
+                                CompanyCompId: compInfo.compId
+                            });
+                        }
+
+                    } else {
+                        if (req.body.menu) {
+                            await Menu.create({
+                                menuName: req.body.menu,
+                                price: req.body.price,
+                                CompanyCompId: compInfo.compId
+                            });
+                        }
+                    }
+
                 } else if (compInfo.type == "C") {
                     if (req.body.allDays == "true") {
                         cafeInfo.cafeOpen = 0;
@@ -264,25 +319,44 @@ exports.registFinished = async (req, res) => {
                         cafeType: req.body.cafeType, //not null
                         CompanyCompId: compInfo.compId,
                     });
-                    Menu.create({
-                        menuName : req.body.menu,
-                        price : req.body.price,
-                        CompanyCompId : compInfo.compId
-                    });
-            
-            
-                    ///////병원///////////////////////////
+
+                    if (req.body.menu && !(typeof (req.body.menu) == 'string')) {
+                        let menu = Object.values(req.body.menu);
+                        let price = Object.values(req.body.price);
+                        var menuAndPrice = menu.map(function (menu, i) {
+                            return [menu, price[i]];
+                        });
+
+                        for await (const e of menuAndPrice) {
+                            if (e[0] == "" || e[1] == "") { continue; }
+                            await Menu.create({
+                                menuName: e[0],
+                                price: e[1],
+                                CompanyCompId: compInfo.compId
+                            });
+                        }
+
+                    } else {
+                        if (req.body.menu) {
+                            await Menu.create({
+                                menuName: req.body.menu,
+                                price: req.body.price,
+                                CompanyCompId: compInfo.compId
+                            });
+                        }
+                        ///////병원///////////////////////////
+                    }
                 } else if (compInfo.type == "H") {
                     hospitalInfo.HospType = req.body.hospType;
                     hospitalInfo.content = req.body.content;
-            
+
                     if (req.body.allDays == "true") {
                         hospitalInfo.HospOpenMon = 0;
-                        hospitalInfo.HospCloseMon= 4000;
+                        hospitalInfo.HospCloseMon = 4000;
 
                         hospitalInfo.HospOpenTue = 0;
                         hospitalInfo.HospCloseTue = 4000;
-                        
+
                         hospitalInfo.HospOpenWed = 0;
                         hospitalInfo.HospCloseWed = 4000;
 
@@ -293,7 +367,7 @@ exports.registFinished = async (req, res) => {
                         hospitalInfo.HospCloseFri = 4000;
 
                         hospitalInfo.HospOpenSat = 0;
-                        hospitalInfo.HospCloseSat= 4000;
+                        hospitalInfo.HospCloseSat = 4000;
 
                         hospitalInfo.HospOpenSun = 0;
                         hospitalInfo.HospCloseSun = 4000;
@@ -301,55 +375,54 @@ exports.registFinished = async (req, res) => {
                         hospitalInfo.HospOpenVac = 0;
                         hospitalInfo.HospCloseVac = 4000
                     } else {
-                        hospitalInfo.HospOpenMon = req.body.openTime[0]*100+req.body.openTime[1]*1;
-                        hospitalInfo.HospCloseMon= req.body.closedTime[0]*100+req.body.closedTime[1]*1;
+                        hospitalInfo.HospOpenMon = req.body.openTime[0] * 100 + req.body.openTime[1] * 1;
+                        hospitalInfo.HospCloseMon = req.body.closedTime[0] * 100 + req.body.closedTime[1] * 1;
 
-                        hospitalInfo.HospOpenTue = req.body.openTime[2]*100+req.body.openTime[3]*1;
-                        hospitalInfo.HospCloseTue = req.body.closedTime[2]*100+req.body.closedTime[3]*1;
-                        
-                        hospitalInfo.HospOpenWed = req.body.openTime[4]*100+req.body.openTime[5]*1;
-                        hospitalInfo.HospCloseWed = req.body.closedTime[4]*100+req.body.closedTime[5]*1;
+                        hospitalInfo.HospOpenTue = req.body.openTime[2] * 100 + req.body.openTime[3] * 1;
+                        hospitalInfo.HospCloseTue = req.body.closedTime[2] * 100 + req.body.closedTime[3] * 1;
 
-                        hospitalInfo.HospOpenThu = req.body.openTime[6]*100+req.body.openTime[7]*1;
-                        hospitalInfo.HospCloseThu = req.body.closedTime[6]*100+req.body.closedTime[7]*1;
+                        hospitalInfo.HospOpenWed = req.body.openTime[4] * 100 + req.body.openTime[5] * 1;
+                        hospitalInfo.HospCloseWed = req.body.closedTime[4] * 100 + req.body.closedTime[5] * 1;
 
-                        hospitalInfo.HospOpenFri = req.body.openTime[8]*100+req.body.openTime[9]*1;
-                        hospitalInfo.HospCloseFri = req.body.closedTime[8]*100+req.body.closedTime[9]*1;
+                        hospitalInfo.HospOpenThu = req.body.openTime[6] * 100 + req.body.openTime[7] * 1;
+                        hospitalInfo.HospCloseThu = req.body.closedTime[6] * 100 + req.body.closedTime[7] * 1;
 
-                        hospitalInfo.HospOpenSat = req.body.openTime[10]*100+req.body.openTime[11]*1;
-                        hospitalInfo.HospCloseSat= req.body.closedTime[10]*100+req.body.closedTime[11]*1;
+                        hospitalInfo.HospOpenFri = req.body.openTime[8] * 100 + req.body.openTime[9] * 1;
+                        hospitalInfo.HospCloseFri = req.body.closedTime[8] * 100 + req.body.closedTime[9] * 1;
 
-                        hospitalInfo.HospOpenSun = req.body.openTime[12]*100+req.body.openTime[13]*1;
-                        hospitalInfo.HospCloseSun = req.body.closedTime[12]*100+req.body.closedTime[13]*1;
+                        hospitalInfo.HospOpenSat = req.body.openTime[10] * 100 + req.body.openTime[11] * 1;
+                        hospitalInfo.HospCloseSat = req.body.closedTime[10] * 100 + req.body.closedTime[11] * 1;
 
-                        hospitalInfo.HospOpenVac = req.body.openTime[14]*100+req.body.openTime[15]*1;
-                        hospitalInfo.HospCloseVac = req.body.closedTime[14]*100+req.body.closedTime[15]*1;
+                        hospitalInfo.HospOpenSun = req.body.openTime[12] * 100 + req.body.openTime[13] * 1;
+                        hospitalInfo.HospCloseSun = req.body.closedTime[12] * 100 + req.body.closedTime[13] * 1;
+
+                        hospitalInfo.HospOpenVac = req.body.openTime[14] * 100 + req.body.openTime[15] * 1;
+                        hospitalInfo.HospCloseVac = req.body.closedTime[14] * 100 + req.body.closedTime[15] * 1;
 
                     }
-            
+
                     if (req.body.noBreak == "true") {
                         hospitalInfo.breakStart = null;
                         hospitalInfo.breakEnd = null;
-            
+
                     } else {
                         hospitalInfo.breakStart = req.body.breakStart[0] * 100 + req.body.breakStart[1] * 1;
                         hospitalInfo.breakEnd = req.body.breakEnd[0] * 100 + req.body.breakEnd[1] * 1;
                     }
+
+                    createHospital();
                 }
-            
+
                 else {
                     res.send("compType 에러");
                 }
             })
-            .then(()=>{
-                if(compInfo.type=="H"){
-                    createHospital();
-                }
-                // 등록완료되면 업주 여부 true로 변경
+            .then(() => {
                 ownerTrue();
             })
-            .catch((err)=>{
-                company.destroy({where: {compId : compInfo.compId}}); // 업체별 정보 db 저장 에러 시 company 정보도 삭제
+            .catch((err) => {
+                Company.destroy({ where: { compId: compInfo.compId } }); // 업체별 정보 db 저장 에러 시 company 정보도 삭제
+                console.log(err);
             })
     }).catch((err) => {
         console.log(err);
@@ -390,10 +463,10 @@ function createHospital() {
         breakStart: hospitalInfo.breakStart,
         breakEnd: hospitalInfo.breakEnd,
 
-        CompanyCompId : hospitalInfo.compId
+        CompanyCompId: compInfo.compId
     });
 }
 
-function ownerTrue(){
-    User.update({isOwner: 1}, {where: {id : compInfo.userId}});
+function ownerTrue() {
+    User.update({ isOwner: 1 }, { where: { id: compInfo.userId } });
 }
