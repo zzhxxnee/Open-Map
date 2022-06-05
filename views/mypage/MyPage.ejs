@@ -15,7 +15,6 @@
                 </div>
                 <ul class="config">
                     <li><i class="fa-solid fa-envelope"></i><a href="/mypage/settings/email">이메일 변경</a></li>
-                    <li><i class="fa-solid fa-key"></i><a href="#">비밀번호 변경</a></li>
                     <li class="passwordConfig">
                         <i class="fa-solid fa-key"></i>
                         <form action="/users/findPassword" method="post">
@@ -77,6 +76,7 @@
         --openmap-purple: #894AFF;
         --openmap-green: #77C3CA;
     }
+
     a{
         text-decoration: none;
         color: var(--text-color);
@@ -86,14 +86,17 @@
         padding-left: 80px;
         padding-top: 120px;
     }
+
     .helloUser_box{
         padding-bottom: 60px;
         letter-spacing: 0.08em;
         opacity: 0.7;
     }
+
     .username{
         color:var(--openmap-purple);
     }
+
     .config{
         display: flex;
         flex-direction: column;
@@ -103,33 +106,41 @@
         font-size: 16px;
         padding-bottom: 10px;
     }
+
     .config li{
         padding:30px;
         width:100%;
     }
+
     .passwordConfig{
         display:flex;
         align-items: center;
+
     }
     .passwordConfig input{
         padding-left: 35px;
         font-size: 16px;
         color:var(--text-color);
     }
+
     .passwordConfig input:hover{
         color:black;
     }
+
     .config li:hover{
         background-color: var(--main-bg-color);
         border-radius: 20px;
         color:black;
     }
+
     .config a{
         padding-left: 35px;
     }
+
     a:hover{
         color:black;
     }
+
     .config_box{
         width: 1200px;
         height: 450px;
@@ -138,29 +149,36 @@
         justify-content:flex-start;
         align-items: baseline;
     }
+
     .account_config{
         width: 540px;
     }
+
     .company_config{
         padding-left: 100px;;
     }
+
     .category_name{
         border-bottom: 1.8px solid #D9D9D9;
         margin-bottom: 44px;
     }
+
     .category_name{
         display: flex;
         justify-content: space-between;
         align-items: center;
     }
+
     .plus{
         font-size: 25px;
     }
+
     .my_company_list {
         overflow-y: scroll;
         width: 700px;
         height: 360px;
     }
+
     .content{
         display: flex;
         flex-direction: row;
@@ -173,24 +191,29 @@
         border-radius: 20px;
         line-height:150%;
     }
+
     .compName{
         display: block;
         font-size: 20px;
         font-weight: 600;
         line-height:180%;
     }
+
     .address{
         display:block;
         color:rgb(107, 107, 107);
         font-size: 13px;
     }
+
     .alter{
         display:flex;
         flex-direction: row;
     }
+
     .image{
         border-radius: 20px;
     }
+
     input[type=submit] {
     padding-right: 10px; 
     background: none; 
