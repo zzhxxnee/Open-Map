@@ -150,7 +150,7 @@ exports.configcomp = async(req, res) => {
   if(req.body.comp_type == 'C'){
     let compId = req.body.comp_id;
 
-    myCafe = await sequelize.query(`SELECT * FROM company C JOIN cafe CA ON C.compid = CA.compid WHERE C.compid=${compId}`, { type: QueryTypes.SELECT });
+    myCafe = await sequelize.query(`SELECT * FROM company C JOIN cafe CA ON C.compid = CA.CompanyCompId WHERE C.compid=${compId}`, { type: QueryTypes.SELECT });
     myCafe = myCafe[0];
 
     if(myCafe.cafeClosed >= 2400){
@@ -162,13 +162,13 @@ exports.configcomp = async(req, res) => {
     myCafe.cafeOpen = moment(`${myCafe.cafeOpen}`,"Hmm").format('HH:mm');
     myCafe.cafeClosed = moment(`${myCafe.cafeClosed}`,"Hmm").format('HH:mm');
     
-    menu = await sequelize.query(`SELECT * FROM menu WHERE compid = '${compId}'`, { type: QueryTypes.SELECT });
+    menu = await sequelize.query(`SELECT * FROM menu WHERE CompanyCompId = '${compId}'`, { type: QueryTypes.SELECT });
     res.render('configCafe',{myCafe:myCafe, menu:menu});
 
   } else if(req.body.comp_type == "R") {
     let compId = req.body.comp_id;
 
-    myRest = await sequelize.query(`SELECT * FROM company C JOIN restaurant R ON C.compid = R.compid WHERE C.compid=${compId}`, { type: QueryTypes.SELECT });
+    myRest = await sequelize.query(`SELECT * FROM company C JOIN restaurant R ON C.compid = R.CompanyCompid WHERE C.compid=${compId}`, { type: QueryTypes.SELECT });
     myRest = myRest[0];
     
     if(myRest.restClosed >= 2400){
@@ -188,17 +188,17 @@ exports.configcomp = async(req, res) => {
       myRest.breakEnd = moment(`${myRest.breakEnd}`,"Hmm").format('HH:mm');
     }
     
-    menu = await sequelize.query(`SELECT * FROM menu WHERE compid = '${compId}'`, { type: QueryTypes.SELECT });
+    menu = await sequelize.query(`SELECT * FROM menu WHERE CompanyCompId = '${compId}'`, { type: QueryTypes.SELECT });
     //res.send(myRest);
     res.render('configRest',{myRest:myRest, menu:menu});
     
   } else if(req.body.comp_type == "H") {
     let compId = req.body.comp_id;
-    myHosp = await sequelize.query(`SELECT * FROM company C JOIN hospital H ON C.compid = H.compid WHERE C.compid=${compId}`, { type: QueryTypes.SELECT });
+    myHosp = await sequelize.query(`SELECT * FROM company C JOIN hospital H ON C.compid = H.CompanyCompId WHERE C.compid=${compId}`, { type: QueryTypes.SELECT });
     myHosp = myHosp[0];
 
 
-    menu = await sequelize.query(`SELECT * FROM menu WHERE compid = '${compId}'`, { type: QueryTypes.SELECT });
+    menu = await sequelize.query(`SELECT * FROM menu WHERE CompanyCompId = '${compId}'`, { type: QueryTypes.SELECT });
 
     //res.send(myHosp);
     var days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Vac'];
@@ -264,11 +264,11 @@ exports.configCafe = async(req, res) => {
         cafeClosed:closed
       },
       {where:{
-          compId:compId
+          CompanyCompId:compId
       }}
     );
   
-    await sequelize.query(`DELETE FROM menu WHERE compId = '${compId}'`, { type: QueryTypes.DELETE });
+    await sequelize.query(`DELETE FROM menu WHERE CompanyCompId = '${compId}'`, { type: QueryTypes.DELETE });
   
     if(req.body.menu && !(typeof(req.body.menu)=='string')){
       let menu = Object.values(req.body.menu);
@@ -282,7 +282,7 @@ exports.configCafe = async(req, res) => {
         await models.Menu.create({
           menuName:e[0],
           price:e[1],
-          compId:compId
+          CompanyCompId:compId
         });
       }
       
@@ -291,7 +291,7 @@ exports.configCafe = async(req, res) => {
       await models.Menu.create({
         menuName:req.body.menu,
         price:req.body.price,
-        compId:compId
+        CompanyCompId:compId
       });
       }
         
@@ -360,11 +360,11 @@ exports.configRest = async(req, res) => {
       breakEnd:(breakEnd ? breakEnd : null)
     },
     {where:{
-        compId:compId
+        CompanyCompId:compId
     }}
   );
   
-  await sequelize.query(`DELETE FROM menu WHERE compId = '${compId}'`, { type: QueryTypes.DELETE });
+  await sequelize.query(`DELETE FROM menu WHERE CompanyCompId = '${compId}'`, { type: QueryTypes.DELETE });
 
   if(req.body.menu && !(typeof(req.body.menu)=='string')){
     let menu = Object.values(req.body.menu);
@@ -378,7 +378,7 @@ exports.configRest = async(req, res) => {
       await models.Menu.create({
         menuName:e[0],
         price:e[1],
-        compId:compId
+        CompanyCompId:compId
       });
     }
     
@@ -387,7 +387,7 @@ exports.configRest = async(req, res) => {
     await models.Menu.create({
       menuName:req.body.menu,
       price:req.body.price,
-      compId:compId
+      CompanyCompId:compId
     });
     }
     
@@ -472,7 +472,7 @@ exports.configHosp = async(req, res) => {
       breakEnd:(breakEnd ? breakEnd : null)
     },
     {where:{
-        compId:compId
+        CompanyCompId:compId
     }}
   );
   res.redirect('/mypage');

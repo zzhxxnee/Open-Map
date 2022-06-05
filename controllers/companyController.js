@@ -1,7 +1,7 @@
 require("dotenv").config();
 const db = require("../models/index"),
-    Company = db.company;
-User = db.users,
+    Company = db.company,
+    User = db.users,
     Rest = db.restaurant,
     Cafe = db.cafe,
     Hosp = db.hospital,
@@ -12,9 +12,19 @@ User = db.users,
         key: process.env.GOOGLE_API_KEY,
     });
 
+var multer = require('multer');
+var _storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/');
+    },
+    filename: function (req, file, cb) {
+        cb(null, `${Date.now()}-${file.originalname}`);
+    }
+});
+
 let compInfo = {
     compId: "",
-    userId: "",
+    userId: null,
     image: null,
     compName: "", //not null
     bNo: null,
@@ -90,6 +100,7 @@ exports.checkExistComp = (req, res) => {
     }
 };
 
+// 업체 검색해서 데이터 불러오기
 exports.searchExistComp = (req, res, next) => {
     let searchWord = req.body.compName;
     Company.findAll({
@@ -110,18 +121,42 @@ exports.searchExistComp = (req, res, next) => {
 };
 
 
-// 여기서 있으면 그 업체 클릭 -> 이미등록된업체로..(?)
+// 존재하는 업체 클릭 시 해당 업체명과 주소를 서버로 보낸 뒤 그걸로 업체정보 받아옴
 
-// // 없으면 업체 유형 선택 페이지 -> 안하는 게 나을 것 같음..
-// exports.chooseCompType = (req, res) => {
-//     res.render("chooseCompType");
-// };
+exports.existCompRegist = async (req, res) => {
+    var cname = req.body.searchCompName;
+    var caddr = req.body.searchCompAddr;
+    if (typeof (cname) == "object") {
+        cname = cname[0];
+        caddr = caddr[0];
+    }
+    Company.findOne({
+        where: {
+            compName: {
+                [Op.like]: "%" + cname + "%",
+            },
+            address: {
+                [Op.like]: "%" + caddr + "%",
+            }
+        },
+    })
+        .then((result) => {
+            res.render("registExistComp", { compInfo: result });
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+}
 
-// 일단 업체 공통 정보 입력 페이지, 여기서 업체 유형 선택하도록 하기
+
+
+
+// 일단 업체 공통 정보 입력 페이지
 exports.registComp = (req, res) => {
     if (!req.session.user_id) {
         res.redirect("/users/login");
     } else {
+        compInfo.userId = req.session.user_id;
         res.render("registComp", { compkey: process.env.COMPANY_CHECK_KEY });
     }
 };
@@ -135,9 +170,16 @@ exports.registCompNext = async (req, res) => {
         compInfo.longitude = res[0].location["lng"];
     });
 
+    if (req.file) {
+        imagepath = `/${req.file.filename}`;
+    }
+    else {
+        imagepath = "/images/baseimg.jpg";
+    }
+
     compInfo.address = req.body.addr;
-    compInfo.userId = req.session.user_id; //로그인 구현되면 수정하기
-    compInfo.image = req.body.image;
+    // compInfo.userId = req.session.user_id; //로그인 구현되면 수정하기
+    compInfo.image = imagepath;
     compInfo.compName = req.body.compName; //not null
     compInfo.bNo = req.body.compNum;
     compInfo.openDate = req.body.openDate;
@@ -201,7 +243,7 @@ exports.registFinished = async (req, res) => {
                 //console.log(result[0].dataValues.compId);
                 compInfo.compId = result[0].dataValues.compId * 1;
                 console.log("업체번호: " + compInfo.compId);
-            }).then(async (result) => {
+            }).then(async () => {
                 if (compInfo.type == "R") {
                     if (req.body.allDays == "true") {
                         restInfo.restOpen = 0;
@@ -368,7 +410,7 @@ exports.registFinished = async (req, res) => {
                         hospitalInfo.breakEnd = req.body.breakEnd[0] * 100 + req.body.breakEnd[1] * 1;
                     }
 
-                    await createHospital();
+                    createHospital();
                 }
 
                 else {
@@ -376,14 +418,10 @@ exports.registFinished = async (req, res) => {
                 }
             })
             .then(() => {
-                // if (compInfo.type == "H") {
-                //     createHospital();
-                // }
-                // 등록완료되면 업주 여부 true로 변경
                 ownerTrue();
             })
             .catch((err) => {
-                //Company.destroy({ where: { compId: compInfo.compId } }); // 업체별 정보 db 저장 에러 시 company 정보도 삭제
+                Company.destroy({ where: { compId: compInfo.compId } }); // 업체별 정보 db 저장 에러 시 company 정보도 삭제
                 console.log(err);
             })
     }).catch((err) => {
