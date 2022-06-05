@@ -96,7 +96,7 @@ exports.checkExistComp = (req, res) => {
     if (!req.session.user_id) {
         res.redirect("/users/login");
     } else {
-        res.render("compRegist/checkExistComp");
+        res.render("\compRegist/checkExistComp");
     }
 };
 
