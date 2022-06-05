@@ -1,5 +1,5 @@
 require("dotenv").config();
-const db = require("../models/index"),
+const db = require("../../models/index"),
     Company = db.company,
     User = db.users,
     Rest = db.restaurant,
@@ -96,7 +96,7 @@ exports.checkExistComp = (req, res) => {
     if (!req.session.user_id) {
         res.redirect("/users/login");
     } else {
-        res.render("checkExistComp");
+        res.render("compRegist/checkExistComp");
     }
 };
 
@@ -113,7 +113,7 @@ exports.searchExistComp = (req, res, next) => {
     })
         .then((result) => {
             // console.log(result);
-            res.render("searchExistComp", { searchComp: result });
+            res.render("compRegist/searchExistComp", { searchComp: result });
         })
         .catch((err) => {
             console.log(err);
@@ -141,7 +141,7 @@ exports.existCompRegist = async (req, res) => {
         },
     })
         .then((result) => {
-            res.render("registExistComp", { compInfo: result });
+            res.render("compRegist/registExistComp", { compInfo: result });
         })
         .catch((err) => {
             console.log(err);
@@ -157,7 +157,7 @@ exports.registComp = (req, res) => {
         res.redirect("/users/login");
     } else {
         compInfo.userId = req.session.user_id;
-        res.render("registComp", { compkey: process.env.COMPANY_CHECK_KEY });
+        res.render("compRegist/registComp", { compkey: process.env.COMPANY_CHECK_KEY });
     }
 };
 
@@ -195,12 +195,12 @@ exports.registCompNext = async (req, res) => {
     compInfo.sun = req.body.sun;
 
     if (compInfo.type == "R") {
-        res.render("registRest");
+        res.render("compRegist/registRest");
     } else if (compInfo.type == "C") {
-        res.render("registCafe");
+        res.render("compRegist/registCafe");
     }
     else if (compInfo.type == "H") {
-        res.render("registHospital")
+        res.render("compRegist/registHospital")
     }
     else {
         res.send("뭔가 잘못됨...!");
@@ -208,7 +208,7 @@ exports.registCompNext = async (req, res) => {
 };
 
 exports.registFinished = async (req, res) => {
-    res.render("registExistCompEnd");
+    res.render("compRegist/registExistCompEnd");
     Company.create({
         image: compInfo.image,
         compName: compInfo.compName,

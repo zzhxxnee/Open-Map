@@ -5,7 +5,7 @@ const db = require("../models/index");
 const Company = db.company;
 const User = db.users;
 const Op = db.Sequelize.Op;
-const companyController = require("../controllers/companyController");
+const companyController = require("../controllers/company/companyController");
 const { request } = require("express");
 var multer = require('multer');
 var _storage = multer.diskStorage({
@@ -54,7 +54,7 @@ router.post("/existCompNext",upload.single('picture'), async (req, res) => {
             address: req.body.addr
           }
         })
-    }).then(() => { res.render("registExistCompEnd", { compInfo: req.body }); })
+    }).then(() => { res.render("compRegist/registExistCompEnd", { compInfo: req.body }); })
     .catch((err) => {
       console.log(err);
     })
@@ -67,14 +67,14 @@ router.post("/registComp",upload.single('picture'), companyController.registComp
 
 // 주소검색하기 누르면 팝업창 뜨도록 설정
 router.get("/registComp/popup/jusoPopup", (req, res) => {
-  res.render("jusoPopup", { addrkey: process.env.ADDRESS_API_KEY });
+  res.render("compRegist/jusoPopup", { addrkey: process.env.ADDRESS_API_KEY });
 });
 
 // 팝업창에서 친 정보 가져오기
 router.post("/registComp/popup/jusoPopup", (req, res) => {
   res.locals = req.body;
   res.locals.islogin = req.user;
-  res.render("jusoPopup", { addrkey: process.env.ADDRESS_API_KEY });
+  res.render("compRegist/jusoPopup", { addrkey: process.env.ADDRESS_API_KEY });
 });
 
 // 업체등록 완료 페이지 주소복붙해서 오는 거 막기
