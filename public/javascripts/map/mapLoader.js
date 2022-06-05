@@ -623,7 +623,7 @@ function removeAllChildNods(el) {
 }
 
 function getClosedRestarantItem(place) {
-    let closeTime = (place.restClosed)/100;
+    let closeTime = Math.floor((place.restClosed)/100);
     if(closeTime >= 24){
         closeTime -= 24;
         closeTime = '익일 ' + closeTime;
@@ -642,10 +642,10 @@ function getClosedRestarantItem(place) {
         '   <h5>' + place.compName + heart +'</h5>';
 
     itemStr += '    <span>' + place.address + '</span>';
-    itemStr += '    <span>' +  (place.restOpen)/100 + ':'+ (place.restOpen)%100   + '</span>'+
-        '   <span> ~ ' +  closeTime  + ':'+ (place.restClosed)%100 + '</span>'; 
+    itemStr += '    <span>' +  Math.floor((place.restOpen)/100) + ':'+ ((place.restOpen)%100 == 0 ? '00' : (place.restOpen)%100)   + '</span>'+
+        '   <span> ~ ' +  closeTime  + ':'+ ((place.restClosed)%100 == 0 ? '00' : (place.restClosed)%100) + '</span>'; 
 
-    itemStr += '  <span class="tel"> 오늘 마감 </span>' +
+    itemStr += '  <span class="tel"> 마감 </span>' +
         '</div>';           
 
     el.innerHTML = itemStr;
@@ -656,7 +656,7 @@ function getClosedRestarantItem(place) {
 
 function getClosedCafeItem(place) {
 
-    let closeTime = (place.cafeClosed)/100;
+    let closeTime = Math.floor((place.cafeClosed)/100);
     if(closeTime > 24){
         closeTime -= 24;
         closeTime = '익일 ' + closeTime;
@@ -674,10 +674,10 @@ function getClosedCafeItem(place) {
     itemStr = '<div class="info">' +
         '   <h5>' + place.compName + heart +'</h5>';
     itemStr += '    <span>' + place.address + '</span>';
-    itemStr += '    <span>' +  (place.cafeOpen)/100 + ':'+ (place.cafeOpen)%100  + '</span>'+
-        '   <span> ~ ' +  closeTime + ':'+ (place.cafeClosed)%100  + '</span>'; 
+    itemStr += '    <span>' +  Math.floor((place.cafeOpen)/100) + ':'+ ((place.cafeOpen)%100 == 0 ? '00' : (place.cafeOpen)%100)  + '</span>'+
+        '   <span> ~ ' +  closeTime + ':'+ ((place.cafeClosed)%100 == 0 ? '00' : (place.cafeClosed)%100)  + '</span>'; 
 
-    itemStr += '  <span class="tel"> 오늘 마감 </span>' +
+    itemStr += '  <span class="tel"> 마감 </span>' +
         '</div>';           
 
     el.innerHTML = itemStr;
@@ -688,7 +688,7 @@ function getClosedCafeItem(place) {
 
 function getClosedHospitalItem(place) {
 
-    let closeTime = (place.hospitalClosed)/100;
+    let closeTime = Math.floor((place.hospitalClosed)/100);
     if(closeTime > 24){
         closeTime -= 24;
         closeTime = '익일 ' + closeTime;
@@ -706,10 +706,10 @@ function getClosedHospitalItem(place) {
     itemStr = '<div class="info">' +
         '   <h5>' + place.compName + heart +'</h5>';
     itemStr += '    <span>' + place.address + '</span>';
-    itemStr += '    <span>' +  (place.hospitalOpen)/100 + ':'+ (place.hospitalOpen)%100  + '</span>'+
-        '   <span> ~ ' +  closeTime + ':'+ (place.hospitalClosed)%100  + '</span>'; 
+    itemStr += '    <span>' +  Math.floor((place.hospitalOpen)/100) + ':'+ ((place.hospitalOpen)%100 == 0 ? '00' : (place.hospitalOpen)%100)  + '</span>'+
+        '   <span> ~ ' +  closeTime + ':'+ ((place.hospitalClosed)%100 == 0 ? '00' : (place.hospitalClosed)%100)  + '</span>'; 
 
-    itemStr += '  <span class="tel"> 오늘 마감 </span>' +
+    itemStr += '  <span class="tel"> 마감 </span>' +
         '</div>';           
 
     el.innerHTML = itemStr;
@@ -796,7 +796,7 @@ function getTodayClosedHospitalItem(place) {
 
 function getOpenedRestarantItem(place) {
 
-    let closeTime = (place.restClosed)/100;
+    let closeTime = Math.floor((place.restClosed)/100);
     if(closeTime > 24){
         closeTime -= 24;
         closeTime = '익일 ' + closeTime;
@@ -815,8 +815,8 @@ function getOpenedRestarantItem(place) {
         '   <h5>' + place.compName + heart +'</h5>';
 
     itemStr += '    <span>' + place.address + '</span>';
-    itemStr += '    <span>' +  (place.restOpen)/100+ ':'+ (place.restOpen)%100   + '</span>'+
-        '   <span> ~ ' +  closeTime  + ':'+ (place.restClosed)%100 + '</span>'; 
+    itemStr += '    <span>' +  Math.floor((place.restOpen)/100) + ':'+ ((place.restOpen)%100 == 0 ? '00' : (place.restOpen)%100)   + '</span>'+
+        '   <span> ~ ' +  closeTime  + ':'+ ((place.restClosed)%100 == 0 ? '00' : (place.restClosed)%100) + '</span>'; 
 
     itemStr += '  <span class="tel"> 영업중 </span>' +
         '</div>';           
@@ -829,7 +829,7 @@ function getOpenedRestarantItem(place) {
 
 function getOpenedCafeItem(place) {
 
-    let closeTime = (place.cafeClosed)/100;
+    let closeTime = Math.floor((place.cafeClosed)/100);
     if(closeTime > 24){
         closeTime -= 24;
         closeTime = '익일 ' + closeTime;
@@ -847,8 +847,8 @@ function getOpenedCafeItem(place) {
     itemStr = '<div class="info">' +
         '   <h5>' + place.compName + heart +'</h5>';
     itemStr += '    <span>' + place.address + '</span>';
-    itemStr += '    <span>' +  (place.cafeOpen)/100 + ':'+ (place.cafeOpen)%100  + '</span>'+
-        '   <span> ~ ' +  closeTime + ':'+ (place.cafeClosed)%100  + '</span>'; 
+    itemStr += '    <span>' +  Math.floor((place.cafeOpen)/100) + ':'+ ((place.cafeOpen)%100 == 0 ? '00' : (place.cafeOpen)%100)  + '</span>'+
+        '   <span> ~ ' +  closeTime + ':'+ ((place.cafeClosed)%100 == 0 ? '00' : (place.cafeClosed)%100)  + '</span>'; 
 
     itemStr += '  <span class="tel"> 영업중 </span>' +
         '</div>';           
@@ -861,7 +861,7 @@ function getOpenedCafeItem(place) {
 
 function getOpenedHospitalItem(place) {
 
-    let closeTime = (place.hospitalClosed)/100;
+    let closeTime = Math.floor((place.hospitalClosed)/100);
     if(closeTime > 24){
         closeTime -= 24;
         closeTime = '익일 ' + closeTime;
@@ -879,8 +879,8 @@ function getOpenedHospitalItem(place) {
     itemStr = '<div class="info">' +
         '   <h5>' + place.compName + heart +'</h5>';
     itemStr += '    <span>' + place.address + '</span>';
-    itemStr += '    <span>' +  (place.hospitalOpen)/100 + ':'+ (place.hospitalOpen)%100  + '</span>'+
-        '   <span> ~ ' +  closeTime + ':'+ (place.hospitalClosed)%100  + '</span>'; 
+    itemStr += '    <span>' +  Math.floor((place.hospitalOpen)/100) + ':'+ ((place.hospitalOpen)%100 == 0 ? '00' : (place.hospitalOpen)%100)  + '</span>'+
+        '   <span> ~ ' +  closeTime + ':'+ ((place.hospitalClosed)%100 == 0 ? '00' : (place.hospitalClosed)%100)  + '</span>'; 
 
     itemStr += '  <span class="tel"> 영업중 </span>' +
         '</div>';           

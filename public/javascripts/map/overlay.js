@@ -13,6 +13,13 @@ function setOverlay(place, marker){
     }
 
     if(place.type == 'cr'){
+        
+        let closeTime = Math.floor((place.restClosed)/100);
+        if(closeTime > 24){
+            closeTime -= 24;
+            closeTime = '익일 ' + closeTime;
+        }
+    
         itemStr = '<div class="wrap">' + 
     '    <div class="info">' + 
     '        <div class="title">' 
@@ -30,17 +37,24 @@ function setOverlay(place, marker){
                     place.tel +
     '            </div>' +
     '            <span class="desc">' + 
-                    (place.restOpen)/100+ ':'+ (place.restOpen)%100 +
+                    Math.floor((place.restOpen)/100) + ':'+ ((place.restOpen)%100 == 0 ? '00' : (place.restOpen)%100) +
     '            </span>' + 
     '            <span class="desc"> ~ ' + 
-                    (place.restClosed)/100  + ':'+ (place.restClosed)%100 +
+                    closeTime  + ':'+ ((place.restClosed)%100 == 0 ? '00' : (place.restClosed)%100) +
     '            </span>' + 
-    '            <span class="desc"> 오늘 마감 </span>' + 
+    '            <span class="desc"> 마감 </span>' + 
     '            <div><button class="menu">메뉴판 보기</a></div>' + 
     '        </div>' + 
     '    </div>' +    
     '</div>';
     }else if(place.type == 'cc'){
+
+        let closeTime = Math.floor((place.cafeClosed)/100);
+        if(closeTime > 24){
+            closeTime -= 24;
+            closeTime = '익일 ' + closeTime;
+        }
+
         itemStr = '<div class="wrap">' + 
         '    <div class="info">' + 
         '        <div class="title">' 
@@ -61,17 +75,24 @@ function setOverlay(place, marker){
                         place.tel +
         '            </div>' +
         '            <span class="desc">' + 
-                        (place.cafeOpen)/100+ ':'+ (place.cafeOpen)%100 +
+                        Math.floor((place.cafeOpen)/100)+ ':'+ ((place.cafeOpen)%100 == 0 ? '00' : (place.cafeOpen)%100) +
         '            </span>' + 
         '            <span class="desc"> ~ ' + 
-                        (place.cafeClosed)/100  + ':'+ (place.cafeClosed)%100 +
+                        closeTime  + ':'+ ((place.cafeClosed)%100 == 0 ? '00' : (place.cafeClosed)%100) +
         '            </span>' + 
-        '            <span class="desc"> 오늘 마감 </span>' + 
+        '            <span class="desc"> 마감 </span>' + 
         '            <div><button class="menu">메뉴판 보기</button></div>' + 
         '        </div>' + 
         '    </div>' +    
         '</div>';
     }else if(place.type == 'ch'){
+
+        let closeTime = Math.floor((place.hospitalClosed)/100);
+        if(closeTime > 24){
+            closeTime -= 24;
+            closeTime = '익일 ' + closeTime;
+        }
+
         itemStr = '<div class="wrap">' + 
         '    <div class="info">' + 
         '        <div class="title">' 
@@ -92,12 +113,12 @@ function setOverlay(place, marker){
                         place.tel +
         '            </div>' +
         '            <span class="desc">' + 
-                        (place.hospitalOpen)/100+ ':'+ (place.hospitalOpen)%100 +
+                        Math.floor((place.hospitalOpen)/100) + ':'+ ((place.hospitalOpen)%100 == 0 ? '00' : (place.hospitalOpen)%100) +
         '            </span>' + 
         '            <span class="desc"> ~ ' + 
-                        (place.hospitalClosed)/100 + ':'+ (place.hospitalClosed)%100 +
+                        closeTime + ':'+ ((place.hospitalClosed)%100 == 0 ? '00' : (place.hospitalClosed)%100) +
         '            </span>' + 
-        '            <span class="desc"> 오늘 마감 </span>' +
+        '            <span class="desc"> 마감 </span>' +
         '            <div class="desc">' + 
                         place.content +
         '            </div>' +
@@ -179,6 +200,13 @@ function setOverlay(place, marker){
         '    </div>' +    
         '</div>';
     }else if(place.type == 'or'){
+
+        let closeTime = Math.floor((place.restClosed)/100);
+        if(closeTime > 24){
+            closeTime -= 24;
+            closeTime = '익일 ' + closeTime;
+        }
+
         itemStr = '<div class="wrap">' + 
         '    <div class="info">' + 
         '        <div class="title">' 
@@ -196,10 +224,10 @@ function setOverlay(place, marker){
                         place.tel +
         '            </div>' +
         '            <span class="desc">' + 
-                        (place.restOpen)/100+ ':'+ (place.restOpen)%100 +
+                        Math.floor((place.restOpen)/100) + ':'+ ((place.restOpen)%100 == 0 ? '00' : (place.restOpen)%100) +
         '            </span>' + 
         '            <span class="desc"> ~ ' + 
-                        (place.restClosed)/100  + ':'+ (place.restClosed)%100 +
+                        closeTime  + ':'+ ((place.restClosed)%100 == 0 ? '00' : (place.restClosed)%100) +
         '            </span>' + 
         '            <span class="desc"> 영업중 </span>' + 
         '            <div><button class="menu">메뉴판 보기</button></div>' + 
@@ -207,6 +235,13 @@ function setOverlay(place, marker){
         '    </div>' +    
         '</div>';
     }else if(place.type == 'oc'){
+
+        let closeTime = Math.floor((place.cafeClosed)/100);
+        if(closeTime > 24){
+            closeTime -= 24;
+            closeTime = '익일 ' + closeTime;
+        }
+
         itemStr = '<div class="wrap">' + 
         '    <div class="info">' + 
         '        <div class="title">' 
@@ -227,10 +262,10 @@ function setOverlay(place, marker){
                         place.tel +
         '            </div>' +
         '            <span class="desc">' + 
-                        (place.cafeOpen)/100+ ':'+ (place.cafeOpen)%100 +
+                        Math.floor((place.cafeOpen)/100) + ':'+ ((place.cafeOpen)%100 == 0 ? '00' : (place.cafeOpen)%100) +
         '            </span>' + 
         '            <span class="desc"> ~ ' + 
-                        (place.cafeClosed)/100  + ':'+ (place.cafeClosed)%100 +
+                        closeTime  + ':'+ ((place.cafeClosed)%100 == 0 ? '00' : (place.cafeClosed)%100) +
         '            </span>' + 
         '            <span class="desc"> 영업중 </span>' + 
         '            <div><button class="menu">메뉴판 보기</button></div>' + 
@@ -238,6 +273,13 @@ function setOverlay(place, marker){
         '    </div>' +    
         '</div>';
     }else if(place.type == 'oh'){
+
+        let closeTime = Math.floor((place.hospitalClosed)/100);
+        if(closeTime > 24){
+            closeTime -= 24;
+            closeTime = '익일 ' + closeTime;
+        }
+
         itemStr = '<div class="wrap">' + 
         '    <div class="info">' + 
         '        <div class="title">' 
@@ -258,10 +300,10 @@ function setOverlay(place, marker){
                         place.tel +
         '            </div>' +
         '            <span class="desc">' + 
-                        (place.hospitalOpen)/100+ ':'+ (place.hospitalOpen)%100 +
+                        Math.floor((place.hospitalOpen)/100) + ':'+ ((place.hospitalOpen)%100 == 0 ? '00' : (place.hospitalOpen)%100) +
         '            </span>' + 
         '            <span class="desc"> ~ ' + 
-                        (place.hospitalClosed)/100  + ':'+ (place.hospitalClosed)%100 +
+                        closeTime  + ':'+ ((place.hospitalClosed)%100 == 0 ? '00' : (place.hospitalClosed)%100) +
         '            </span>' + 
         '            <span class="desc"> 영업중 </span>' +
         '            <div class="desc">' + 
