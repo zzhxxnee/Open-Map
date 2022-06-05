@@ -1,7 +1,9 @@
 const moment = require('moment');
 const { QueryTypes } = require('sequelize');
-const { sequelize } = require('./../models');
-const models = require('./../models');
+const { sequelize } = require('./../../models');
+const models = require('./../../models/index');
+const db = require("../../models/index");
+
 const crypto = require('crypto');
 var multer = require('multer');
 var _storage = multer.diskStorage({
@@ -13,6 +15,8 @@ var _storage = multer.diskStorage({
   }
 })
 var upload = multer({ storage: _storage });
+const holidays = require('holidays-kr');
+holidays.serviceKey = `${process.env.HOLIDAY_APIKEY}`;
 
 exports.showMyplaceList = async(req, res) => {
     let userid = req.session.user_id;
@@ -52,6 +56,8 @@ exports.showMyplaceList = async(req, res) => {
 
       c.cafeOpen = moment(`${c.cafeOpen}`,"Hmm").format('H:mm');
       c.cafeClosed = moment(`${c.cafeClosed}`, "Hmm").format('H:mm');
+
+      c.image = c.image ? c.image : "/images/baseimg.jpg";
     });
   
     myRest.forEach(c => {
@@ -80,15 +86,37 @@ exports.showMyplaceList = async(req, res) => {
 
       c.restOpen = moment(`${c.restOpen}`,"Hmm").format('H:mm');
       c.restClosed = moment(`${c.restClosed}`, "Hmm").format('H:mm');
+
+      c.image = c.image ? c.image : "/images/baseimg.jpg";
       
     });
   
+    var todayFor_HolidayCheck = moment().format('YYYY-MM-DD');
+    var year = moment().year();
+    var holidayList = await holidays.getHolidays({
+      year : year,        // 수집 시작 연도
+      month : 1,         // 수집 시작 월
+      monthCount : 12     // 수집 월 갯수
+    });
+    var holidayDates = [];
+    holidayList.forEach(e =>{
+      holidayDates.push(e.date);
+    });
+    let isHoliday = holidayDates.includes(`${todayFor_HolidayCheck}`);
+ 
     today2 = moment().format('ddd');
     
     myHosp.forEach(c => {
 
-      let HospOpen = c[`HospOpen${today2}`];
-      let HospClosed = c[`HospClose${today2}`];
+      let HospOpen;
+      let HospClosed;
+      if(isHoliday){
+        HospOpen = c[`HospOpenVac`];
+        HospClosed = c[`HospCloseVac`];
+      }else{
+        HospOpen = c[`HospOpen${today2}`];
+        HospClosed = c[`HospClose${today2}`];
+      } 
 
       if(c[today] || c.todayClosed || c.earlyClosed || c.vacation){
         c['status'] = "오늘휴무";
@@ -112,8 +140,10 @@ exports.showMyplaceList = async(req, res) => {
       c['hospOpen'] = moment(`${HospOpen}`,"Hmm").format('H:mm');
       c['hospClosed'] = moment(`${HospClosed}`,"Hmm").format('H:mm');
 
+      c.image = c.image ? c.image : "/images/baseimg.jpg";
+
     });
-    res.render('MyPlaceList', {cafe:myCafe, hosp:myHosp, rest:myRest});
+    res.render('mypage/MyPlaceList', {cafe:myCafe, hosp:myHosp, rest:myRest});
 }
 
 
@@ -140,8 +170,11 @@ exports.showMypage = async(req, res) => {
     let myComp=[];
     if(Boolean(isOwner.isOwner)){
       myComp = await sequelize.query(`SELECT * FROM company where userId = '${userid}'`, { type: QueryTypes.SELECT });
+      myComp.forEach(c =>{
+        c.image = c.image ? c.image : "/images/baseimg.jpg";
+      });
     }
-    res.render('MyPage',{user:userid, myComp:myComp, isOwner:isOwner.isOwner});
+    res.render('mypage/MyPage',{user:userid, myComp:myComp, isOwner:isOwner.isOwner});
   }
 
 }
@@ -150,7 +183,7 @@ exports.configcomp = async(req, res) => {
   if(req.body.comp_type == 'C'){
     let compId = req.body.comp_id;
 
-    myCafe = await sequelize.query(`SELECT * FROM company C JOIN cafe CA ON C.compid = CA.compid WHERE C.compid=${compId}`, { type: QueryTypes.SELECT });
+    myCafe = await sequelize.query(`SELECT * FROM company C JOIN cafe CA ON C.compid = CA.CompanyCompId WHERE C.compid=${compId}`, { type: QueryTypes.SELECT });
     myCafe = myCafe[0];
 
     if(myCafe.cafeClosed >= 2400){
@@ -162,13 +195,13 @@ exports.configcomp = async(req, res) => {
     myCafe.cafeOpen = moment(`${myCafe.cafeOpen}`,"Hmm").format('HH:mm');
     myCafe.cafeClosed = moment(`${myCafe.cafeClosed}`,"Hmm").format('HH:mm');
     
-    menu = await sequelize.query(`SELECT * FROM menu WHERE compid = '${compId}'`, { type: QueryTypes.SELECT });
-    res.render('configCafe',{myCafe:myCafe, menu:menu});
+    menu = await sequelize.query(`SELECT * FROM menu WHERE CompanyCompId = '${compId}'`, { type: QueryTypes.SELECT });
+    res.render('mypage/configCafe',{myCafe:myCafe, menu:menu});
 
   } else if(req.body.comp_type == "R") {
     let compId = req.body.comp_id;
 
-    myRest = await sequelize.query(`SELECT * FROM company C JOIN restaurant R ON C.compid = R.compid WHERE C.compid=${compId}`, { type: QueryTypes.SELECT });
+    myRest = await sequelize.query(`SELECT * FROM company C JOIN restaurant R ON C.compid = R.CompanyCompId WHERE C.compid=${compId}`, { type: QueryTypes.SELECT });
     myRest = myRest[0];
     
     if(myRest.restClosed >= 2400){
@@ -188,19 +221,14 @@ exports.configcomp = async(req, res) => {
       myRest.breakEnd = moment(`${myRest.breakEnd}`,"Hmm").format('HH:mm');
     }
     
-    menu = await sequelize.query(`SELECT * FROM menu WHERE compid = '${compId}'`, { type: QueryTypes.SELECT });
-    //res.send(myRest);
-    res.render('configRest',{myRest:myRest, menu:menu});
+    menu = await sequelize.query(`SELECT * FROM menu WHERE CompanyCompId = '${compId}'`, { type: QueryTypes.SELECT });
+    res.render('mypage/configRest',{myRest:myRest, menu:menu});
     
   } else if(req.body.comp_type == "H") {
     let compId = req.body.comp_id;
-    myHosp = await sequelize.query(`SELECT * FROM company C JOIN hospital H ON C.compid = H.compid WHERE C.compid=${compId}`, { type: QueryTypes.SELECT });
+    myHosp = await sequelize.query(`SELECT * FROM company C JOIN hospital H ON C.compid = H.CompanyCompId WHERE C.compid=${compId}`, { type: QueryTypes.SELECT });
     myHosp = myHosp[0];
-
-
-    menu = await sequelize.query(`SELECT * FROM menu WHERE compid = '${compId}'`, { type: QueryTypes.SELECT });
-
-    //res.send(myHosp);
+    
     var days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Vac'];
     days.forEach(d => {
 
@@ -212,12 +240,12 @@ exports.configcomp = async(req, res) => {
       }
       myHosp[`HospOpen${d}`] = moment(myHosp[`HospOpen${d}`],"Hmm").format('HH:mm');
       myHosp[`HospClose${d}`] = moment(myHosp[`HospClose${d}`],"Hmm").format('HH:mm');
-      if(myHosp.breakStart){
-        myHosp.breakStart = moment(`${myHosp.breakStart}`,"Hmm").format('HH:mm');
-        myHosp.breakEnd = moment(`${myHosp.breakEnd}`,"Hmm").format('HH:mm');
-      }
     });
-    res.render('configHosp',{myHosp:myHosp, menu:menu, days:days});
+    if(myHosp.breakStart){
+      myHosp.breakStart = moment(`${myHosp.breakStart}`,"Hmm").format('HH:mm');
+      myHosp.breakEnd = moment(`${myHosp.breakEnd}`,"Hmm").format('HH:mm');
+    }
+    res.render('mypage/configHosp',{myHosp:myHosp});
   }
 }
 
@@ -229,7 +257,7 @@ exports.configCafe = async(req, res) => {
       imagepath = `/${req.file.filename}`;
     }
     else{
-      imagepath = "/images/baseimg.jpg";
+      imagepath = null;
     }
   
     await models.company.update(
@@ -252,24 +280,33 @@ exports.configCafe = async(req, res) => {
       }}
     );
   
-    let closed = `${req.body.closedTime}`.replaceAll(":","");
-    if(Boolean(req.body.tomorrow)){
-      closed = closed*1 + 2400;
+    let open;
+    let closed;
+    if(Boolean(req.body._24hours)){
+      open = 0;
+      closed = 2359;
+    }else if(Boolean(req.body.tomorrow)){
+      closed = `${req.body.closedTime}`.replaceAll(":","") *1 + 2400;
+      open = `${req.body.openTime}`.replaceAll(":","");
+    }else{
+      open = `${req.body.openTime}`.replaceAll(":","");
+      closed = `${req.body.closedTime}`.replaceAll(":","");
     }
-  
+
     await models.cafe.update(
       {
         cafeType:req.body.cafeType,
-        cafeOpen:`${req.body.openTime}`.replaceAll(":",""),
+        cafeOpen:open,
         cafeClosed:closed
       },
       {where:{
-          compId:compId
+        CompanyCompId:compId
       }}
     );
   
-    await sequelize.query(`DELETE FROM menu WHERE compId = '${compId}'`, { type: QueryTypes.DELETE });
-  
+    await sequelize.query(`DELETE FROM menu WHERE CompanyCompId = '${compId}'`, { type: QueryTypes.DELETE });
+    
+ 
     if(req.body.menu && !(typeof(req.body.menu)=='string')){
       let menu = Object.values(req.body.menu);
       let price = Object.values(req.body.price);
@@ -279,25 +316,22 @@ exports.configCafe = async(req, res) => {
   
       for await (const e of menuAndPrice){
         if(e[0]=="" || e[1]==""){continue;}
-        await models.Menu.create({
+        await models.menu.create({
           menuName:e[0],
           price:e[1],
-          compId:compId
+          CompanyCompId:compId
         });
       }
       
-    }else{
-      if(req.body.menu){
+    }else if(typeof(req.body.menu) == "string"){
       await models.Menu.create({
         menuName:req.body.menu,
         price:req.body.price,
-        compId:compId
+        CompanyCompId:compId
       });
-      }
-        
+      
     }
-    //res.send('completed');
-    //res.send(req.body);
+
     res.redirect('/mypage');
 }
 
@@ -310,7 +344,7 @@ exports.configRest = async(req, res) => {
     imagepath = `/${req.file.filename}`;
   }
   else{
-    imagepath = "/images/baseimg.jpg";
+    imagepath = null;
   }
   await models.company.update(
     {
@@ -332,9 +366,17 @@ exports.configRest = async(req, res) => {
     }}
   );
   
-  let closed = `${req.body.closedTime}`.replaceAll(":","");
-  if(Boolean(req.body.tomorrow)){
-    closed = closed*1 + 2400;
+  let open;
+  let closed;
+  if(Boolean(req.body._24hours)){
+    open = 0;
+    closed = 2359;
+  }else if(Boolean(req.body.tomorrow)){
+    closed = `${req.body.closedTime}`.replaceAll(":","") *1 + 2400;
+    open = `${req.body.openTime}`.replaceAll(":","");
+  }else{
+    open = `${req.body.openTime}`.replaceAll(":","");
+    closed = `${req.body.closedTime}`.replaceAll(":","");
   }
 
   let breakStart = req.body.breakStart;
@@ -354,17 +396,17 @@ exports.configRest = async(req, res) => {
   await models.restaurant.update(
     {
       restType:req.body.restType,
-      restOpen:`${req.body.openTime}`.replaceAll(":",""),
+      restOpen:open,
       restClosed:closed,
       breakStart:(breakStart ? breakStart : null) ,
       breakEnd:(breakEnd ? breakEnd : null)
     },
     {where:{
-        compId:compId
+      CompanyCompId:compId
     }}
   );
   
-  await sequelize.query(`DELETE FROM menu WHERE compId = '${compId}'`, { type: QueryTypes.DELETE });
+  await sequelize.query(`DELETE FROM menu WHERE CompanyCompId = '${compId}'`, { type: QueryTypes.DELETE });
 
   if(req.body.menu && !(typeof(req.body.menu)=='string')){
     let menu = Object.values(req.body.menu);
@@ -375,21 +417,19 @@ exports.configRest = async(req, res) => {
 
     for await (const e of menuAndPrice){
       if(e[0]=="" || e[1]==""){continue;}
-      await models.Menu.create({
+      await models.menu.create({
         menuName:e[0],
         price:e[1],
-        compId:compId
+        CompanyCompId:compId
       });
     }
     
-  }else{
-    if(req.body.menu){
-    await models.Menu.create({
+  }else if(typeof(req.body.menu) == "string"){
+    await models.menu.create({
       menuName:req.body.menu,
       price:req.body.price,
-      compId:compId
+      CompanyCompId:compId
     });
-    }
     
   }
   res.redirect('/mypage');
@@ -403,7 +443,7 @@ exports.configHosp = async(req, res) => {
     imagepath = `/${req.file.filename}`;
   }
   else{
-    imagepath = "/images/baseimg.jpg";
+    imagepath = null;
   }
 
   await models.company.update(
@@ -426,53 +466,65 @@ exports.configHosp = async(req, res) => {
     }}
   );
 
-  let breakStart = req.body.breakStart;
+  let breakStart;
   if(Boolean(req.body.noBreak)){
     breakStart = null;
   }else{
     breakStart = `${req.body.breakStart}`.replaceAll(":","");
   }
 
-  let breakEnd = req.body.breakEnd;
+  let breakEnd;
   if(Boolean(req.body.noBreak)){
     breakEnd = null;
   }else{
     breakEnd = `${req.body.breakEnd}`.replaceAll(":","");
   }
 
+  let daysOpen = {Mon:null, Tue:null, Wed:null, Thu:null, Fri:null, Sat:null, Sun:null, Vac:null};
+  let daysClosed = {Mon:null, Tue:null, Wed:null, Thu:null, Fri:null, Sat:null, Sun:null, Vac:null};
+
+  if(Boolean(req.body._24hours)){
+    Object.keys(daysOpen).forEach(e => {daysOpen[e] = 0});
+    Object.keys(daysClosed).forEach(e => {daysClosed[e] = 2359});
+  }else{
+    Object.keys(daysClosed).forEach(e => {daysOpen[e] = `${req.body[`open${e}`]}`.replaceAll(":","")});
+    Object.keys(daysClosed).forEach(e => {daysClosed[e] = `${req.body[`closed${e}`]}`.replaceAll(":","")});
+  }
+
   await models.hospital.update(
     {
       HospType:req.body.HospType,
+      content:req.body.content,
+      
+      HospOpenMon:daysOpen['Mon'],
+      HospCloseMon:daysClosed['Mon'],
 
-      HospOpenMon:`${req.body.openMon}`.replaceAll(":",""),
-      HospCloseMon:`${req.body.closedMon}`.replaceAll(":",""),
+      HospOpenTue:daysOpen['Tue'],
+      HospCloseTue:daysClosed['Tue'],
 
-      HospOpenTue:`${req.body.openTue}`.replaceAll(":",""),
-      HospCloseTue:`${req.body.closedTue}`.replaceAll(":",""),
+      HospOpenWed:daysOpen['Wed'],
+      HospCloseWed:daysClosed['Wed'],
 
-      HospOpenWed:`${req.body.openWed}`.replaceAll(":",""),
-      HospCloseWed:`${req.body.closedWed}`.replaceAll(":",""),
+      HospOpenThu:daysOpen['Thu'],
+      HospCloseThu:daysClosed['Thu'],
 
-      HospOpenThu:`${req.body.openThu}`.replaceAll(":",""),
-      HospCloseThu:`${req.body.closedThu}`.replaceAll(":",""),
+      HospOpenFri:daysOpen['Fri'],
+      HospCloseFri:daysClosed['Fri'],
 
-      HospOpenFri:`${req.body.openFri}`.replaceAll(":",""),
-      HospCloseFri:`${req.body.closedFri}`.replaceAll(":",""),
+      HospOpenSat:daysOpen['Sat'],
+      HospCloseSat:daysClosed['Sat'],
 
-      HospOpenSat:`${req.body.openSat}`.replaceAll(":",""),
-      HospCloseSat:`${req.body.closedSat}`.replaceAll(":",""),
+      HospOpenSun:daysOpen['Sun'],
+      HospCloseSun:daysClosed['Sun'],
 
-      HospOpenSun:`${req.body.openSun}`.replaceAll(":",""),
-      HospCloseSun:`${req.body.closedSun}`.replaceAll(":",""),
-
-      HospOpenVac:`${req.body.openVac}`.replaceAll(":",""),
-      HospCloseVac:`${req.body.closedVac}`.replaceAll(":",""),
-
+      HospOpenVac:daysOpen['Vac'],
+      HospCloseVac:daysClosed['Vac'],
+     
       breakStart:(breakStart ? breakStart : null) ,
       breakEnd:(breakEnd ? breakEnd : null)
     },
     {where:{
-        compId:compId
+      CompanyCompId:compId
     }}
   );
   res.redirect('/mypage');
@@ -496,10 +548,10 @@ exports.settingEmail = async(req, res) => {
   let hashPassword = crypto.createHash("sha512").update(inputPassword + salt).digest("hex");
 
   if(dbPassword === hashPassword){
-    res.render('settingEmail2',{oldEmail:result.dataValues.email});
+    res.render('mypage/settingEmail2',{oldEmail:result.dataValues.email});
   }
   else{
-      res.render('settingEmail');
+      res.render('mypage/settingEmail');
     
   }
 }
@@ -509,8 +561,20 @@ exports.settingEmail2 = async(req, res) => {
   if(!userid){
     res.redirect("/users/login");
   }
-  await sequelize.query(`UPDATE users SET email = ? WHERE id = '${userid}'`, {replacements:[`${req.body.new_email}`], type: QueryTypes.UPDATE });
-  res.redirect('/users/MyPage');
+  
+  let exEmail = await models.Users.findOne({
+    where:{
+      email : req.body.new_email
+    }
+  });
+
+  if(exEmail){
+    res.status(500).send(`<script>alert('이미 가입되어있는 이메일입니다.');history.go(-1);</script>`);
+    return;
+  } else {
+    await sequelize.query(`UPDATE users SET email = ? WHERE id = '${userid}'`, {replacements:[`${req.body.new_email}`], type: QueryTypes.UPDATE });
+    res.redirect('/mypage');
+  }
 }
 
 exports.leave_confirmPwd = async(req, res) => {
@@ -531,10 +595,10 @@ exports.leave_confirmPwd = async(req, res) => {
   let hashPassword = crypto.createHash("sha512").update(inputPassword + salt).digest("hex");
 
   if(dbPassword === hashPassword){
-    res.render('leaveMember2',{oldEmail:result.dataValues.email});
+    res.render('mypage/leaveMember2',{oldEmail:result.dataValues.email});
   }
   else{
-      res.render('leaveMember');
+      res.render('mypage/leaveMember');
     
   }
 
@@ -548,12 +612,12 @@ exports.leave_thanks = async(req, res) => {
   try {
     await sequelize.query(`DELETE FROM users WHERE id = '${userid}'`, { type: QueryTypes.DELETE });
   } catch (e) {
-    res.redirect("/");
+    res.send(e);
   }
   req.session.destroy();
   res.clearCookie('sid');
 
-  res.render('leaveMemberConfirm');
+  res.render('mypage/leaveMemberConfirm');
 }
 
 exports.delete_comp = async(req,res) => {
