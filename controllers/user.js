@@ -1,6 +1,7 @@
 const models = require('./../models');
 const crypto = require('crypto');
 let session = require('express-session');
+
 const nodemailer = require('nodemailer');
 
 exports.getUsers = function(req, res, next) {
