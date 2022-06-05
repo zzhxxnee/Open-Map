@@ -1,5 +1,5 @@
 require('dotenv').config();
-const db = require("../models/index");
+const db = require("../../models/index");
 const { Op } = require("sequelize");
 const Company = db.company;
 const CompanyRestaurantView = db.companyRestaurantView;
@@ -7,7 +7,7 @@ const CompanyCafeView = db.CompanyCafeView;
 const CompanyHospitalView = db.companyHospitalView;
 const Sequelize = require('sequelize');
 const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.json')[env];
+const config = require(__dirname + '/../../config/config.json')[env];
 const { QueryTypes } = require('sequelize');
 const request = require('request');
 

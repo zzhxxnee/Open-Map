@@ -1,10 +1,10 @@
 var express = require('express');
 const req = require('express/lib/request');
 const res = require('express/lib/response');
-const mapInit = require("../controllers/mapInit");
-const mapController = require("../controllers/mapController");
-const menuLoader = require("../controllers/menuLoader");
-const myPlaceController = require("../controllers/myPlaceController");
+const mapInit = require("../controllers/map/mapInit");
+const mapController = require("../controllers/map/mapController");
+const menuLoader = require("../controllers/map/menuLoader");
+const myPlaceController = require("../controllers/map/myPlaceController");
 var router = express.Router();
 
 /* GET home page. */

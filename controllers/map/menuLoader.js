@@ -1,4 +1,4 @@
-const db = require("../models/index");
+const db = require("../../models/index");
 const Menu = db.menu;
 
 exports.getMenu = async (req, res) => {

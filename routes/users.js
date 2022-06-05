@@ -4,6 +4,7 @@ const res = require('express/lib/response');
 const { response } = require('../app');
 var router = express.Router();
 const models = require('./../models');
+const passport = require('passport');
 const crypto = require('crypto');
 let session = require('express-session');
 const db = require('./../models');
@@ -40,6 +41,17 @@ router.get('/changePassword', User.getChangePassword);
 router.post('/findPassword', User.postFindPassword);
 
 router.post('/changePassword', User.postChangePassword);
+
+router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] })); // 프로파일과 이메일 정보를 받는다.
+
+router.get(
+    '/google/callback',
+    passport.authenticate('google'), 
+    (req, res) => {
+        req.session.user_id = req.session.passport.user;
+        res.redirect('/');
+    },
+ );
 
 
 module.exports = router;

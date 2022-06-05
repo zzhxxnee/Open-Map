@@ -5,6 +5,8 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const expressLayouts = require('express-ejs-layouts');
 const session = require('express-session');
+const passport = require('passport');
+const passportConfig = require('./passport');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -13,6 +15,8 @@ const myPageRouter = require('./routes/mypage');
 var sequelize = require('./models').sequelize; // mysql 시퀄라이즈 모델
 var app = express();
 const port = 3000;
+
+passportConfig();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -31,7 +35,6 @@ app.use(session({
   }
 }));
 
-
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -45,6 +48,9 @@ app.use(function (req, res, next) {
   res.locals.islogin = req.session.user_id;
   next();
 });/////////// app.use 라우터들 위에 있어야 함!
+
+app.use(passport.initialize()); // 요청 객체에 passport 설정을 심음
+app.use(passport.session()); // req.session 객체에 passport정보를 추가 저장
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
