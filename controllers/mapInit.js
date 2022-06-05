@@ -1,10 +1,4 @@
 require('dotenv').config();
-const db = require("../models/index");
-const { Op } = require("sequelize");
-const Company = db.company;
-const CompanyRestaurantView = db.companyRestaurantView;
-const CompanyCafeView = db.CompanyCafeView;
-const CompanyHospitalView = db.companyHospitalView;
 const Sequelize = require('sequelize');
 const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/config.json')[env];
@@ -26,9 +20,9 @@ exports.Initialize = async (req, res) => {
         });
 
         if(req.session.user_id){
-            res.render("index", {myPlaces : myPlaceId, apikey : process.env.KAKAO_JS_KEY, isLogin: 'true'});
+            res.render("main/index", {myPlaces : myPlaceId, apikey : process.env.KAKAO_JS_KEY, isLogin: 'true'});
         }else{
-            res.render("index", {myPlaces : myPlaceId, apikey : process.env.KAKAO_JS_KEY, isLogin: 'false'});
+            res.render("main/index", {myPlaces : myPlaceId, apikey : process.env.KAKAO_JS_KEY, isLogin: 'false'});
         }
 
     }catch(err){
