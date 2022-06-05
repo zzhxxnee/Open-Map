@@ -9,6 +9,7 @@ const Sequelize = require('sequelize');
 const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/config.json')[env];
 const { QueryTypes } = require('sequelize');
+const request = require('request');
 
 let sequelize;
 if (config.use_env_variable) {
@@ -16,9 +17,10 @@ if (config.use_env_variable) {
 } else {
   sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
-
+let holiday_date = [];
 let today = new Date();
 const day = today.getDay();
+const date = today.getDate();
 let hour = today.getHours();
 if(hour < 6){
     hour += 24;
@@ -28,6 +30,16 @@ if(minute < 10){
     minute = '0' + minute;
 }
 let now = String(hour) + minute;
+
+request({
+    url: `http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo?serviceKey=${process.env.HOLIDAY_APIKEY}&solYear=${today.getFullYear()}&solMonth=0${today.getMonth()+1}&_type=json`,
+    method: 'GET'
+}, async function (error, response, body) {
+    const result = JSON.parse(body).response.body.items.item;
+    for(let i=0; i < result.length; i++){
+        holiday_date.push(result[i].locdate%100);
+    }
+});
 
 exports.getAllPositions = async (req, res) => {
     try{
@@ -561,7 +573,42 @@ exports.getAllPositions = async (req, res) => {
             }
         });
 
-        if(day == 0){
+        if(holiday_date.includes(date)){
+            openedHospital = await CompanyHospitalView.findAll({
+                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenVac', 'hospitalOpen'], ['HospCloseVac', 'hospitalClosed'], 'breakStart', 'breakEnd'],
+                where: {
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
+                    compId:{
+                        [Op.or]: [...openedCompany_H]
+                    },
+                    HospOpenSun:{
+                        [Op.lte]: parseInt(now)
+                    },
+                    HospCloseSun:{
+                        [Op.gt]: parseInt(now)
+                    }
+                }
+            });
+            closedHospital = await CompanyHospitalView.findAll({
+                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenVac', 'hospitalOpen'], ['HospCloseVac', 'hospitalClosed'], 'breakStart', 'breakEnd'],
+                where: {
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
+                    compId:{
+                        [Op.or]: [...openedCompany_H],
+                    },
+                    [Op.or]:{
+                        HospOpenSun:{
+                            [Op.gt]: parseInt(now)
+                        },
+                        HospCloseSun:{
+                            [Op.lte]: parseInt(now)
+                        }
+                    }
+                }
+            });
+        }else if(day == 0){
             openedHospital = await CompanyHospitalView.findAll({
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenSun', 'hospitalOpen'], ['HospCloseSun', 'hospitalClosed'], 'breakStart', 'breakEnd'],
                 where: {
@@ -812,7 +859,6 @@ exports.getAllPositions = async (req, res) => {
         myPlaces.forEach(p => {
             myPlaceId.push(p.CompanyCompId);
         });
-        console.log(myPlaceId);
 
     let closedRestaurantPositionTotal = new Array(earlyClosedRestaurantPosition);
     closedRestaurantPositionTotal = [...closedRestaurant];
