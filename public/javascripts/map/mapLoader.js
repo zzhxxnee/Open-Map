@@ -108,6 +108,7 @@ function sendBoundAjax(url, data) {
     
     xhr.addEventListener('load', function () {
         const result =  JSON.parse(xhr.responseText);
+        MyPlaces = result.myPlaces;
         closedRestaurant = result.closedRestaurantTotal;
         for(let i = 0; i < closedRestaurant.length; i++){
             for(let j=0; j < MyPlaces.length; j++){

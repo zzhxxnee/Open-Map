@@ -2,12 +2,7 @@ function setOverlay(place, marker){
     let img;
 
     if(place.image){
-        async () => {
-            const res = await axios.get("http://localhost:3000/");
-            let buff = new Buffer(res.data.images[0], "base64");
-            let text = buff.toString("ascii");
-            img = `data:image/png;base64,${text}`;
-        };
+        img = place.image;
     }else{
         img = '//localhost:3000/images/baseimg.jpg'
     }

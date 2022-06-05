@@ -16,7 +16,7 @@ module.exports = () => {
                     try {
                         const exUser = await models.Users.findOne({
                                 // 구글 플랫폼에서 로그인 했고 & id필드에 구글 아이디가 일치할경우
-                                where: { id: profile.id, provider: 'google' },
+                                where: { id: profile.displayName, provider: 'google' },
                         });
                         // 이미 가입된 구글 프로필이면 성공
                         if (exUser) {
@@ -35,7 +35,7 @@ module.exports = () => {
                                 provider: 'google',
                             });
                             done(null, newUser); // 회원가입하고 로그인 인증 완료
-                    }
+                        }
                     } catch (error) {
                     console.error(error);
                     done(error);

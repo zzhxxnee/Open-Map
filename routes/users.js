@@ -1,15 +1,6 @@
 var express = require('express');
-const req = require('express/lib/request');
-const res = require('express/lib/response');
-const { response } = require('../app');
 var router = express.Router();
-const models = require('./../models');
 const passport = require('passport');
-const crypto = require('crypto');
-let session = require('express-session');
-const db = require('./../models');
-const nodemailer = require('nodemailer');
-const { resourceLimits } = require('worker_threads');
 const User = require("../controllers/user");
 
 var router = express.Router();
