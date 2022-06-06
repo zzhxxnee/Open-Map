@@ -222,7 +222,7 @@ exports.postFindPassword = async (req, res, next) => {
           console.log('Email sent: ' + info.response);
         }
       });
-      return res.json(result);
+      return res.render('speakChangePassword');
     } else {
       return res.status(403).send('This account does not exist');
     }
@@ -272,6 +272,7 @@ exports.postChangePassword = async(req, res, next)=>{
         
         await user.update({ // password 업데이트
           password: hashPassword,
+          salt : salt,
         });
         res.send(`
             <script>alert('비밀번호가 변경 되었습니다'); window.location.href="/users/login"</script>`);

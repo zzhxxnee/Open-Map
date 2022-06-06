@@ -2,18 +2,27 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>아이디찾기</title>
+    <title>Openmap</title>
+    <link rel="stylesheet" href="/stylesheets/findIDResult.css" />
 </head>
 
 <body>
     <form>
-        <h3>
-            가입하신 아이디는 <%= FindID %>입니다.
-        </h3>
+        <div class="findid">
+            <h3>아이디 찾기</h3>
+        </div>
+        <div class="info-findid">
+            <h5>가입한 아이디 </h5>
+        </div>
+        <div class="point">
+            <%= FindID %>
+        </div>
     </form>
 
     <form action="/users/login" method="get">
-        <button type="submit">확인</button>
+        <div class="submit-btn">
+            <button type="submit">확인</button>
+        </div>
     </form>
 </body>
 </html>

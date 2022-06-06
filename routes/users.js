@@ -41,5 +41,11 @@ router.post('/findPassword', User.postFindPassword);
 
 router.post('/changePassword', User.postChangePassword);
 
+router.get('chooseSignup', async(req, res, next)=>{
+  res.render("changePassword")
+});
+
+
+
 
 module.exports = router;
