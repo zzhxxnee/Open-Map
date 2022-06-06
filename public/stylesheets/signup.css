@@ -1,14 +1,9 @@
 *{
-    margin:30;
+    margin:20;
     padding:100;
     box-sizing:border-box;
 }
 
-
-.signup-form{
-    text-align:center;
-    margin :0 auto;
-}
 
 .signup-form h3{
     font-family:'Inter';
@@ -18,8 +13,53 @@
     line-height:61px;
     color:#413E3E;
     text-shadow:0px 4px 4px rgba(0,0,0,0.25);
-    text-align:center;
     text-decoration:underline;
+    margin-top:50px;
+}
+
+.signup-form{
+    margin-left : 500px;
+    margin-top:10px;
+}
+
+.signup-form input{
+    padding:17px 10px;
+    width:30%;
+    border: 2px solid #E1E0E0;
+    height:20px;
+    margin-bottom:3px;
 }
 
 
+.input-type p{
+    margin-bottom:1px;
+    font-size:14px;
+}
+
+.input-checkbox input{
+    margin-left:-130px;
+    margin-top:15px;
+    box-sizing: border-box;
+}
+
+.input-checkbox agree{
+    padding-left:2px;
+}
+
+.confirm input{
+    border:none;
+    border-radius:20px;
+}
+
+
+.btn-area button{
+    width:30%;
+    height:40px;
+    background:#77C3CA;
+    color:#fff;
+    font-size:18px;
+    font-weight:normal;
+    border:none;
+    border-radius:25px;
+    margin-top:20px;
+}

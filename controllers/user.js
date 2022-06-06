@@ -117,7 +117,7 @@ exports.postSignup = async function(req,res,next){
       if (dbPassword === hashPassword) {
         console.log("비밀번호 일치");
         req.session.user_id = body.userid;
-        res.redirect("/users");
+        res.send(`<script>alert('로그인 성공입니다!');window.location.href="/";</script>`);
       } else {
         res.status(500).send(`<script>alert('잘못된 비밀번호입니다');history.go(-1);</script>`);
         return;
@@ -160,7 +160,7 @@ exports.postFindIDResult = async(req, res, next)=>{
       console.log("cannot findID");
       res.send(`
       <a href='/users/findID'>Back</a>
-      <h1>cannot find id</h1>`);
+      <h2>찾을 수 없는 아이디입니다!</h2>`);
     }
   } catch (error) {
     console.log(`findIdResult Error -> ${error}`);
@@ -222,7 +222,7 @@ exports.postFindPassword = async (req, res, next) => {
           console.log('Email sent: ' + info.response);
         }
       });
-      return res.json(result);
+      return res.render('speakChangePassword');
     } else {
       return res.status(403).send('This account does not exist');
     }
@@ -272,6 +272,7 @@ exports.postChangePassword = async(req, res, next)=>{
         
         await user.update({ // password 업데이트
           password: hashPassword,
+          salt : salt,
         });
         res.send(`
             <script>alert('비밀번호가 변경 되었습니다'); window.location.href="/users/login"</script>`);
