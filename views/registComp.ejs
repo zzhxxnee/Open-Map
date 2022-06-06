@@ -2,6 +2,7 @@
     <title>openMap</title>
     <link rel="stylesheet" href="/stylesheets/registComp.css" />
     <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+    <script>const compservicekey = "<%= compkey %>"</script>
     <script language="javascript" src="/javascripts/checkCompInfo.js"></script>
     <script language="javascript" src="/javascripts/address.js"></script>
     <script language="javascript" src="/javascripts/registComp.js"></script>
@@ -15,7 +16,7 @@
     </div>
 
         <div class="compRegist">
-            <form name="compRegistForm" id="compRegistForm" method="post">
+            <form name="compRegistForm" id="compRegistForm" method="post" enctype="multipart/form-data">
                 <label for="name">대표자명</label>
                 <br>
                 <input type="text" class="input_text" name="name" id="name" placeholder="사업자등록증에 적힌 성명을 입력해주세요." />
@@ -56,7 +57,7 @@
                 <br>
                 <label for="image">업체사진</label>
                 <br>
-                <input name="image" id="image" type="file" accept="image/png, image/jpeg" />
+                <input name="picture" id="picture" type="file" accept="image/png, image/jpeg" />
                 <br>
                 <p>외부사진 혹은 내부사진을 업로드 해주세요.</p>
                 <br>
