@@ -15,8 +15,10 @@ var _storage = multer.diskStorage({
   }
 })
 var upload = multer({ storage: _storage });
-const holidays = require('holidays-kr');
-holidays.serviceKey = `${process.env.HOLIDAY_APIKEY}`;
+
+/*const holidays = require('holidays-kr');
+holidays.serviceKey = `${process.env.HOLIDAY_APIKEY}`;*/
+
 
 exports.showMyplaceList = async(req, res) => {
     let userid = req.session.user_id;
@@ -43,7 +45,10 @@ exports.showMyplaceList = async(req, res) => {
       else{
         c['status'] = "영업종료";
       }
-      
+
+      if(c.cafeClosed == 4000){
+        c.cafeClosed = 2359;
+      }
       if(c.cafeClosed >= 2400){
         c.cafeClosed -= 2400;
       }
@@ -74,6 +79,9 @@ exports.showMyplaceList = async(req, res) => {
         c['status'] = "영업종료";
       }
 
+      if(c.restClosed == 4000){
+        c.restClosed = 2359;
+      }
       if(c.restClosed >= 2400){
         c.restClosed -= 2400;
       }
@@ -91,7 +99,7 @@ exports.showMyplaceList = async(req, res) => {
       
     });
   
-    var todayFor_HolidayCheck = moment().format('YYYY-MM-DD');
+    /*var todayFor_HolidayCheck = moment().format('YYYY-MM-DD');
     var year = moment().year();
     var holidayList = await holidays.getHolidays({
       year : year,        // 수집 시작 연도
@@ -102,7 +110,7 @@ exports.showMyplaceList = async(req, res) => {
     holidayList.forEach(e =>{
       holidayDates.push(e.date);
     });
-    let isHoliday = holidayDates.includes(`${todayFor_HolidayCheck}`);
+    let isHoliday = holidayDates.includes(`${todayFor_HolidayCheck}`);*/
  
     today2 = moment().format('ddd');
     
@@ -110,13 +118,15 @@ exports.showMyplaceList = async(req, res) => {
 
       let HospOpen;
       let HospClosed;
-      if(isHoliday){
+      /*if(isHoliday){
         HospOpen = c[`HospOpenVac`];
         HospClosed = c[`HospCloseVac`];
       }else{
         HospOpen = c[`HospOpen${today2}`];
         HospClosed = c[`HospClose${today2}`];
-      } 
+      } */
+      HospOpen = c[`HospOpen${today2}`];
+      HospClosed = c[`HospClose${today2}`];
 
       if(c[today] || c.todayClosed || c.earlyClosed || c.vacation){
         c['status'] = "오늘휴무";
@@ -130,8 +140,14 @@ exports.showMyplaceList = async(req, res) => {
         c['status'] = "영업종료";
       }
 
+      if(HospClosed == 4000){
+        HospClosed = 2359;
+      }
       if(HospClosed >= 2400){
         HospClosed -= 2400;
+      }
+      if(HospOpen == 0){
+        HospOpen ='000';
       }
       if(HospClosed == 0){
         HospClosed ='000';
@@ -186,8 +202,14 @@ exports.configcomp = async(req, res) => {
     myCafe = await sequelize.query(`SELECT * FROM company C JOIN cafe CA ON C.compid = CA.CompanyCompId WHERE C.compid=${compId}`, { type: QueryTypes.SELECT });
     myCafe = myCafe[0];
 
+    if(myCafe.cafeClosed == 4000){
+      myCafe.cafeClosed = 2359;
+    }
     if(myCafe.cafeClosed >= 2400){
       myCafe.cafeClosed -= 2400;
+    }
+    if(myCafe.cafeOpen == 0){
+      myCafe.cafeOpen ='000';
     }
     if(myCafe.cafeClosed == 0){
       myCafe.cafeClosed ='000';
@@ -203,7 +225,10 @@ exports.configcomp = async(req, res) => {
 
     myRest = await sequelize.query(`SELECT * FROM company C JOIN restaurant R ON C.compid = R.CompanyCompId WHERE C.compid=${compId}`, { type: QueryTypes.SELECT });
     myRest = myRest[0];
-    
+
+    if(myRest.restClosed == 4000){
+      myRest.restClosed = 2359;
+    }
     if(myRest.restClosed >= 2400){
       myRest.restClosed -= 2400;
     }
@@ -231,12 +256,15 @@ exports.configcomp = async(req, res) => {
     
     var days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Vac'];
     days.forEach(d => {
-
+      
+      if(myHosp[`HospClosed${d}`] == 4000){
+        myHosp[`HospClosed${d}`] = 2359;
+      }
       if(myHosp[`HospOpen${d}`] == 0){
         myHosp[`HospOpen${d}`] ='000';
       }
       if(myHosp[`HospClosed${d}`] == 0){
-        myHosp[`HospOpen${d}`] ='000';
+        myHosp[`HospClosed${d}`] ='000';
       }
       myHosp[`HospOpen${d}`] = moment(myHosp[`HospOpen${d}`],"Hmm").format('HH:mm');
       myHosp[`HospClose${d}`] = moment(myHosp[`HospClose${d}`],"Hmm").format('HH:mm');
@@ -284,7 +312,7 @@ exports.configCafe = async(req, res) => {
     let closed;
     if(Boolean(req.body._24hours)){
       open = 0;
-      closed = 2359;
+      closed = 4000;
     }else if(Boolean(req.body.tomorrow)){
       closed = `${req.body.closedTime}`.replaceAll(":","") *1 + 2400;
       open = `${req.body.openTime}`.replaceAll(":","");
@@ -323,13 +351,14 @@ exports.configCafe = async(req, res) => {
         });
       }
       
-    }else if(typeof(req.body.menu) == "string"){
-      await models.Menu.create({
-        menuName:req.body.menu,
-        price:req.body.price,
-        CompanyCompId:compId
-      });
-      
+    }else{
+      if(req.body.menu){
+        await models.Menu.create({
+          menuName:req.body.menu,
+          price:req.body.price,
+          CompanyCompId:compId
+        });
+      }
     }
 
     res.redirect('/mypage');
@@ -370,7 +399,7 @@ exports.configRest = async(req, res) => {
   let closed;
   if(Boolean(req.body._24hours)){
     open = 0;
-    closed = 2359;
+    closed = 4000;
   }else if(Boolean(req.body.tomorrow)){
     closed = `${req.body.closedTime}`.replaceAll(":","") *1 + 2400;
     open = `${req.body.openTime}`.replaceAll(":","");
@@ -485,7 +514,7 @@ exports.configHosp = async(req, res) => {
 
   if(Boolean(req.body._24hours)){
     Object.keys(daysOpen).forEach(e => {daysOpen[e] = 0});
-    Object.keys(daysClosed).forEach(e => {daysClosed[e] = 2359});
+    Object.keys(daysClosed).forEach(e => {daysClosed[e] = 4000});
   }else{
     Object.keys(daysClosed).forEach(e => {daysOpen[e] = `${req.body[`open${e}`]}`.replaceAll(":","")});
     Object.keys(daysClosed).forEach(e => {daysClosed[e] = `${req.body[`closed${e}`]}`.replaceAll(":","")});
