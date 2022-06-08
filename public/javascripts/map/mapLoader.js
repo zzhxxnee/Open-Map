@@ -182,6 +182,9 @@ function sendBoundAjax(url, data) {
             }
         }
         companyTotal = closedCafe.concat(openedCafe, todayClosedCafe, closedRestaurant, openedRestaurant, todayClosedRestaurant, closedHospital, openedHospital, todayClosedHospital);
+        console.log(todayClosedCafe);
+        console.log(openedCafe);
+        console.log(closedCafe);
         removeAllChildNods(listEl);
         removeMarker();
         createClosedRestaurantMarkers(); 
