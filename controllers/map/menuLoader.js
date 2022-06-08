@@ -6,7 +6,7 @@ exports.getMenu = async (req, res) => {
         var responseData = await Menu.findAll({
             attributes: ['id', 'price', 'menuName'],
             where:{
-                compId : req.body.id
+                CompanyCompId : req.body.id
             }
         });
         res.json(responseData);

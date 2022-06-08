@@ -202,7 +202,7 @@ function setOverlay(place, marker){
         }
 
         let openInfo;
-        if(restClosed == 4000){
+        if(place.restClosed == 4000){
             openInfo = '<span class="desc">24시간 영업</span>';
         }else{
             openInfo = '            <span class="desc">' + 
@@ -243,7 +243,7 @@ function setOverlay(place, marker){
         }
 
         let openInfo;
-        if(cafeClosed == 4000){
+        if(place.cafeClosed == 4000){
             openInfo = '<span class="desc">24시간 영업</span>';
         }else{
             openInfo = '            <span class="desc">' + 
@@ -287,7 +287,7 @@ function setOverlay(place, marker){
         }
 
         let openInfo;
-        if(hospitalClosed == 4000){
+        if(place.hospitalClosed == 4000){
             openInfo = '<span class="desc">24시간 영업</span>';
         }else{
             openInfo = '            <span class="desc">' + 

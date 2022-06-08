@@ -813,7 +813,7 @@ function getOpenedRestarantItem(place) {
     }
 
     let openInfo;
-    if(restClosed == 4000){
+    if(place.restClosed == 4000){
         openInfo = '<span>24시간 영업</span>';
     }else{
         openInfo = '    <span>' +  Math.floor((place.restOpen)/100) + ':'+ ((place.restOpen)%100 == 0 ? '00' : (place.restOpen)%100)   + '</span>'+
@@ -853,7 +853,7 @@ function getOpenedCafeItem(place) {
     }
 
     let openInfo;
-    if(cafeClosed == 4000){
+    if(place.cafeClosed == 4000){
         openInfo = '<span>24시간 영업</span>';
     }else{
         openInfo =  '    <span>' +  Math.floor((place.cafeOpen)/100) + ':'+ ((place.cafeOpen)%100 == 0 ? '00' : (place.cafeOpen)%100)  + '</span>'+
@@ -891,7 +891,7 @@ function getOpenedHospitalItem(place) {
     }
 
     let openInfo;
-    if(hospitalClosed == 4000){
+    if(place.hospitalClosed == 4000){
         openInfo = '<span>24시간 영업</span>';
     }else{
         openInfo = '    <span>' +  Math.floor((place.hospitalOpen)/100) + ':'+ ((place.hospitalOpen)%100 == 0 ? '00' : (place.hospitalOpen)%100)  + '</span>'+
