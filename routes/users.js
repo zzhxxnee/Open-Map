@@ -44,5 +44,10 @@ router.get(
     },
  );
 
+router.get('chooseSignup', async(req, res, next)=>{
+  res.render("changePassword")
+});
+
+
 
 module.exports = router;
