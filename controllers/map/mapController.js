@@ -40,15 +40,15 @@ request({
         for(let i=0; i < result.length; i++){
             holiday_date.push(result[i].locdate%100);
         }
+        console.log('holiday / ' + holiday_date);
     }catch(err){
-        console.log(body);
+        console.log('body / ' + body);
         console.log('Error: ', err.message);
     }
 });
 
 exports.getAllPositions = async (req, res) => {
     try{
-        console.log(holiday_date);
         if(day == 0){
             todayClosedRestaurantPosition = await CompanyRestaurantView.findAll({
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
@@ -412,6 +412,12 @@ exports.getAllPositions = async (req, res) => {
                 }
             });
         };
+
+        todayOpenedCompId = [];
+        for(let i = 0; i < todayOpened.length; i++){
+            todayOpenedCompId.push(todayOpened[i].compId);
+        };
+
         earlyClosedRestaurantPosition = await CompanyRestaurantView.findAll({
             attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
             where:{
@@ -501,13 +507,6 @@ exports.getAllPositions = async (req, res) => {
                 }
             });
         }
-        let openedCompany_R = new Array();
-        let openedCompany_C = new Array();
-        let openedCompany_H = new Array();
-        todayOpened.filter((company) => company.type == 'R').forEach((company) => openedCompany_R.push(company.compId));
-        console.log(openedCompany_R);
-        todayOpened.filter((company) => company.type == 'C').forEach((company) => openedCompany_C.push(company.compId));
-        todayOpened.filter((company) => company.type == 'H').forEach((company) => openedCompany_H.push(company.compId));
 
         openedRestaurant = await CompanyRestaurantView.findAll({
             attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
@@ -515,7 +514,7 @@ exports.getAllPositions = async (req, res) => {
                 latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                 longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                 compId:{
-                    [Op.or]: [...openedCompany_R],
+                    [Op.or]: [...todayOpenedCompId],
                 },
                 restOpen:{
                     [Op.lte]: parseInt(now)
@@ -531,7 +530,7 @@ exports.getAllPositions = async (req, res) => {
                 latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                 longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                 compId:{
-                    [Op.or]: [...openedCompany_R],
+                    [Op.or]: [...todayOpenedCompId],
                 },
                 [Op.or]: {
                     restOpen:{
@@ -550,7 +549,7 @@ exports.getAllPositions = async (req, res) => {
                 latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                 longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                 compId:{
-                    [Op.or]: [...openedCompany_C]
+                    [Op.or]: [...todayOpenedCompId]
                 },
                 cafeOpen:{
                     [Op.lte]: parseInt(now)
@@ -567,7 +566,7 @@ exports.getAllPositions = async (req, res) => {
                 latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                 longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                 compId:{
-                    [Op.or]: [...openedCompany_C],
+                    [Op.or]: [...todayOpenedCompId],
                 },
                 [Op.or]: {
                     cafeOpen:{
@@ -587,7 +586,7 @@ exports.getAllPositions = async (req, res) => {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
-                        [Op.or]: [...openedCompany_H]
+                        [Op.or]: [...todayOpenedCompId]
                     },
                     HospOpenSun:{
                         [Op.lte]: parseInt(now)
@@ -603,7 +602,7 @@ exports.getAllPositions = async (req, res) => {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
-                        [Op.or]: [...openedCompany_H],
+                        [Op.or]: [...todayOpenedCompId],
                     },
                     [Op.or]:{
                         HospOpenSun:{
@@ -622,7 +621,7 @@ exports.getAllPositions = async (req, res) => {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
-                        [Op.or]: [...openedCompany_H]
+                        [Op.or]: [...todayOpenedCompId]
                     },
                     HospOpenSun:{
                         [Op.lte]: parseInt(now)
@@ -638,7 +637,7 @@ exports.getAllPositions = async (req, res) => {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
-                        [Op.or]: [...openedCompany_H],
+                        [Op.or]: [...todayOpenedCompId],
                     },
                     [Op.or]:{
                         HospOpenSun:{
@@ -657,7 +656,7 @@ exports.getAllPositions = async (req, res) => {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
-                        [Op.or]: [...openedCompany_H]
+                        [Op.or]: [...todayOpenedCompId]
                     },
                     HospOpenMon:{
                         [Op.lte]: parseInt(now)
@@ -673,7 +672,7 @@ exports.getAllPositions = async (req, res) => {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
-                        [Op.or]: [...openedCompany_H],
+                        [Op.or]: [...todayOpenedCompId],
                     },
                     [Op.or]:{
                         HospOpenMon:{
@@ -692,7 +691,7 @@ exports.getAllPositions = async (req, res) => {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
-                        [Op.or]: [...openedCompany_H]
+                        [Op.or]: [...todayOpenedCompId]
                     },
                     HospOpenTue:{
                         [Op.lte]: parseInt(now)
@@ -708,7 +707,7 @@ exports.getAllPositions = async (req, res) => {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
-                        [Op.or]: [...openedCompany_H],
+                        [Op.or]: [...todayOpenedCompId],
                     },
                     [Op.or]:{
                         HospOpenTue:{
@@ -727,7 +726,7 @@ exports.getAllPositions = async (req, res) => {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
-                        [Op.or]: [...openedCompany_H]
+                        [Op.or]: [...todayOpenedCompId]
                     },
                     HospOpenWed:{
                         [Op.lte]: parseInt(now)
@@ -743,7 +742,7 @@ exports.getAllPositions = async (req, res) => {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
-                        [Op.or]: [...openedCompany_H],
+                        [Op.or]: [...todayOpenedCompId],
                     },
                     [Op.or]:{
                         HospOpenWed:{
@@ -762,7 +761,7 @@ exports.getAllPositions = async (req, res) => {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
-                        [Op.or]: [...openedCompany_H]
+                        [Op.or]: [...todayOpenedCompId]
                     },
                     HospOpenThu:{
                         [Op.lte]: parseInt(now)
@@ -778,7 +777,7 @@ exports.getAllPositions = async (req, res) => {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
-                        [Op.or]: [...openedCompany_H],
+                        [Op.or]: [...todayOpenedCompId],
                     },
                     [Op.or]:{
                         HospOpenThu:{
@@ -797,7 +796,7 @@ exports.getAllPositions = async (req, res) => {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
-                        [Op.or]: [...openedCompany_H]
+                        [Op.or]: [...todayOpenedCompId]
                     },
                     HospOpenFri:{
                         [Op.lte]: parseInt(now)
@@ -813,7 +812,7 @@ exports.getAllPositions = async (req, res) => {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
-                        [Op.or]: [...openedCompany_H],
+                        [Op.or]: [...todayOpenedCompId],
                     },
                     [Op.or]:{
                         HospOpenFri:{
@@ -832,7 +831,7 @@ exports.getAllPositions = async (req, res) => {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
-                        [Op.or]: [...openedCompany_H]
+                        [Op.or]: [...todayOpenedCompId]
                     },
                     HospOpenSat:{
                         [Op.lte]: parseInt(now)
@@ -848,7 +847,7 @@ exports.getAllPositions = async (req, res) => {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
-                        [Op.or]: [...openedCompany_H],
+                        [Op.or]: [...todayOpenedCompId],
                     },
                     [Op.or]:{
                         HospOpenSat:{
@@ -861,11 +860,6 @@ exports.getAllPositions = async (req, res) => {
                 }
             });
         }
-        let myPlaces = await sequelize.query(`SELECT * FROM myplace WHERE UserId='${req.session.user_id}';`, { type: QueryTypes.SELECT });
-        let myPlaceId = [];
-        myPlaces.forEach(p => {
-            myPlaceId.push(p.CompanyCompId);
-        });
 
         let closedRestaurantPositionTotal = new Array(earlyClosedRestaurantPosition);
         closedRestaurantPositionTotal = [...closedRestaurant];
@@ -923,7 +917,6 @@ exports.getAllPositions = async (req, res) => {
             todayClosedRestaurant : todayClosedRestaurantPosition, todayClosedCafe :  todayClosedCafePosition, todayClosedHospital : todayClosedHospitalPosition , 
             openedRestaurant : openedRestaurant, openedCafe : openedCafe, openedHospital : openedHospital,
             closedRestaurantTotal : closedRestaurantPositionTotal, closedCafeTotal : closedCafePositionTotal, closedHospitalTotal : closedHospitalPositionTotal,
-            myPlaces: myPlaceId
         });
 
     }catch(err){

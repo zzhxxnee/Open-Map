@@ -108,7 +108,6 @@ function sendBoundAjax(url, data) {
     
     xhr.addEventListener('load', function () {
         const result =  JSON.parse(xhr.responseText);
-        MyPlaces = result.myPlaces;
         closedRestaurant = result.closedRestaurantTotal;
         for(let i = 0; i < closedRestaurant.length; i++){
             for(let j=0; j < MyPlaces.length; j++){
@@ -182,9 +181,7 @@ function sendBoundAjax(url, data) {
             }
         }
         companyTotal = closedCafe.concat(openedCafe, todayClosedCafe, closedRestaurant, openedRestaurant, todayClosedRestaurant, closedHospital, openedHospital, todayClosedHospital);
-        console.log(todayClosedCafe);
-        console.log(openedCafe);
-        console.log(closedCafe);
+        
         removeAllChildNods(listEl);
         removeMarker();
         createClosedRestaurantMarkers(); 
@@ -418,7 +415,7 @@ function createTodayClosedCafeMarkers() {
                 spriteSize: new kakao.maps.Size(36, 133)  
             };       
 
-        let itemEl_TCC = getClosedCafeItem(todayClosedCafe[i]);
+        let itemEl_TCC = getTodayClosedCafeItem(todayClosedCafe[i]);
      
         // 마커이미지와 마커를 생성합니다
         var markerImage = createMarkerImage(holidayMarkerImageSrc, imageSize, imageOptions),    
