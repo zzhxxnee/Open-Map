@@ -1,14 +1,6 @@
 var express = require('express');
-const req = require('express/lib/request');
-const res = require('express/lib/response');
-const { response } = require('../app');
 var router = express.Router();
-const models = require('./../models');
-const crypto = require('crypto');
-let session = require('express-session');
-const db = require('./../models');
-const nodemailer = require('nodemailer');
-const { resourceLimits } = require('worker_threads');
+const passport = require('passport');
 const User = require("../controllers/user");
 
 var router = express.Router();
@@ -41,10 +33,20 @@ router.post('/findPassword', User.postFindPassword);
 
 router.post('/changePassword', User.postChangePassword);
 
+router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] })); // 프로파일과 이메일 정보를 받는다.
+
+router.get(
+    '/google/callback',
+    passport.authenticate('google'), 
+    (req, res) => {
+        req.session.user_id = req.session.passport.user;
+        res.redirect('/');
+    },
+ );
+
 router.get('chooseSignup', async(req, res, next)=>{
   res.render("changePassword")
 });
-
 
 
 
