@@ -22,22 +22,22 @@ function setOverlay(place, marker){
     '        </div>' + 
     '        <div class="body">' + 
     '            <div class="img">' +
-    `                <img src=${img} width="73" height="70">` +
-    '           </div>' + 
-    '            <div class="desc">' + 
+    `                <img src=${img} />` +
+    '           </div><br />' + 
+    '            <div class="desc"><i class="fa-solid fa-location-dot"></i>' + 
                     place.address +
     '            </div>' + 
-    '            <div class="desc">' + 
+    '            <div class="desc"><i class="fa-solid fa-phone"></i>' + 
                     (place.tel ? place.tel : '-') +
     '            </div>' + 
-    '            <span class="desc">' + 
+    '            <div class="openInfo"><div class="desc"><span><i class="fa-solid fa-clock"></i>' + 
             Math.floor((place.restOpen)/100) + ':'+ ((place.restOpen)%100 == 0 ? '00' : (place.restOpen)%100) +
 '            </span>' + 
-'            <span class="desc"> ~ ' + 
+'            <span> ~ ' + 
             closeTime  + ':'+ ((place.restClosed)%100 == 0 ? '00' : (place.restClosed)%100) +
-'            </span>' + 
-    '            <span class="desc"> 마감 </span>' + 
-    '            <div><button class="menu">메뉴판 보기</a></div>' + 
+'            </span></div>' + 
+    '            <span class="desc" style="color: #fe8201;"> 마감 </span></div>' + 
+    '            <div class="desc"><i class="fa-solid fa-utensils"></i><button class="menu">메뉴판 보기</a></div>' + 
     '        </div>' + 
     '    </div>' +    
     '</div>';
@@ -57,25 +57,25 @@ function setOverlay(place, marker){
         '        </div>' + 
         '        <div class="body">' + 
         '            <div class="img">' +
-        `                <img src=${img} width="73" height="70">` +
-        '           </div>' + 
-        '            <div class="desc">' + 
+        `                <img src=${img} />` +
+        '           </div><br />' + 
+        '            <div class="desc"><i class="fa-solid fa-info"></i>' + 
                         place.cafeType +
         '            </div>' +
-        '            <div class="desc">' + 
+        '            <div class="desc"><i class="fa-solid fa-location-dot"></i>' + 
                         place.address +
         '            </div>' + 
-        '            <div class="desc">' + 
+        '            <div class="desc"><i class="fa-solid fa-phone"></i>' + 
                         (place.tel ? place.tel : '-') +
         '            </div>' + 
-        '            <span class="desc">' + 
+        '            <div class="openInfo"><div class="desc"><span><i class="fa-solid fa-clock"></i>' + 
             Math.floor((place.cafeOpen)/100)+ ':'+ ((place.cafeOpen)%100 == 0 ? '00' : (place.cafeOpen)%100) +
 '            </span>' + 
-'            <span class="desc"> ~ ' + 
+'            <span> ~ ' + 
             closeTime  + ':'+ ((place.cafeClosed)%100 == 0 ? '00' : (place.cafeClosed)%100) +
-'            </span>' + 
-        '            <span class="desc"> 마감 </span>' + 
-        '            <div><button class="menu">메뉴판 보기</button></div>' + 
+'            </span></div>' + 
+        '            <span class="desc" style="color: #fe8201;"> 마감 </span></div>' + 
+        '            <div class="desc"><i class="fa-solid fa-utensils"></i><button class="menu">메뉴판 보기</button></div>' + 
         '        </div>' + 
         '    </div>' +    
         '</div>';
@@ -95,24 +95,24 @@ function setOverlay(place, marker){
         '        </div>' + 
         '        <div class="body">' + 
         '            <div class="img">' +
-        `                <img src=${img} width="73" height="70">` +
-        '           </div>' + 
-        '            <div class="desc">' + 
+        `                <img src=${img} />` +
+        '           </div><br />' + 
+        '            <div class="desc"><i class="fa-solid fa-info"></i>' + 
                         place.HospType +
         '            </div>' +
-        '            <div class="desc">' + 
+        '            <div class="desc"><i class="fa-solid fa-location-dot"></i>' + 
                         place.address +
         '            </div>' + 
-        '            <div class="desc">' + 
+        '            <div class="desc"><i class="fa-solid fa-phone"></i>' + 
                         (place.tel ? place.tel : '-') +
         '            </div>' + 
-        '            <span class="desc">' + 
+        '            <div class="openInfo"><div class="desc"><span><i class="fa-solid fa-clock"></i>' + 
         Math.floor((place.hospitalOpen)/100) + ':'+ ((place.hospitalOpen)%100 == 0 ? '00' : (place.hospitalOpen)%100) +
 '            </span>' + 
-'            <span class="desc"> ~ ' + 
+'            <span> ~ ' + 
         closeTime + ':'+ ((place.hospitalClosed)%100 == 0 ? '00' : (place.hospitalClosed)%100) +
-'            </span>' + 
-        '            <span class="desc"> 마감 </span>' +
+'            </span></div>' + 
+        '            <span class="desc" style="color: #fe8201;"> 마감 </span></div>' +
         '            <div class="desc">' + 
                         place.content +
         '            </div>' +
@@ -128,16 +128,16 @@ function setOverlay(place, marker){
         '        </div>' + 
         '        <div class="body">' + 
         '            <div class="img">' +
-        `                <img src=${img} width="73" height="70">` +
-        '           </div>' + 
-        '            <div class="desc">' + 
+        `                <img src=${img} />` +
+        '           </div><br />' + 
+        '            <div class="desc"><i class="fa-solid fa-location-dot"></i>' + 
                         place.address +
         '            </div>' + 
-        '            <div class="desc">' + 
+        '            <div class="desc"><i class="fa-solid fa-phone"></i>' + 
                         (place.tel ? place.tel : '-') +
         '            </div>' +
-        '            <span class="desc"> 오늘 휴무 </span>' + 
-        '            <div><button class="menu">메뉴판 보기</button></div>' + 
+        '            <span class="desc" style="color: #5A6EC4;"><i class="fa-solid fa-clock"></i> 오늘 휴무 </span>' + 
+        '            <div class="desc"><i class="fa-solid fa-utensils"></i><button class="menu">메뉴판 보기</button></div>' + 
         '        </div>' + 
         '    </div>' +    
         '</div>';
@@ -150,19 +150,19 @@ function setOverlay(place, marker){
         '        </div>' + 
         '        <div class="body">' + 
         '            <div class="img">' +
-        `                <img src=${img} width="73" height="70">` +
-        '           </div>' + 
-        '            <div class="desc">' + 
+        `                <img src=${img} />` +
+        '           </div><br />' + 
+        '            <div class="desc"><i class="fa-solid fa-info"></i>' + 
                         place.cafeType +
         '            </div>' +
-        '            <div class="desc">' + 
+        '            <div class="desc"><i class="fa-solid fa-location-dot"></i>' + 
                         place.address +
         '            </div>' + 
-        '            <div class="desc">' + 
+        '            <div class="desc"><i class="fa-solid fa-phone"></i>' + 
                         (place.tel ? place.tel : '-') +
         '            </div>' +
-        '            <span class="desc"> 오늘 휴무 </span>' + 
-        '            <div><button class="menu">메뉴판 보기</button></div>' + 
+        '            <span class="desc" style="color: #5A6EC4;"><i class="fa-solid fa-clock"></i> 오늘 휴무 </span>' + 
+        '            <div class="desc"><i class="fa-solid fa-utensils"></i><button class="menu">메뉴판 보기</button></div>' + 
         '        </div>' + 
         '    </div>' +    
         '</div>';
@@ -175,18 +175,18 @@ function setOverlay(place, marker){
         '        </div>' + 
         '        <div class="body">' + 
         '            <div class="img">' +
-        `                <img src=${img} width="73" height="70">` +
-        '           </div>' + 
-        '            <div class="desc">' + 
+        `                <img src=${img} />` +
+        '           </div><br />' + 
+        '            <div class="desc"><i class="fa-solid fa-info"></i>' + 
                         place.HospType +
         '            </div>' +
-        '            <div class="desc">' + 
+        '            <div class="desc"><i class="fa-solid fa-location-dot"></i>' + 
                         place.address +
         '            </div>' + 
-        '            <div class="desc">' + 
+        '            <div class="desc"><i class="fa-solid fa-phone"></i>' + 
                         (place.tel ? place.tel : '-') +
         '            </div>' +
-        '            <span class="desc"> 오늘 휴무 </span>' +
+        '            <span class="desc" style="color: #5A6EC4;"><i class="fa-solid fa-clock"></i> 오늘 휴무 </span>' +
         '            <div class="desc">' + 
                         place.content +
         '            </div>' +
@@ -203,12 +203,12 @@ function setOverlay(place, marker){
 
         let openInfo;
         if(place.restClosed == 4000){
-            openInfo = '<span class="desc">24시간 영업</span>';
+            openInfo = '<span>24시간 영업</span>';
         }else{
-            openInfo = '            <span class="desc">' + 
+            openInfo = '            <span>' + 
             Math.floor((place.restOpen)/100) + ':'+ ((place.restOpen)%100 == 0 ? '00' : (place.restOpen)%100) +
 '            </span>' + 
-'            <span class="desc"> ~ ' + 
+'            <span> ~ ' + 
             closeTime  + ':'+ ((place.restClosed)%100 == 0 ? '00' : (place.restClosed)%100) +
 '            </span>'
         }
@@ -221,16 +221,16 @@ function setOverlay(place, marker){
         '        </div>' + 
         '        <div class="body">' + 
         '            <div class="img">' +
-        `                <img src=${img} width="73" height="70">` +
-        '           </div>' + 
-        '            <div class="desc">' + 
+        `                <img src=${img} />` +
+        '           </div><br />' + 
+        '            <div class="desc"><i class="fa-solid fa-location-dot"></i>' + 
                         place.address +
         '            </div>' + 
-        '            <div class="desc">' + 
+        '            <div class="desc"><i class="fa-solid fa-phone"></i>' + 
                         (place.tel ? place.tel : '-')+
-        '            </div>' + openInfo + 
-        '            <span class="desc"> 영업중 </span>' + 
-        '            <div><button class="menu">메뉴판 보기</button></div>' + 
+        '            </div><div class="openInfo"><div class="desc"><i class="fa-solid fa-clock"></i>' + openInfo + '</div>'+ 
+        '            <span class="desc" style="color: #69d3de;"> 영업중 </span></div>' + 
+        '            <div class="desc"><i class="fa-solid fa-utensils"></i><button class="menu">메뉴판 보기</button></div>' + 
         '        </div>' + 
         '    </div>' +    
         '</div>';
@@ -244,12 +244,12 @@ function setOverlay(place, marker){
 
         let openInfo;
         if(place.cafeClosed == 4000){
-            openInfo = '<span class="desc">24시간 영업</span>';
+            openInfo = '<span>24시간 영업</span>';
         }else{
-            openInfo = '            <span class="desc">' + 
+            openInfo = '            <span>' + 
             Math.floor((place.cafeOpen)/100) + ':'+ ((place.cafeOpen)%100 == 0 ? '00' : (place.cafeOpen)%100) +
 '            </span>' + 
-'            <span class="desc"> ~ ' + 
+'            <span> ~ ' + 
             closeTime  + ':'+ ((place.cafeClosed)%100 == 0 ? '00' : (place.cafeClosed)%100) +
 '            </span>'
         }
@@ -262,19 +262,19 @@ function setOverlay(place, marker){
         '        </div>' + 
         '        <div class="body">' + 
         '            <div class="img">' +
-        `                <img src=${img} width="73" height="70">` +
-        '           </div>' + 
-        '            <div class="desc">' + 
+        `                <img src=${img} />` +
+        '           </div><br />' + 
+        '            <div class="desc"><i class="fa-solid fa-info"></i>' + 
                         place.cafeType +
         '            </div>' +
-        '            <div class="desc">' + 
+        '            <div class="desc"><i class="fa-solid fa-location-dot"></i>' + 
                         place.address +
         '            </div>' + 
-        '            <div class="desc">' + 
+        '            <div class="desc"><i class="fa-solid fa-phone"></i>' + 
                         (place.tel ? place.tel : '-')+
-        '            </div>' + openInfo + 
-        '            <span class="desc"> 영업중 </span>' + 
-        '            <div><button class="menu">메뉴판 보기</button></div>' + 
+        '            </div><div class="openInfo"><div class="desc"><i class="fa-solid fa-clock"></i>' + openInfo + '</div>' +
+        '            <span class="desc" style="color: #69d3de;"> 영업중 </span></div>' + 
+        '            <div class="desc"><i class="fa-solid fa-utensils"></i><button class="menu">메뉴판 보기</button></div>' + 
         '        </div>' + 
         '    </div>' +    
         '</div>';
@@ -288,12 +288,12 @@ function setOverlay(place, marker){
 
         let openInfo;
         if(place.hospitalClosed == 4000){
-            openInfo = '<span class="desc">24시간 영업</span>';
+            openInfo = '<span>24시간 영업</span>';
         }else{
-            openInfo = '            <span class="desc">' + 
+            openInfo = '            <span>' + 
             Math.floor((place.hospitalOpen)/100) + ':'+ ((place.hospitalOpen)%100 == 0 ? '00' : (place.hospitalOpen)%100) +
 '            </span>' + 
-'            <span class="desc"> ~ ' + 
+'            <span> ~ ' + 
             closeTime  + ':'+ ((place.hospitalClosed)%100 == 0 ? '00' : (place.hospitalClosed)%100) +
 '            </span>'
         }
@@ -306,18 +306,18 @@ function setOverlay(place, marker){
         '        </div>' + 
         '        <div class="body">' + 
         '            <div class="img">' +
-        `                <img src=${img} width="73" height="70">` +
+        `                <img src=${img} />` +
         '           </div>' + 
-        '            <div class="desc">' + 
+        '            <div class="desc"><i class="fa-solid fa-info"></i>' + 
                         place.HospType +
         '            </div>' +
-        '            <div class="desc">' + 
+        '            <div class="desc"><i class="fa-solid fa-location-dot"></i>' + 
                         place.address +
         '            </div>' + 
-        '            <div class="desc">' + 
+        '            <div class="desc"><i class="fa-solid fa-phone"></i>' + 
                         (place.tel ? place.tel : '-') +
-        '            </div>' + openInfo + 
-        '            <span class="desc"> 영업중 </span>' +
+        '            </div><div class="openInfo"><div class="desc"><i class="fa-solid fa-clock"></i>' + openInfo + '</div>' +
+        '            <span class="desc" style="color: #69d3de;"> 영업중 </span></div>' +
         '            <div class="desc">' + 
                         place.content +
         '            </div>' +
