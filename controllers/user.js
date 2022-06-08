@@ -9,7 +9,7 @@ exports.getUsers = function(req, res, next) {
 };
 
 exports.getSignup = function(req, res, next) {
-    res.render("signup");
+    res.render("users/signup");
   };
 
 exports.postSignup = async function(req,res,next){
@@ -90,7 +90,7 @@ exports.postSignup = async function(req,res,next){
   exports.getLogin = function(req, res, next) {
     let session = req.session;
   
-      res.render("login", {
+      res.render("users/login", {
         session : session
     });
   };
@@ -139,11 +139,11 @@ exports.getLogout = (req, res, next)=>{
   }
 
 exports.getFindID =  (req, res, next) =>{
-  res.render('findID');
+  res.render('users/findID');
 }
 
 exports.getFindIDResult = (req, res, next) =>{
-  res.render('findIDResult');
+  res.render('users/findIDResult');
 }
 
 exports.postFindIDResult = async(req, res, next)=>{
@@ -153,7 +153,7 @@ exports.postFindIDResult = async(req, res, next)=>{
     const user = await models.Users.findOne({ where: { email: uemail }, raw: true }); // User 이외의 interface 값이 안들어오고 실제 데이터 값만 raw :true
     
     if (user) {
-      res.render("findIDResult", {
+      res.render("users/findIDResult", {
         FindID: user.id,
       });
 
@@ -172,7 +172,7 @@ exports.postFindIDResult = async(req, res, next)=>{
 }
 
 exports.getFindPassword = async(req, res, next)=>{
-  res.render('findPassword.ejs');
+  res.render('users/findPassword');
 };
 
 exports.postFindPassword = async (req, res, next) => {
@@ -223,7 +223,7 @@ exports.postFindPassword = async (req, res, next) => {
           console.log('Email sent: ' + info.response);
         }
       });
-      return res.render('speakChangePassword');
+      return res.render('users/speakChangePassword');
     } else {
       return res.status(403).send('This account does not exist');
     }
@@ -235,7 +235,7 @@ exports.postFindPassword = async (req, res, next) => {
 };
 
 exports.getChangePassword = async(req, res, next)=>{
-  res.render("changePassword", {
+  res.render("users/changePassword", {
     Token: req.query.token,
   });
 };
