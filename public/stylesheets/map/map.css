@@ -24,8 +24,16 @@
     justify-content: space-between;
 }
 
-#placesList .item .type {
-    margin-left: 90px;
+#placesList .item .openInfo {
+    display: flex;
+    justify-content: space-between;
+}
+
+#marker-img-cr {
+    background-image: url("../../images/closed.png");
+    width: 25px;
+    height: 34px;
+    background-position: 0 45px;
 }
 
 .wrap {
