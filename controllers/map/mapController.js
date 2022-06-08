@@ -1,5 +1,5 @@
 require('dotenv').config();
-const db = require("../models/index");
+const db = require("../../models/index");
 const { Op } = require("sequelize");
 const Company = db.company;
 const CompanyRestaurantView = db.companyRestaurantView;
@@ -7,7 +7,7 @@ const CompanyCafeView = db.CompanyCafeView;
 const CompanyHospitalView = db.companyHospitalView;
 const Sequelize = require('sequelize');
 const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.json')[env];
+const config = require(__dirname + '/../../config/config.json')[env];
 const { QueryTypes } = require('sequelize');
 const request = require('request');
 
@@ -860,62 +860,63 @@ exports.getAllPositions = async (req, res) => {
             myPlaceId.push(p.CompanyCompId);
         });
 
-    let closedRestaurantPositionTotal = new Array(earlyClosedRestaurantPosition);
-    closedRestaurantPositionTotal = [...closedRestaurant];
-    let closedCafePositionTotal = new Array(earlyClosedCafePosition);
-    closedCafePositionTotal = [...closedCafe];
-    let closedHospitalPositionTotal = new Array(earlyClosedHospitalPosition);
-    closedHospitalPositionTotal = [...closedHospital];
+        let closedRestaurantPositionTotal = new Array(earlyClosedRestaurantPosition);
+        closedRestaurantPositionTotal = [...closedRestaurant];
+        let closedCafePositionTotal = new Array(earlyClosedCafePosition);
+        closedCafePositionTotal = [...closedCafe];
+        let closedHospitalPositionTotal = new Array(earlyClosedHospitalPosition);
+        closedHospitalPositionTotal = [...closedHospital];
 
-    for(let i=0; i < todayClosedRestaurantPosition.length; i++){
-        todayClosedRestaurantPosition[i].dataValues.type = 'tcr';
-        todayClosedRestaurantPosition[i].dataValues.isMyPlace = false;
-    }
+        for(let i=0; i < todayClosedRestaurantPosition.length; i++){
+            todayClosedRestaurantPosition[i].dataValues.type = 'tcr';
+            todayClosedRestaurantPosition[i].dataValues.isMyPlace = false;
+        }
 
-    for(let i=0; i < todayClosedCafePosition.length; i++){
-        todayClosedCafePosition[i].dataValues.type = 'tcc';
-        todayClosedCafePosition[i].dataValues.isMyPlace = false;
-    }
+        for(let i=0; i < todayClosedCafePosition.length; i++){
+            todayClosedCafePosition[i].dataValues.type = 'tcc';
+            todayClosedCafePosition[i].dataValues.isMyPlace = false;
+        }
 
-    for(let i=0; i < todayClosedHospitalPosition.length; i++){
-        todayClosedHospitalPosition[i].dataValues.type = 'tch';
-        todayClosedHospitalPosition[i].dataValues.isMyPlace = false;
-    }
+        for(let i=0; i < todayClosedHospitalPosition.length; i++){
+            todayClosedHospitalPosition[i].dataValues.type = 'tch';
+            todayClosedHospitalPosition[i].dataValues.isMyPlace = false;
+        }
 
-    for(let i=0; i < openedRestaurant.length; i++){
-        openedRestaurant[i].dataValues.type = 'or';
-        openedRestaurant[i].dataValues.isMyPlace = false;
-    }
+        for(let i=0; i < openedRestaurant.length; i++){
+            openedRestaurant[i].dataValues.type = 'or';
+            openedRestaurant[i].dataValues.isMyPlace = false;
+        }
 
-    for(let i=0; i < openedCafe.length; i++){
-        openedCafe[i].dataValues.type = 'oc';
-        openedCafe[i].dataValues.isMyPlace = false;
-    }
+        for(let i=0; i < openedCafe.length; i++){
+            openedCafe[i].dataValues.type = 'oc';
+            openedCafe[i].dataValues.isMyPlace = false;
+        }
 
-    for(let i=0; i < openedHospital.length; i++){
-        openedHospital[i].dataValues.type = 'oh';
-        openedHospital[i].dataValues.isMyPlace = false;
-    }
+        for(let i=0; i < openedHospital.length; i++){
+            openedHospital[i].dataValues.type = 'oh';
+            openedHospital[i].dataValues.isMyPlace = false;
+        }
 
-    for(let i=0; i < closedRestaurantPositionTotal.length; i++){
-        closedRestaurantPositionTotal[i].dataValues.type = 'cr';
-        closedRestaurantPositionTotal[i].dataValues.isMyPlace = false;
-    }
+        for(let i=0; i < closedRestaurantPositionTotal.length; i++){
+            closedRestaurantPositionTotal[i].dataValues.type = 'cr';
+            closedRestaurantPositionTotal[i].dataValues.isMyPlace = false;
+        }
 
-    for(let i=0; i < closedCafePositionTotal.length; i++){
-        closedCafePositionTotal[i].dataValues.type = 'cc';
-        closedCafePositionTotal[i].dataValues.isMyPlace = false;
-    }
+        for(let i=0; i < closedCafePositionTotal.length; i++){
+            closedCafePositionTotal[i].dataValues.type = 'cc';
+            closedCafePositionTotal[i].dataValues.isMyPlace = false;
+        }
 
-    for(let i=0; i < closedHospitalPositionTotal.length; i++){
-        closedHospitalPositionTotal[i].dataValues.type = 'ch';
-        closedHospitalPositionTotal[i].dataValues.isMyPlace = false;
-    }
+        for(let i=0; i < closedHospitalPositionTotal.length; i++){
+            closedHospitalPositionTotal[i].dataValues.type = 'ch';
+            closedHospitalPositionTotal[i].dataValues.isMyPlace = false;
+        }
 
-    res.json({
-        todayClosedRestaurant : todayClosedRestaurantPosition, todayClosedCafe :  todayClosedCafePosition, todayClosedHospital : todayClosedHospitalPosition , 
-        openedRestaurant : openedRestaurant, openedCafe : openedCafe, openedHospital : openedHospital,
-        closedRestaurantTotal : closedRestaurantPositionTotal, closedCafeTotal : closedCafePositionTotal, closedHospitalTotal : closedHospitalPositionTotal,
+        res.json({
+            todayClosedRestaurant : todayClosedRestaurantPosition, todayClosedCafe :  todayClosedCafePosition, todayClosedHospital : todayClosedHospitalPosition , 
+            openedRestaurant : openedRestaurant, openedCafe : openedCafe, openedHospital : openedHospital,
+            closedRestaurantTotal : closedRestaurantPositionTotal, closedCafeTotal : closedCafePositionTotal, closedHospitalTotal : closedHospitalPositionTotal,
+            myPlaces: myPlaceId
         });
 
     }catch(err){
