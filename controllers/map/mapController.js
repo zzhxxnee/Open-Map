@@ -35,7 +35,7 @@ request({
     url: `http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo?serviceKey=${process.env.HOLIDAY_APIKEY}&solYear=${today.getFullYear()}&solMonth=0${today.getMonth()+1}&_type=json`,
     method: 'GET'
 }, async function (error, response, body) {
-    const result = JSON.parse(body).response.body.items.item;
+    const result = body.response.body.items.item;
     for(let i=0; i < result.length; i++){
         holiday_date.push(result[i].locdate%100);
     }
