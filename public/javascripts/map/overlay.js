@@ -28,7 +28,7 @@ function setOverlay(place, marker){
                     place.address +
     '            </div>' + 
     '            <div class="desc">' + 
-                    place.tel +
+                    (place.tel ? place.tel : '-') +
     '            </div>' + 
     '            <span class="desc">' + 
             Math.floor((place.restOpen)/100) + ':'+ ((place.restOpen)%100 == 0 ? '00' : (place.restOpen)%100) +
@@ -66,7 +66,7 @@ function setOverlay(place, marker){
                         place.address +
         '            </div>' + 
         '            <div class="desc">' + 
-                        place.tel +
+                        (place.tel ? place.tel : '-') +
         '            </div>' + 
         '            <span class="desc">' + 
             Math.floor((place.cafeOpen)/100)+ ':'+ ((place.cafeOpen)%100 == 0 ? '00' : (place.cafeOpen)%100) +
@@ -104,7 +104,7 @@ function setOverlay(place, marker){
                         place.address +
         '            </div>' + 
         '            <div class="desc">' + 
-                        place.tel +
+                        (place.tel ? place.tel : '-') +
         '            </div>' + 
         '            <span class="desc">' + 
         Math.floor((place.hospitalOpen)/100) + ':'+ ((place.hospitalOpen)%100 == 0 ? '00' : (place.hospitalOpen)%100) +
@@ -134,7 +134,7 @@ function setOverlay(place, marker){
                         place.address +
         '            </div>' + 
         '            <div class="desc">' + 
-                        place.tel +
+                        (place.tel ? place.tel : '-') +
         '            </div>' +
         '            <span class="desc"> 오늘 휴무 </span>' + 
         '            <div><button class="menu">메뉴판 보기</button></div>' + 
@@ -159,7 +159,7 @@ function setOverlay(place, marker){
                         place.address +
         '            </div>' + 
         '            <div class="desc">' + 
-                        place.tel +
+                        (place.tel ? place.tel : '-') +
         '            </div>' +
         '            <span class="desc"> 오늘 휴무 </span>' + 
         '            <div><button class="menu">메뉴판 보기</button></div>' + 
@@ -184,7 +184,7 @@ function setOverlay(place, marker){
                         place.address +
         '            </div>' + 
         '            <div class="desc">' + 
-                        place.tel +
+                        (place.tel ? place.tel : '-') +
         '            </div>' +
         '            <span class="desc"> 오늘 휴무 </span>' +
         '            <div class="desc">' + 
@@ -227,7 +227,7 @@ function setOverlay(place, marker){
                         place.address +
         '            </div>' + 
         '            <div class="desc">' + 
-                        place.tel +
+                        (place.tel ? place.tel : '-')+
         '            </div>' + openInfo + 
         '            <span class="desc"> 영업중 </span>' + 
         '            <div><button class="menu">메뉴판 보기</button></div>' + 
@@ -271,7 +271,7 @@ function setOverlay(place, marker){
                         place.address +
         '            </div>' + 
         '            <div class="desc">' + 
-                        place.tel +
+                        (place.tel ? place.tel : '-')+
         '            </div>' + openInfo + 
         '            <span class="desc"> 영업중 </span>' + 
         '            <div><button class="menu">메뉴판 보기</button></div>' + 
@@ -315,7 +315,7 @@ function setOverlay(place, marker){
                         place.address +
         '            </div>' + 
         '            <div class="desc">' + 
-                        place.tel +
+                        (place.tel ? place.tel : '-') +
         '            </div>' + openInfo + 
         '            <span class="desc"> 영업중 </span>' +
         '            <div class="desc">' + 

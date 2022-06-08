@@ -35,14 +35,20 @@ request({
     url: `http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo?serviceKey=${process.env.HOLIDAY_APIKEY}&solYear=${today.getFullYear()}&solMonth=0${today.getMonth()+1}&_type=json`,
     method: 'GET'
 }, async function (error, response, body) {
-    const result = body.response.body.items.item;
-    for(let i=0; i < result.length; i++){
-        holiday_date.push(result[i].locdate%100);
+    try{
+        const result = JSON.parse(body).response.body.items.item;
+        for(let i=0; i < result.length; i++){
+            holiday_date.push(result[i].locdate%100);
+        }
+    }catch(err){
+        console.log(body);
+        console.log('Error: ', err.message);
     }
 });
 
 exports.getAllPositions = async (req, res) => {
     try{
+        console.log(holiday_date);
         if(day == 0){
             todayClosedRestaurantPosition = await CompanyRestaurantView.findAll({
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
@@ -499,6 +505,7 @@ exports.getAllPositions = async (req, res) => {
         let openedCompany_C = new Array();
         let openedCompany_H = new Array();
         todayOpened.filter((company) => company.type == 'R').forEach((company) => openedCompany_R.push(company.compId));
+        console.log(openedCompany_R);
         todayOpened.filter((company) => company.type == 'C').forEach((company) => openedCompany_C.push(company.compId));
         todayOpened.filter((company) => company.type == 'H').forEach((company) => openedCompany_H.push(company.compId));
 

@@ -182,6 +182,9 @@ function sendBoundAjax(url, data) {
             }
         }
         companyTotal = closedCafe.concat(openedCafe, todayClosedCafe, closedRestaurant, openedRestaurant, todayClosedRestaurant, closedHospital, openedHospital, todayClosedHospital);
+        console.log(todayClosedCafe);
+        console.log(openedCafe);
+        console.log(closedCafe);
         removeAllChildNods(listEl);
         removeMarker();
         createClosedRestaurantMarkers(); 
@@ -646,15 +649,15 @@ function getClosedRestarantItem(place) {
     }
 
     let el = document.createElement('li'),
-    itemStr = `<div class="img"> <img src=${img} width="73" height="70"> </div>`;
+    itemStr = `<div class="img"> <img src=${img} /> </div>`;
     itemStr += '<div class="info">' +
         '   <h4>' + place.compName + heart +'</h4>';
 
     itemStr += '    <span>' + place.address + '</span> <br /><br />';
-    itemStr += '   <div class="openInfo"> <span>' +  Math.floor((place.restOpen)/100) + ':'+ ((place.restOpen)%100 == 0 ? '00' : (place.restOpen)%100)   + '</span>'+
-        '   <span> ~ ' +  closeTime  + ':'+ ((place.restClosed)%100 == 0 ? '00' : (place.restClosed)%100) + '</span>'; 
+    itemStr += '   <div class="openInfo"><div><span>' +  Math.floor((place.restOpen)/100) + ':'+ ((place.restOpen)%100 == 0 ? '00' : (place.restOpen)%100)   + '</span>'+
+        '   <span> ~ ' +  closeTime  + ':'+ ((place.restClosed)%100 == 0 ? '00' : (place.restClosed)%100) + '</span></div> '; 
 
-    itemStr += '  <span class="type"> 마감 </span></div>' +
+    itemStr += '  <div class="type"><p id="marker-img-cr"></p>마감 </div></div>' +
         '</div>';           
 
     el.innerHTML = itemStr;
@@ -685,14 +688,14 @@ function getClosedCafeItem(place) {
     }
 
     let el = document.createElement('li'),
-    itemStr = `<div class="img"> <img src=${img} width="73" height="70"> </div>`;
+    itemStr = `<div class="img"> <img src=${img} /> </div>`;
     itemStr += '<div class="info">' +
         '   <h4>' + place.compName + heart +'</h4>';
     itemStr += '    <span>' + place.address + '</span> <br /><br />';
-    itemStr += '    <div class="openInfo"> <span>' +  Math.floor((place.cafeOpen)/100) + ':'+ ((place.cafeOpen)%100 == 0 ? '00' : (place.cafeOpen)%100)  + '</span>'+
-        '   <span> ~ ' +  closeTime + ':'+ ((place.cafeClosed)%100 == 0 ? '00' : (place.cafeClosed)%100)  + '</span>'; 
+    itemStr += '    <div class="openInfo"><div><span>' +  Math.floor((place.cafeOpen)/100) + ':'+ ((place.cafeOpen)%100 == 0 ? '00' : (place.cafeOpen)%100)  + '</span>'+
+        '   <span> ~ ' +  closeTime + ':'+ ((place.cafeClosed)%100 == 0 ? '00' : (place.cafeClosed)%100)  + '</span></div> '; 
 
-    itemStr += '  <span class="type"> 마감 </span></div>' +
+    itemStr += '  <div class="type"><p id="marker-img-cc"></p> 마감 </div></div>' +
         '</div>';           
 
     el.innerHTML = itemStr;
@@ -723,14 +726,14 @@ function getClosedHospitalItem(place) {
     }
 
     let el = document.createElement('li'),
-    itemStr = `<div class="img"> <img src=${img} width="73" height="70"> </div>`;
+    itemStr = `<div class="img"> <img src=${img} /> </div>`;
     itemStr += '<div class="info">' +
         '   <h4>' + place.compName + heart +'</h4>';
     itemStr += '    <span>' + place.address + '</span> <br /><br />';
-    itemStr += '    <div class="openInfo"> <span>' +  Math.floor((place.hospitalOpen)/100) + ':'+ ((place.hospitalOpen)%100 == 0 ? '00' : (place.hospitalOpen)%100)  + '</span>'+
-        '   <span> ~ ' +  closeTime + ':'+ ((place.hospitalClosed)%100 == 0 ? '00' : (place.hospitalClosed)%100)  + '</span>'; 
+    itemStr += '    <div class="openInfo"><div><span>' +  Math.floor((place.hospitalOpen)/100) + ':'+ ((place.hospitalOpen)%100 == 0 ? '00' : (place.hospitalOpen)%100)  + '</span>'+
+        '   <span> ~ ' +  closeTime + ':'+ ((place.hospitalClosed)%100 == 0 ? '00' : (place.hospitalClosed)%100)  + '</span></div>'; 
 
-    itemStr += '  <span class="type"> 마감 </span></div>' +
+    itemStr += '  <div class="type"><p id="marker-img-ch"></p> 마감 </div></div>' +
         '</div>';           
 
     el.innerHTML = itemStr;
@@ -755,14 +758,14 @@ function getTodayClosedRestarantItem(place) {
     }
 
     let el = document.createElement('li'),
-    itemStr = `<div class="img"> <img src=${img} width="73" height="70"> </div>`;
+    itemStr = `<div class="img"> <img src=${img} /> </div>`;
     itemStr += '<div class="info">' +
         '   <h4>' + place.compName + heart +'</h4>';
 
     itemStr += '    <span>' + place.address + '</span> <br /><br />';
     itemStr += '    <div class="openInfo"> <span> 휴무 </span>'
 
-    itemStr += '  <span class="type"> 오늘 휴무 </span></div>' +
+    itemStr += '  <div class="type"><p id="marker-img-tcr"></p> 오늘 휴무 </div></div>' +
         '</div>';           
 
     el.innerHTML = itemStr;
@@ -787,13 +790,13 @@ function getTodayClosedCafeItem(place) {
     }
 
     let el = document.createElement('li'),
-    itemStr = `<div class="img"> <img src=${img} width="73" height="70"> </div>`;
+    itemStr = `<div class="img"> <img src=${img} /> </div>`;
     itemStr += '<div class="info">' +
         '   <h4>' + place.compName + heart +'</h4>';
     itemStr += '    <span>' + place.address + '</span> <br /><br />';
     itemStr += '    <div class="openInfo"> <span> 휴무 </span>'
 
-    itemStr += '  <span class="type"> 오늘 휴무 </span></div>' +
+    itemStr += '  <div class="type"><p id="marker-img-tcc"></p> 오늘 휴무 </div></div>' +
         '</div>';           
 
     el.innerHTML = itemStr;
@@ -818,13 +821,13 @@ function getTodayClosedHospitalItem(place) {
     }
 
     let el = document.createElement('li'),
-    itemStr = `<div class="img"> <img src=${img} width="73" height="70"> </div>`;
+    itemStr = `<div class="img"> <img src=${img} /> </div>`;
     itemStr += '<div class="info">' +
         '   <h4>' + place.compName + heart +'</h4>';
     itemStr += '    <span>' + place.address + '</span> <br /><br />';
     itemStr += '    <div class="openInfo"> <span> 휴무 </span>'
 
-    itemStr += '  <span class="type"> 오늘 휴무 </span></div>' +
+    itemStr += '  <div class="type"><p id="marker-img-tch"></p> 오늘 휴무 </div></div>' +
         '</div>';           
 
     el.innerHTML = itemStr;
@@ -863,14 +866,14 @@ function getOpenedRestarantItem(place) {
     }
 
     let el = document.createElement('li'),
-    itemStr = `<div class="img"> <img src=${img} width="73" height="70"> </div>`;
+    itemStr = `<div class="img"> <img src=${img} /> </div>`;
     itemStr += '<div class="info">' +
         '   <h4>' + place.compName + heart +'</h4>';
 
     itemStr += '    <span>' + place.address + '</span> <br /><br />';
-    itemStr += '<div class="openInfo">' + openInfo;
+    itemStr += '<div class="openInfo"><div>' + openInfo +'</div>';
 
-    itemStr += '  <span class="type"> 영업중 </span></div>' +
+    itemStr += '  <div class="type"><p id="marker-img-or"></p> 영업중 </div></div>' +
         '</div>';           
 
     el.innerHTML = itemStr;
@@ -909,12 +912,12 @@ function getOpenedCafeItem(place) {
     }
 
     let el = document.createElement('li'),
-    itemStr = `<div class="img"> <img src=${img} width="73" height="70"> </div>`;
+    itemStr = `<div class="img"> <img src=${img} /> </div>`;
     itemStr += '<div class="info">' +
         '   <h4>' + place.compName + heart +'</h4>';
     itemStr += '    <span>' + place.address + '</span> <br /><br />';
-    itemStr += '<div class="openInfo">' + openInfo;
-    itemStr += '  <span class="type"> 영업중 </span></div>' +
+    itemStr += '<div class="openInfo"><div>' + openInfo + '</div>';
+    itemStr += '  <div class="type"><p id="marker-img-oc"></p> 영업중 </div></div>' +
         '</div>';           
 
     el.innerHTML = itemStr;
@@ -953,13 +956,13 @@ function getOpenedHospitalItem(place) {
     }
 
     let el = document.createElement('li'),
-    itemStr = `<div class="img"> <img src=${img} width="73" height="70"> </div>`;
+    itemStr = `<div class="img"> <img src=${img} /> </div>`;
     itemStr += '<div class="info">' +
         '   <h4>' + place.compName + heart +'</h4>';
     itemStr += '    <span>' + place.address + '</span> <br /><br />';
-    itemStr += '<div class="openInfo">' + openInfo;
+    itemStr += '<div class="openInfo"><div>' + openInfo + '</div>';
 
-    itemStr += '  <span class="type"> 영업중 </span></div>' +
+    itemStr += '  <div class="type"><p id="marker-img-oh"></p> 영업중 </div></div>' +
         '</div>';           
 
     el.innerHTML = itemStr;

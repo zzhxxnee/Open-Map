@@ -24,8 +24,87 @@
     justify-content: space-between;
 }
 
-#placesList .item .type {
-    margin-left: 90px;
+#placesList .item .openInfo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#placesList .item .openInfo .type{
+    display: flex;
+    align-items: center;
+}
+
+#marker-img-cr {
+    background-image: url("../../images/closed.png");
+    width: 35px;
+    height: 35px;
+    background-position: 1px 76px;
+    margin-right: 10px;
+}
+
+#marker-img-cc {
+    background-image: url("../../images/closed.png");
+    width: 35px;
+    height: 36px;
+    background-position: 1px 0px;
+    margin-right: 10px;
+}
+
+#marker-img-ch {
+    background-image: url("../../images/closed.png");
+    width: 35px;
+    height: 36px;
+    background-position: 1px 36px;
+    margin-right: 10px;
+}
+
+#marker-img-tcr {
+    background-image: url("../../images/holiday.png");
+    width: 35px;
+    height: 37px;
+    background-position: 1px 84px;
+    margin-right: 10px;
+}
+
+#marker-img-tcc {
+    background-image: url("../../images/holiday.png");
+    width: 35px;
+    height: 35px;
+    background-position: 1px 1px;
+    margin-right: 10px;
+}
+
+#marker-img-tch {
+    background-image: url("../../images/holiday.png");
+    width: 35px;
+    height: 38px;
+    background-position: 1px 40px;
+    margin-right: 10px;
+}
+
+#marker-img-or {
+    background-image: url("../../images/open.png");
+    width: 35px;
+    height: 38px;
+    background-position: 1px 85px;
+    margin-right: 10px;
+}
+
+#marker-img-oc {
+    background-image: url("../../images/open.png");
+    width: 35px;
+    height: 39px;
+    background-position: 1px 1px;
+    margin-right: 10px;
+}
+
+#marker-img-oh {
+    background-image: url("../../images/open.png");
+    width: 35px;
+    height: 38px;
+    background-position: 1px 36px;
+    margin-right: 10px;
 }
 
 .wrap {
