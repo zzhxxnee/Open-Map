@@ -15,9 +15,7 @@ var _storage = multer.diskStorage({
   }
 })
 var upload = multer({ storage: _storage });
-
-/*const holidays = require('holidays-kr');
-holidays.serviceKey = `${process.env.HOLIDAY_APIKEY}`;*/
+const request = require('request');
 
 
 exports.showMyplaceList = async(req, res) => {
@@ -99,34 +97,38 @@ exports.showMyplaceList = async(req, res) => {
       
     });
   
-    /*var todayFor_HolidayCheck = moment().format('YYYY-MM-DD');
-    var year = moment().year();
-    var holidayList = await holidays.getHolidays({
-      year : year,        // 수집 시작 연도
-      month : 1,         // 수집 시작 월
-      monthCount : 12     // 수집 월 갯수
-    });
-    var holidayDates = [];
-    holidayList.forEach(e =>{
-      holidayDates.push(e.date);
-    });
-    let isHoliday = holidayDates.includes(`${todayFor_HolidayCheck}`);*/
- 
+    let holiday_date = [];
+
+    const a = function(){
+      return new Promise(function (resolve, reject) {
+        request({
+          url: `http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo?serviceKey=${process.env.HOLIDAY_APIKEY}&solYear=${moment().year()}&solMonth=0${moment().month()+1}&_type=json`,
+          method: 'GET'
+        }, function (error, response, body){resolve(body)});
+      });
+    }
+    var rawHoliday = await a();
+    const result = JSON.parse(rawHoliday).response.body.items.item;
+    for(let i=0; i < result.length; i++){
+      holiday_date.push(result[i].locdate);
+    }
+    let todayFor_HolidayCheck = moment().format('YYYYMMDD');
+    let isHoliday = holiday_date.includes(`${todayFor_HolidayCheck}`*1);
+
     today2 = moment().format('ddd');
     
     myHosp.forEach(c => {
 
       let HospOpen;
       let HospClosed;
-      /*if(isHoliday){
+      if(isHoliday){
         HospOpen = c[`HospOpenVac`];
         HospClosed = c[`HospCloseVac`];
       }else{
         HospOpen = c[`HospOpen${today2}`];
         HospClosed = c[`HospClose${today2}`];
-      } */
-      HospOpen = c[`HospOpen${today2}`];
-      HospClosed = c[`HospClose${today2}`];
+      }
+      
 
       if(c[today] || c.todayClosed || c.earlyClosed || c.vacation){
         c['status'] = "오늘휴무";
