@@ -127,7 +127,7 @@ function placesSearchCB (data, status, pagination) {
                             spriteOrigin: new kakao.maps.Point(0, 2),    
                             spriteSize: new kakao.maps.Size(36, 133)  
                         };  
-                        let itemEl_TCC = getClosedCafeItem(companyTotal[i]);
+                        let itemEl_TCC = getTodayClosedCafeItem(companyTotal[i]);
          
                         // 마커이미지와 마커를 생성합니다
                         var markerImage = createMarkerImage(holidayMarkerImageSrc, imageSize, imageOptions),    

@@ -104,11 +104,20 @@ exports.showMyplaceList = async(req, res) => {
         request({
           url: `http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo?serviceKey=${process.env.HOLIDAY_APIKEY}&solYear=${moment().year()}&solMonth=0${moment().month()+1}&_type=json`,
           method: 'GET'
-        }, function (error, response, body){resolve(body)});
+        }, function (error, response, body) {
+          try{
+            //console.log(body);
+            //resolve(body);
+            resolve(JSON.parse(body).response.body.items.item);
+          }
+          catch(error){console.log(error)}
+        });
       });
     }
-    var rawHoliday = await a();
-    const result = JSON.parse(rawHoliday).response.body.items.item;
+    //var rawHoliday = await a();
+    //const result = JSON.parse(rawHoliday).response.body.items.item;
+    const result = await a();
+    //console.log(result);
     for(let i=0; i < result.length; i++){
       holiday_date.push(result[i].locdate);
     }
