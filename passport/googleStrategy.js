@@ -37,7 +37,6 @@ module.exports = () => {
                             done(null, newUser); // 회원가입하고 로그인 인증 완료
                         }
                     } catch (error) {
-                    console.error(error);
                     done(error);
                     }
                 },

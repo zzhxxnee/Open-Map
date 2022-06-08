@@ -812,13 +812,20 @@ function getOpenedRestarantItem(place) {
         heart = `<span class="heart-${place.compId}" onclick="setMyPlace(${place.compId})"><i class="fa-solid fa-heart"></i></i></span>`;
     }
 
+    let openInfo;
+    if(restClosed == 4000){
+        openInfo = '<span>24시간 영업</span>';
+    }else{
+        openInfo = '    <span>' +  Math.floor((place.restOpen)/100) + ':'+ ((place.restOpen)%100 == 0 ? '00' : (place.restOpen)%100)   + '</span>'+
+        '   <span> ~ ' +  closeTime  + ':'+ ((place.restClosed)%100 == 0 ? '00' : (place.restClosed)%100) + '</span>'; 
+    }
+
     let el = document.createElement('li'),
     itemStr = '<div class="info">' +
         '   <h5>' + place.compName + heart +'</h5>';
 
     itemStr += '    <span>' + place.address + '</span>';
-    itemStr += '    <span>' +  Math.floor((place.restOpen)/100) + ':'+ ((place.restOpen)%100 == 0 ? '00' : (place.restOpen)%100)   + '</span>'+
-        '   <span> ~ ' +  closeTime  + ':'+ ((place.restClosed)%100 == 0 ? '00' : (place.restClosed)%100) + '</span>'; 
+    itemStr += openInfo;
 
     itemStr += '  <span class="tel"> 영업중 </span>' +
         '</div>';           
@@ -845,13 +852,19 @@ function getOpenedCafeItem(place) {
         heart = `<span class="heart-${place.compId}" onclick="setMyPlace(${place.compId})"><i class="fa-solid fa-heart"></i></i></span>`;
     }
 
+    let openInfo;
+    if(cafeClosed == 4000){
+        openInfo = '<span>24시간 영업</span>';
+    }else{
+        openInfo =  '    <span>' +  Math.floor((place.cafeOpen)/100) + ':'+ ((place.cafeOpen)%100 == 0 ? '00' : (place.cafeOpen)%100)  + '</span>'+
+        '   <span> ~ ' +  closeTime + ':'+ ((place.cafeClosed)%100 == 0 ? '00' : (place.cafeClosed)%100)  + '</span>'; 
+    }
+
     let el = document.createElement('li'),
     itemStr = '<div class="info">' +
         '   <h5>' + place.compName + heart +'</h5>';
     itemStr += '    <span>' + place.address + '</span>';
-    itemStr += '    <span>' +  Math.floor((place.cafeOpen)/100) + ':'+ ((place.cafeOpen)%100 == 0 ? '00' : (place.cafeOpen)%100)  + '</span>'+
-        '   <span> ~ ' +  closeTime + ':'+ ((place.cafeClosed)%100 == 0 ? '00' : (place.cafeClosed)%100)  + '</span>'; 
-
+    itemStr += openInfo;
     itemStr += '  <span class="tel"> 영업중 </span>' +
         '</div>';           
 
@@ -877,12 +890,19 @@ function getOpenedHospitalItem(place) {
         heart = `<span class="heart-${place.compId}" onclick="setMyPlace(${place.compId})"><i class="fa-solid fa-heart"></i></i></span>`;
     }
 
+    let openInfo;
+    if(hospitalClosed == 4000){
+        openInfo = '<span>24시간 영업</span>';
+    }else{
+        openInfo = '    <span>' +  Math.floor((place.hospitalOpen)/100) + ':'+ ((place.hospitalOpen)%100 == 0 ? '00' : (place.hospitalOpen)%100)  + '</span>'+
+        '   <span> ~ ' +  closeTime + ':'+ ((place.hospitalClosed)%100 == 0 ? '00' : (place.hospitalClosed)%100)  + '</span>'; 
+    }
+
     let el = document.createElement('li'),
     itemStr = '<div class="info">' +
         '   <h5>' + place.compName + heart +'</h5>';
     itemStr += '    <span>' + place.address + '</span>';
-    itemStr += '    <span>' +  Math.floor((place.hospitalOpen)/100) + ':'+ ((place.hospitalOpen)%100 == 0 ? '00' : (place.hospitalOpen)%100)  + '</span>'+
-        '   <span> ~ ' +  closeTime + ':'+ ((place.hospitalClosed)%100 == 0 ? '00' : (place.hospitalClosed)%100)  + '</span>'; 
+    itemStr += openInfo;
 
     itemStr += '  <span class="tel"> 영업중 </span>' +
         '</div>';           

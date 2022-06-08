@@ -40,11 +40,6 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: false,
         comment: "업주 여부",
       },
-      isActivated: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-        comment: "활성화 여부",
-      },
     }, {
       charset: "utf8", // 한국어 설정
       collate: "utf8_general_ci", // 한국어 설정
