@@ -9,7 +9,7 @@ exports.getUsers = function(req, res, next) {
 };
 
 exports.getSignup = function(req, res, next) {
-    res.render("signup.ejs");
+    res.render("signup");
   };
 
 exports.postSignup = async function(req,res,next){
@@ -40,20 +40,21 @@ exports.postSignup = async function(req,res,next){
       name: body.username,
       password: hashPassword,
       email: body.email,
-      salt: salt
+      salt: salt,
+      isOwner: body.isOwner // 업주인지 아닌지 
     })
   
     models.Users.create(userInfo)
     .then( result => {
-      res.status(200).send(`<script>alert('회원가입 성공!');window.location.href='/users';</script>`);
+      req.session.user_id = body.userid;
+      res.json({ status: 'success', data: result, message: '회원가입이 완료되었습니다!' });
+
     })
     .catch((err) => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while creating the Tutorial."
-      });
+      res.status(500).json({ status: 'error', message: err.message || "Some error occurred while creating the Tutorial." });
     });
-  };
+}
+
 
   exports.postCheckID = async function(req, res, next){
     let body = req.body;
@@ -89,7 +90,7 @@ exports.postSignup = async function(req,res,next){
   exports.getLogin = function(req, res, next) {
     let session = req.session;
   
-      res.render("login.ejs", {
+      res.render("login", {
         session : session
     });
   };
@@ -138,11 +139,11 @@ exports.getLogout = (req, res, next)=>{
   }
 
 exports.getFindID =  (req, res, next) =>{
-  res.render('findID.ejs');
+  res.render('findID');
 }
 
 exports.getFindIDResult = (req, res, next) =>{
-  res.render('findIDResult.ejs');
+  res.render('findIDResult');
 }
 
 exports.postFindIDResult = async(req, res, next)=>{
