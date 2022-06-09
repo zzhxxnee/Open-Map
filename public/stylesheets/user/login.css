@@ -57,6 +57,7 @@ body{
     font-weight:normal;
     border:none;
     border-radius:25px;
+    cursor:pointer;
 }
 
 .findID-btn button{
@@ -65,6 +66,7 @@ body{
     background-color: #fff;
     float:left;
     color:rgba(173, 170, 170, 1);
+    cursor:pointer;
 }
 
 .findPassword-btn button{
@@ -74,6 +76,7 @@ body{
     background-color: #fff;
     display:flex;
     color:rgba(173, 170, 170, 1);
+    cursor:pointer;
 }
 
 .login-form a{
@@ -90,6 +93,7 @@ body{
     text-align:center;
     font-size:18px;
     padding-top:10px;
+    cursor:pointer;
 }
 
 
