@@ -9,7 +9,7 @@ exports.getUsers = function(req, res, next) {
 };
 
 exports.getSignup = function(req, res, next) {
-    res.render("signup.ejs");
+    res.render("users/signup");
   };
 
 exports.postSignup = async function(req,res,next){
@@ -40,20 +40,21 @@ exports.postSignup = async function(req,res,next){
       name: body.username,
       password: hashPassword,
       email: body.email,
-      salt: salt
+      salt: salt,
+      isOwner: body.isOwner // 업주인지 아닌지 
     })
   
     models.Users.create(userInfo)
     .then( result => {
-      res.status(200).send(`<script>alert('회원가입 성공!');window.location.href='/users';</script>`);
+      req.session.user_id = body.userid;
+      res.json({ status: 'success', data: result, message: '회원가입이 완료되었습니다!' });
+
     })
     .catch((err) => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while creating the Tutorial."
-      });
+      res.status(500).json({ status: 'error', message: err.message || "Some error occurred while creating the Tutorial." });
     });
-  };
+}
+
 
   exports.postCheckID = async function(req, res, next){
     let body = req.body;
@@ -89,7 +90,7 @@ exports.postSignup = async function(req,res,next){
   exports.getLogin = function(req, res, next) {
     let session = req.session;
   
-      res.render("login.ejs", {
+      res.render("users/login", {
         session : session
     });
   };
@@ -138,11 +139,11 @@ exports.getLogout = (req, res, next)=>{
   }
 
 exports.getFindID =  (req, res, next) =>{
-  res.render('findID.ejs');
+  res.render('users/findID');
 }
 
 exports.getFindIDResult = (req, res, next) =>{
-  res.render('findIDResult.ejs');
+  res.render('users/findIDResult');
 }
 
 exports.postFindIDResult = async(req, res, next)=>{
@@ -152,7 +153,7 @@ exports.postFindIDResult = async(req, res, next)=>{
     const user = await models.Users.findOne({ where: { email: uemail }, raw: true }); // User 이외의 interface 값이 안들어오고 실제 데이터 값만 raw :true
     
     if (user) {
-      res.render("findIDResult", {
+      res.render("users/findIDResult", {
         FindID: user.id,
       });
 
@@ -171,7 +172,7 @@ exports.postFindIDResult = async(req, res, next)=>{
 }
 
 exports.getFindPassword = async(req, res, next)=>{
-  res.render('findPassword.ejs');
+  res.render('users/findPassword');
 };
 
 exports.postFindPassword = async (req, res, next) => {
@@ -222,7 +223,7 @@ exports.postFindPassword = async (req, res, next) => {
           console.log('Email sent: ' + info.response);
         }
       });
-      return res.render('speakChangePassword');
+      return res.render('users/speakChangePassword');
     } else {
       return res.status(403).send('This account does not exist');
     }
@@ -234,7 +235,7 @@ exports.postFindPassword = async (req, res, next) => {
 };
 
 exports.getChangePassword = async(req, res, next)=>{
-  res.render("changePassword", {
+  res.render("users/changePassword", {
     Token: req.query.token,
   });
 };
