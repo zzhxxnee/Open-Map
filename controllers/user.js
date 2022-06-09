@@ -1,6 +1,7 @@
 const models = require('./../models');
 const crypto = require('crypto');
 let session = require('express-session');
+const passport = require('passport');
 
 const nodemailer = require('nodemailer');
 
@@ -131,11 +132,11 @@ exports.postSignup = async function(req,res,next){
     }
   }
 
-exports.getLogout = (req, res, next)=>{
+exports.getLogout = (req, res, next)=>{ // 로그아웃
     req.session.destroy();
     res.clearCookie('sid');
   
-    res.redirect('/users');
+    res.redirect('/');
   }
 
 exports.getFindID =  (req, res, next) =>{
@@ -178,36 +179,35 @@ exports.getFindPassword = async(req, res, next)=>{
 exports.postFindPassword = async (req, res, next) => {
   const { userid } = req.body;
   try {
-    const user = await models.Users.findOne({ // 1. 유저가 존재하면 유저 정보를 가져옴
+    const user = await models.Users.findOne({ // 유저가 존재하면 유저 정보를 가져옴
       where: { id: userid }, raw:true,
     });
-    if (user) { // 2. 유저가 있다면?
-      const token = crypto.randomBytes(20).toString('hex'); // 3. token 생성(인증코드)
+    if (user) { // 유저가 있다면?
+      const token = crypto.randomBytes(20).toString('hex'); // token 생성(인증코드)
       const data = {
-        // 4. 인증코드 테이블에 넣을 데이터 정리
+        // 인증코드 테이블에 넣을 데이터 정리
         token,
         userid: user.id,
         ttl: 300, // ttl 값 설정 (5분) email 인증에 대한 유효시간
       };
       
-      models.EmailAuth.create(data); // 5. 인증 코드 테이블에 데이터 입력
+      models.EmailAuth.create(data); // 인증 코드 테이블에 데이터 입력
 
       const transporter = nodemailer.createTransport({
         service: 'gmail',
         port: 465,
-        secure: true, // true for 465, false for other ports
+        secure: true, 
         auth: {
           // 이메일을 보낼 계정 데이터 입력
           user: process.env.GOOGLE_ID,
           pass: process.env.GOOGLE_PASSWORD,
-          // .env에 따로 관리해야함
         },
         tls : { rejectUnauthorized: false }
 
       });
 
       const mailOptions = {
-        from: process.env.GOOGLE_ID, // 발송 메일 주소 (위에서 작성한 gmail 계정 아이디)
+        from: process.env.GOOGLE_ID, // 발송 메일 주소 
         to: user.email, // 수신 메일 주소
         subject: 'Password search authentication code transmission', // 제목
         text: 'This is the authentication code to find the password!', // 내용
@@ -290,6 +290,4 @@ exports.postChangePassword = async(req, res, next)=>{
       <h1>server error</h1>`);
   }
 };
-
-
 
