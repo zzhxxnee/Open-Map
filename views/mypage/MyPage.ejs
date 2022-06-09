@@ -38,7 +38,8 @@
                     <% } else { %>
                         <% myComp.forEach( c => { %>
                             <div class="content">
-                                <image class="image" src=<%= c.image%> width="110px" height="110px">
+                                <script>console.log('<%= c.image%>')</script>
+                                <img class="image" src='<%= c.image%>' width="110px" height="110px">
                                 <left>
                                     <span class="compName"><%=c.compName%></span>
                                     <span class="address"><%=c.address%></span>
