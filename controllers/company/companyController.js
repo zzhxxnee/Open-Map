@@ -272,7 +272,6 @@ exports.registFinished = async (req, res) => {
             }
         })
             .then((result) => {
-                //console.log(result[0].dataValues.compId);
                 compInfo.compId = result[0].dataValues.compId * 1;
                 console.log("업체번호: " + compInfo.compId);
             }).then(async () => {
