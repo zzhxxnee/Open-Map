@@ -1,13 +1,6 @@
 body{
     padding-top:100px;
-    padding-left: 100px;
-}
-
-.day{
-    background-color: rgb(222, 222, 222);
-    margin:33x;
-    padding:5px;
-    border-radius: 50%;
+    padding-left: 200px;
 }
 
 .input_text {
@@ -38,4 +31,29 @@ body{
 
     border: none;
     border-radius: 15px;
+}
+.btn:hover{
+    cursor: pointer; 
+    background-color: #e9ceff;
+    color:black;
+}
+
+.typeSelect{
+    padding-top:30px;
+   }
+    select {
+        width: 150px;
+        padding: 0.5rem 1rem;
+        border: none;
+        background-color: rgb(233, 233, 233);
+        font-family: inherit; 
+        border-radius: 20px;
+    }
+
+p{
+    font-size: 12px;
+}
+
+#endbtn{
+    margin-bottom:20px;
 }
