@@ -88,7 +88,7 @@
             
                     <div class="menuList">
                         <label for="menu">주요메뉴</label>
-                        <input type="button" value="+" onclick="addMenu()">
+                        <input type="button" class="addmenu" value="+" onclick="addMenu()">
                         
                         <br>
                         <br>
@@ -97,6 +97,7 @@
                             <div class ="onemenu">
                                 <input type="text" name="menu" id="menu" placeholder="메뉴명" value=<%= m.menuName%>>
                                 <input type="number" name="price" id="price" placeholder="가격" value=<%= m.price%>>원
+                                <input type="button" value="삭제" class="delete_row" onclick="removeMenu(this)">
                             </div>
                             <% }); %>
                         </div>
@@ -148,7 +149,8 @@
     var newMenu = document.createElement('div');
     newMenu.classList.add("onemenu");
     newMenu.innerHTML = `<input type="text" name="menu" id="menu" placeholder="메뉴명">
-                        <input type="number" name="price" id="price" placeholder="가격">원`;
+                        <input type="number" name="price" id="price" placeholder="가격">원
+                        <input type="button" value="삭제" class="delete_row" onclick="removeMenu(this)">`;
     document.getElementById('menuBox').append(newMenu);
     };
 
@@ -166,6 +168,11 @@
                         <input type="number" name="price" id="price" placeholder="가격">원`;
     document.getElementById('menuBox').append(newMenu);
     })();
+
+    function removeMenu(obj){
+    obj.parentElement.remove();
+    }
+
 
 </script>
 
@@ -262,7 +269,7 @@
         padding-top: 30px;
     }
 
-    .menuList input[type=button] {
+    .menuList input.addmenu {
         background-color:#F0F0F0;
         color:black;
         width: 30px;
@@ -270,6 +277,10 @@
         font-size: 20px;
         font-weight: bold;
         padding:0;
+    }
+
+    input.delete_row{
+        width:50px;
     }
 
     .onemenu{

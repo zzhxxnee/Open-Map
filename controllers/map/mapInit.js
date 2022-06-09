@@ -1,8 +1,9 @@
 require('dotenv').config();
 const Sequelize = require('sequelize');
 const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.json')[env];
+const config = require(__dirname + '/../../config/config.json')[env];
 const { QueryTypes } = require('sequelize');
+const request = require('request');
 
 let sequelize;
 if (config.use_env_variable) {
@@ -13,6 +14,7 @@ if (config.use_env_variable) {
 
 exports.Initialize = async (req, res) => {
     try{
+
         let myPlaces = await sequelize.query(`SELECT * FROM myplace WHERE UserId='${req.session.user_id}';`, { type: QueryTypes.SELECT });
         let myPlaceId = [];
         myPlaces.forEach(p => {

@@ -181,6 +181,7 @@ function sendBoundAjax(url, data) {
             }
         }
         companyTotal = closedCafe.concat(openedCafe, todayClosedCafe, closedRestaurant, openedRestaurant, todayClosedRestaurant, closedHospital, openedHospital, todayClosedHospital);
+        
         removeAllChildNods(listEl);
         removeMarker();
         createClosedRestaurantMarkers(); 
@@ -414,7 +415,7 @@ function createTodayClosedCafeMarkers() {
                 spriteSize: new kakao.maps.Size(36, 133)  
             };       
 
-        let itemEl_TCC = getClosedCafeItem(todayClosedCafe[i]);
+        let itemEl_TCC = getTodayClosedCafeItem(todayClosedCafe[i]);
      
         // 마커이미지와 마커를 생성합니다
         var markerImage = createMarkerImage(holidayMarkerImageSrc, imageSize, imageOptions),    
@@ -624,6 +625,7 @@ function removeAllChildNods(el) {
 }
 
 function getClosedRestarantItem(place) {
+
     let closeTime = Math.floor((place.restClosed)/100);
     if(closeTime >= 24){
         closeTime -= 24;
@@ -639,14 +641,15 @@ function getClosedRestarantItem(place) {
     }
 
     let el = document.createElement('li'),
-    itemStr = '<div class="info">' +
-        '   <h5>' + place.compName + heart +'</h5>';
+    itemStr = `<div class="img"> <img src=${place.image} /> </div>`;
+    itemStr += '<div class="info">' +
+        '   <h4>' + place.compName + heart +'</h4>';
 
-    itemStr += '    <span>' + place.address + '</span>';
-    itemStr += '    <span>' +  Math.floor((place.restOpen)/100) + ':'+ ((place.restOpen)%100 == 0 ? '00' : (place.restOpen)%100)   + '</span>'+
-        '   <span> ~ ' +  closeTime  + ':'+ ((place.restClosed)%100 == 0 ? '00' : (place.restClosed)%100) + '</span>'; 
+    itemStr += '    <span>' + place.address + '</span> <br /><br />';
+    itemStr += '   <div class="openInfo"><div><span id="time">' +  Math.floor((place.restOpen)/100) + ':'+ ((place.restOpen)%100 == 0 ? '00' : (place.restOpen)%100)   + '</span>'+
+        '   <span id="time"> ~ ' +  closeTime  + ':'+ ((place.restClosed)%100 == 0 ? '00' : (place.restClosed)%100) + '</span></div> '; 
 
-    itemStr += '  <span class="tel"> 마감 </span>' +
+    itemStr += '  <div class="type"><p id="marker-img-cr"></p>마감 </div></div>' +
         '</div>';           
 
     el.innerHTML = itemStr;
@@ -672,13 +675,14 @@ function getClosedCafeItem(place) {
     }
 
     let el = document.createElement('li'),
-    itemStr = '<div class="info">' +
-        '   <h5>' + place.compName + heart +'</h5>';
-    itemStr += '    <span>' + place.address + '</span>';
-    itemStr += '    <span>' +  Math.floor((place.cafeOpen)/100) + ':'+ ((place.cafeOpen)%100 == 0 ? '00' : (place.cafeOpen)%100)  + '</span>'+
-        '   <span> ~ ' +  closeTime + ':'+ ((place.cafeClosed)%100 == 0 ? '00' : (place.cafeClosed)%100)  + '</span>'; 
+    itemStr = `<div class="img"> <img src=${place.image} /> </div>`;
+    itemStr += '<div class="info">' +
+        '   <h4>' + place.compName + heart +'</h4>';
+    itemStr += '    <span>' + place.address + '</span> <br /><br />';
+    itemStr += '    <div class="openInfo"><div><span id="time">' +  Math.floor((place.cafeOpen)/100) + ':'+ ((place.cafeOpen)%100 == 0 ? '00' : (place.cafeOpen)%100)  + '</span>'+
+        '   <span id="time"> ~ ' +  closeTime + ':'+ ((place.cafeClosed)%100 == 0 ? '00' : (place.cafeClosed)%100)  + '</span></div> '; 
 
-    itemStr += '  <span class="tel"> 마감 </span>' +
+    itemStr += '  <div class="type"><p id="marker-img-cc"></p> 마감 </div></div>' +
         '</div>';           
 
     el.innerHTML = itemStr;
@@ -704,13 +708,14 @@ function getClosedHospitalItem(place) {
     }
 
     let el = document.createElement('li'),
-    itemStr = '<div class="info">' +
-        '   <h5>' + place.compName + heart +'</h5>';
-    itemStr += '    <span>' + place.address + '</span>';
-    itemStr += '    <span>' +  Math.floor((place.hospitalOpen)/100) + ':'+ ((place.hospitalOpen)%100 == 0 ? '00' : (place.hospitalOpen)%100)  + '</span>'+
-        '   <span> ~ ' +  closeTime + ':'+ ((place.hospitalClosed)%100 == 0 ? '00' : (place.hospitalClosed)%100)  + '</span>'; 
+    itemStr = `<div class="img"> <img src=${place.image} /> </div>`;
+    itemStr += '<div class="info">' +
+        '   <h4>' + place.compName + heart +'</h4>';
+    itemStr += '    <span>' + place.address + '</span> <br /><br />';
+    itemStr += '    <div class="openInfo"><div><span id="time">' +  Math.floor((place.hospitalOpen)/100) + ':'+ ((place.hospitalOpen)%100 == 0 ? '00' : (place.hospitalOpen)%100)  + '</span>'+
+        '   <span id="time"> ~ ' +  closeTime + ':'+ ((place.hospitalClosed)%100 == 0 ? '00' : (place.hospitalClosed)%100)  + '</span></div>'; 
 
-    itemStr += '  <span class="tel"> 마감 </span>' +
+    itemStr += '  <div class="type"><p id="marker-img-ch"></p> 마감 </div></div>' +
         '</div>';           
 
     el.innerHTML = itemStr;
@@ -730,13 +735,14 @@ function getTodayClosedRestarantItem(place) {
     }
 
     let el = document.createElement('li'),
-    itemStr = '<div class="info">' +
-        '   <h5>' + place.compName + heart +'</h5>';
+    itemStr = `<div class="img"> <img src=${place.image} /> </div>`;
+    itemStr += '<div class="info">' +
+        '   <h4>' + place.compName + heart +'</h4>';
 
-    itemStr += '    <span>' + place.address + '</span>';
-    itemStr += '    <span> 휴무 </span>'
+    itemStr += '    <span>' + place.address + '</span> <br /><br />';
+    itemStr += '    <div class="openInfo"> <span id="time"> 휴무 </span>'
 
-    itemStr += '  <span class="tel"> 오늘 휴무 </span>' +
+    itemStr += '  <div class="type"><p id="marker-img-tcr"></p> 오늘 휴무 </div></div>' +
         '</div>';           
 
     el.innerHTML = itemStr;
@@ -756,12 +762,13 @@ function getTodayClosedCafeItem(place) {
     }
 
     let el = document.createElement('li'),
-    itemStr = '<div class="info">' +
-        '   <h5>' + place.compName + heart +'</h5>';
-    itemStr += '    <span>' + place.address + '</span>';
-    itemStr += '    <span> 휴무 </span>'
+    itemStr = `<div class="img"> <img src=${place.image} /> </div>`;
+    itemStr += '<div class="info">' +
+        '   <h4>' + place.compName + heart +'</h4>';
+    itemStr += '    <span>' + place.address + '</span> <br /><br />';
+    itemStr += '    <div class="openInfo"> <span id="time"> 휴무 </span>'
 
-    itemStr += '  <span class="tel"> 오늘 휴무 </span>' +
+    itemStr += '  <div class="type"><p id="marker-img-tcc"></p> 오늘 휴무 </div></div>' +
         '</div>';           
 
     el.innerHTML = itemStr;
@@ -781,12 +788,13 @@ function getTodayClosedHospitalItem(place) {
     }
 
     let el = document.createElement('li'),
-    itemStr = '<div class="info">' +
-        '   <h5>' + place.compName + heart +'</h5>';
-    itemStr += '    <span>' + place.address + '</span>';
-    itemStr += '    <span> 휴무 </span>'
+    itemStr = `<div class="img"> <img src=${place.image} /> </div>`;
+    itemStr += '<div class="info">' +
+        '   <h4>' + place.compName + heart +'</h4>';
+    itemStr += '    <span>' + place.address + '</span> <br /><br />';
+    itemStr += '    <div class="openInfo"> <span id="time"> 휴무 </span>'
 
-    itemStr += '  <span class="tel"> 오늘 휴무 </span>' +
+    itemStr += '  <div class="type"><p id="marker-img-tch"></p> 오늘 휴무 </div></div>' +
         '</div>';           
 
     el.innerHTML = itemStr;
@@ -811,15 +819,23 @@ function getOpenedRestarantItem(place) {
         heart = `<span class="heart-${place.compId}" onclick="setMyPlace(${place.compId})"><i class="fa-solid fa-heart"></i></i></span>`;
     }
 
-    let el = document.createElement('li'),
-    itemStr = '<div class="info">' +
-        '   <h5>' + place.compName + heart +'</h5>';
-
-    itemStr += '    <span>' + place.address + '</span>';
-    itemStr += '    <span>' +  Math.floor((place.restOpen)/100) + ':'+ ((place.restOpen)%100 == 0 ? '00' : (place.restOpen)%100)   + '</span>'+
+    let openInfo;
+    if(place.restClosed == 4000){
+        openInfo = '<span>24시간 영업</span>';
+    }else{
+        openInfo = '    <span>' +  Math.floor((place.restOpen)/100) + ':'+ ((place.restOpen)%100 == 0 ? '00' : (place.restOpen)%100)   + '</span>'+
         '   <span> ~ ' +  closeTime  + ':'+ ((place.restClosed)%100 == 0 ? '00' : (place.restClosed)%100) + '</span>'; 
+    }
 
-    itemStr += '  <span class="tel"> 영업중 </span>' +
+    let el = document.createElement('li'),
+    itemStr = `<div class="img"> <img src=${place.image} /> </div>`;
+    itemStr += '<div class="info">' +
+        '   <h4>' + place.compName + heart +'</h4>';
+
+    itemStr += '    <span>' + place.address + '</span> <br /><br />';
+    itemStr += '<div class="openInfo"><div id="time">' + openInfo +'</div>';
+
+    itemStr += '  <div class="type"><p id="marker-img-or"></p> 영업중 </div></div>' +
         '</div>';           
 
     el.innerHTML = itemStr;
@@ -844,14 +860,21 @@ function getOpenedCafeItem(place) {
         heart = `<span class="heart-${place.compId}" onclick="setMyPlace(${place.compId})"><i class="fa-solid fa-heart"></i></i></span>`;
     }
 
-    let el = document.createElement('li'),
-    itemStr = '<div class="info">' +
-        '   <h5>' + place.compName + heart +'</h5>';
-    itemStr += '    <span>' + place.address + '</span>';
-    itemStr += '    <span>' +  Math.floor((place.cafeOpen)/100) + ':'+ ((place.cafeOpen)%100 == 0 ? '00' : (place.cafeOpen)%100)  + '</span>'+
+    let openInfo;
+    if(place.cafeClosed == 4000){
+        openInfo = '<span>24시간 영업</span>';
+    }else{
+        openInfo =  '    <span>' +  Math.floor((place.cafeOpen)/100) + ':'+ ((place.cafeOpen)%100 == 0 ? '00' : (place.cafeOpen)%100)  + '</span>'+
         '   <span> ~ ' +  closeTime + ':'+ ((place.cafeClosed)%100 == 0 ? '00' : (place.cafeClosed)%100)  + '</span>'; 
+    }
 
-    itemStr += '  <span class="tel"> 영업중 </span>' +
+    let el = document.createElement('li'),
+    itemStr = `<div class="img"> <img src=${place.image} /> </div>`;
+    itemStr += '<div class="info">' +
+        '   <h4>' + place.compName + heart +'</h4>';
+    itemStr += '    <span>' + place.address + '</span> <br /><br />';
+    itemStr += '<div class="openInfo"><div id="time">' + openInfo + '</div>';
+    itemStr += '  <div class="type"><p id="marker-img-oc"></p> 영업중 </div></div>' +
         '</div>';           
 
     el.innerHTML = itemStr;
@@ -876,14 +899,22 @@ function getOpenedHospitalItem(place) {
         heart = `<span class="heart-${place.compId}" onclick="setMyPlace(${place.compId})"><i class="fa-solid fa-heart"></i></i></span>`;
     }
 
-    let el = document.createElement('li'),
-    itemStr = '<div class="info">' +
-        '   <h5>' + place.compName + heart +'</h5>';
-    itemStr += '    <span>' + place.address + '</span>';
-    itemStr += '    <span>' +  Math.floor((place.hospitalOpen)/100) + ':'+ ((place.hospitalOpen)%100 == 0 ? '00' : (place.hospitalOpen)%100)  + '</span>'+
+    let openInfo;
+    if(place.hospitalClosed == 4000){
+        openInfo = '<span>24시간 영업</span>';
+    }else{
+        openInfo = '    <span>' +  Math.floor((place.hospitalOpen)/100) + ':'+ ((place.hospitalOpen)%100 == 0 ? '00' : (place.hospitalOpen)%100)  + '</span>'+
         '   <span> ~ ' +  closeTime + ':'+ ((place.hospitalClosed)%100 == 0 ? '00' : (place.hospitalClosed)%100)  + '</span>'; 
+    }
 
-    itemStr += '  <span class="tel"> 영업중 </span>' +
+    let el = document.createElement('li'),
+    itemStr = `<div class="img"> <img src=${place.image} /> </div>`;
+    itemStr += '<div class="info">' +
+        '   <h4>' + place.compName + heart +'</h4>';
+    itemStr += '    <span>' + place.address + '</span> <br /><br />';
+    itemStr += '<div class="openInfo"><div id="time">' + openInfo + '</div>';
+
+    itemStr += '  <div class="type"><p id="marker-img-oh"></p> 영업중 </div></div>' +
         '</div>';           
 
     el.innerHTML = itemStr;

@@ -1,0 +1,139 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+.signup-form{
+    margin-left:380px;
+    margin-top:100px;
+}
+
+.signup-form h2{
+    margin-left:-250px;
+    font-size:23px;
+}
+
+.signup-form h3{
+    font-family:'Inter';
+    font-style:normal;
+    font-weight:700;
+    font-size:30px;
+    line-height:61px;
+    color:#413E3E;
+    text-shadow:0px 4px 4px rgba(173, 170, 170, 1);
+    text-decoration:underline;
+    text-decoration-color:rgba(176, 166, 205, 1);
+}
+
+.input-name{
+    color:rgba(0, 0, 0, 0.72);
+    font-size:15px;
+    margin-top:18px;
+}
+
+.input-name input{
+    text-decoration-color: rgba(225, 224, 224, 1);
+    text-decoration: none;
+    /* width:24%; */
+    height:35px;
+    border-style: thin;
+    border-color: rgba(225, 224, 224, 1);
+    border:3px solid #E1E0E0;
+}
+
+.input-id{
+    margin-top:18px;
+    color:rgba(0, 0, 0, 0.72);
+    font-size:15px;
+}
+
+.input-id input{
+    text-decoration-color: rgba(225, 224, 224, 1);
+    text-decoration: none;
+    /* width: 100px; */
+    height:35px;
+    border-style: thin;
+    border-color: rgba(225, 224, 224, 1);
+    border:3px solid #E1E0E0;
+}
+
+.confirm input{
+    border-radius:10%;
+    border-style:hidden;
+    background: #E1E0E0;
+    height:35px;
+    margin-left:20px;
+    width : 100%;
+}
+
+.input-password{
+    margin-top:18px;
+    color:rgba(0, 0, 0, 0.72);
+    font-size:15px;
+    /* width:50%; */
+}
+
+.input-password input{
+    text-decoration-color: rgba(225, 224, 224, 1);
+    text-decoration: none;
+    /* width:24%; */
+    height:35px;
+    border-style: thin;
+    border-color: rgba(225, 224, 224, 1);
+    border:3px solid #E1E0E0;
+}
+
+.input-rpassword{
+    margin-top:18px;
+    color:rgba(0, 0, 0, 0.72);
+    font-size:15px;
+    margin-left : 20px;
+}
+
+.input-rpassword input{
+    text-decoration-color: rgba(225, 224, 224, 1);
+    text-decoration: none;
+    /* width:24%; */
+    height:35px;
+    border-style: thin;
+    border-color: rgba(225, 224, 224, 1);
+    border:3px solid #E1E0E0;
+    margin-left : 2px;
+}
+
+.input-email{
+    margin-top:18px;
+    color:rgba(0, 0, 0, 0.72);
+    font-size:15px;
+}
+
+.input-email input{
+    text-decoration-color: rgba(225, 224, 224, 1);
+    text-decoration: none;
+    width:15.7%;
+    height:35px;
+    border-style: thin;
+    border-color: rgba(225, 224, 224, 1);
+    border:3px solid #E1E0E0;
+}
+
+.input-checkbox{
+    margin-top:18px;
+}
+
+.input-checkbox label{
+    font-size:15px;
+}
+
+.btn-area button{
+    margin-top:18px;
+    width:50%;
+    height:47px;
+    background:#77C3CA;
+    color:#fff;
+    font-size:18px;
+    font-weight:normal;
+    border:none;
+    border-radius:25px;
+}

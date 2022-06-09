@@ -1,0 +1,274 @@
+#placesList .item {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    padding: 10px;
+    background-color: white;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+#placesList .item img {
+    margin-right: 10px;
+    width: 90px;
+    height: 85px;
+}
+
+#placesList {
+    padding: 10px;
+    margin-top: 0;
+}
+
+#placesList .item h4 {
+    margin-top: 5px;
+    display: flex;
+    justify-content: space-between;
+}
+
+#placesList .item .openInfo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#placesList .item .openInfo .type{
+    display: flex;
+    align-items: center;
+}
+
+#placesList .item .openInfo #time{
+    color: #894AFF;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+#marker-img-cr {
+    background-image: url("../../images/closed.png");
+    width: 35px;
+    height: 35px;
+    background-position: 1px 76px;
+    margin-right: 10px;
+}
+
+#marker-img-cc {
+    background-image: url("../../images/closed.png");
+    width: 35px;
+    height: 36px;
+    background-position: 1px 0px;
+    margin-right: 10px;
+}
+
+#marker-img-ch {
+    background-image: url("../../images/closed.png");
+    width: 35px;
+    height: 36px;
+    background-position: 1px 36px;
+    margin-right: 10px;
+}
+
+#marker-img-tcr {
+    background-image: url("../../images/holiday.png");
+    width: 35px;
+    height: 37px;
+    background-position: 1px 84px;
+    margin-right: 10px;
+}
+
+#marker-img-tcc {
+    background-image: url("../../images/holiday.png");
+    width: 35px;
+    height: 41px;
+    background-position: 1px 0px;
+    margin-right: 10px;
+}
+
+#marker-img-tch {
+    background-image: url("../../images/holiday.png");
+    width: 35px;
+    height: 38px;
+    background-position: 1px 40px;
+    margin-right: 10px;
+}
+
+#marker-img-or {
+    background-image: url("../../images/open.png");
+    width: 35px;
+    height: 38px;
+    background-position: 1px 85px;
+    margin-right: 10px;
+}
+
+#marker-img-oc {
+    background-image: url("../../images/open.png");
+    width: 35px;
+    height: 39px;
+    background-position: 1px 1px;
+    margin-right: 10px;
+}
+
+#marker-img-oh {
+    background-image: url("../../images/open.png");
+    width: 35px;
+    height: 38px;
+    background-position: 1px 41px;
+    margin-right: 10px;
+}
+
+.wrap {
+    position: absolute;
+    left: 0;
+    bottom: 40px;
+    width: 360px;
+    height: 480px;
+    margin-left: -180px;
+    text-align: left;
+    overflow: hidden;
+    font-size: 12px;
+    font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;
+    line-height: 1.5;
+}
+
+
+.wrap * {padding: 0;margin: 0;}
+
+.wrap i {
+    margin-right: 20px;
+    margin-left: 5px;
+    font-size: 20px;
+    color: #fe8201;
+}
+
+.wrap .info {
+    width: 360px;
+    height: 470px;
+    border-radius: 5px;
+    border-bottom: 2px solid #ccc;
+    border-right: 1px solid #ccc;
+    overflow: hidden;
+    background: #fff;
+}
+
+.wrap .info:nth-child(1) {border: 0;box-shadow: 0px 1px 2px #888;}
+
+.wrap .openInfo {
+    display: flex;
+    justify-content: space-between;
+}
+
+.wrap button {
+    border: none;
+    background-color: transparent;
+    color: #4563da;
+    cursor: pointer;
+}
+
+.info .title {
+    padding: 5px 0 0 10px;
+    height: 30px;
+    background: #eee;
+    border-bottom: 1px solid #ddd;
+    font-size: 18px;
+    font-weight: bold;
+}
+.info .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #888;
+    width: 17px;
+    height: 17px;
+    background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png');
+}
+.info .close:hover {cursor: pointer;}
+.info .body {
+    position: relative;
+    overflow: hidden;
+}
+
+.info .desc {
+    position: relative;
+    margin: 10px;
+}
+.desc .ellipsis {overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
+.desc .jibun {font-size: 11px;color: #888;margin-top: -2px;}
+.info .img {
+    position: relative;
+    top: 6px;
+    left: 5px;
+    width: 95%;
+    height: 200px;
+    overflow: hidden;
+}
+
+.info .img img{
+    width: 100%;
+}
+
+.wrap .info:after {
+    content: '';
+    position: absolute;
+    margin-left: -12px;
+    left: 50%;
+    bottom: 0;
+    width: 22px;
+    height: 12px;
+    background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')
+}
+
+#pagination {margin:10px auto;text-align: center; visibility: hidden;}
+
+.modal {
+    z-index: 2;
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    display: none;
+
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal .title {
+    text-align: initial;
+}
+
+.modal.show {
+    display: block;
+}
+
+.modal .content {
+    background-color: #FBF9FC;
+    border-radius: 15px;
+    margin: 10px;
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+    padding-right: 20px;
+    padding-left: 20px;
+    align-items: center;
+}
+
+.modal .content #price {
+    color: #fe8201;
+}
+
+.modal_body {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    width: 400px;
+    height: 600px;
+
+    padding: 20px;
+
+    text-align: center;
+
+    background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+    box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);
+
+    transform: translateX(-50%) translateY(-50%);
+}

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Openmap</title>
-    <link rel="stylesheet" href="/stylesheets/login.css" />
+    <link rel="stylesheet" href="/stylesheets/user/login.css" />
 </head>
 <body>
 <% if(session.user_id){ %>
@@ -27,12 +27,19 @@
                 <button type="submit">로그인</button>
             </div>
     </form>
+    <hr style="border: 1px normal silver; margin-top:10px; width:100%;">
+    <a href="/users/google" onclick="return confirm('일반 회원이신가요? 업주 회원이시라면 일반 로그인을 이용해주세요!');">구글로그인</a>
     <form action="/users/findID" mehtod="post">
-        <button type="submit">아이디 찾기</button>
+        <div class="findID-btn">
+            <button type="submit">아이디 찾기</button>
+        </div>
     </form>
     <form action="/users/findPassword" mehtod="post">
-        <button type="submit">비밀번호 찾기</button>
+        <div class="findPassword-btn">
+            <button type="submit">비밀번호 찾기</button>
+        </div>
     </form>
+    <!-- <a href="/users/google" onclick="return confirm('일반 회원이신가요? 업주 회원이시라면 일반 로그인을 이용해주세요!');">구글로그인</a> -->
 </section>
 <% } %>
 </body>

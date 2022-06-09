@@ -41,9 +41,9 @@ function sendMenuAjax(url, data) {
     //서버에서 결과가 도착하면 그것을 div에 입력합니다
     xhr.addEventListener('load', function () {
         const result =  JSON.parse(xhr.responseText);
-        let menuInfo = '';
+        let menuInfo = '<h2 class="title">메뉴</h2>';
         for(let i = 0; i < result.length; i++){
-            menuInfo += `<div>${result[i].menuName} ${result[i].price}</div>`
+            menuInfo += `<div class="content"><span>${result[i].menuName}</span> <span id="price">${result[i].price}</span></div>`
         }
         content.innerHTML = menuInfo;
         console.log(result);

@@ -32,6 +32,7 @@ function placesSearchCB (data, status, pagination) {
 
         // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
         map.setBounds(bounds);
+        companyTotal = closedCafe.concat(openedCafe, todayClosedCafe, closedRestaurant, openedRestaurant, todayClosedRestaurant, closedHospital, openedHospital, todayClosedHospital);
 
         for(let j=0; j<data.length; j++){
             for(let i=0; i < companyTotal.length; i++){
@@ -126,7 +127,7 @@ function placesSearchCB (data, status, pagination) {
                             spriteOrigin: new kakao.maps.Point(0, 2),    
                             spriteSize: new kakao.maps.Size(36, 133)  
                         };  
-                        let itemEl_TCC = getClosedCafeItem(companyTotal[i]);
+                        let itemEl_TCC = getTodayClosedCafeItem(companyTotal[i]);
          
                         // 마커이미지와 마커를 생성합니다
                         var markerImage = createMarkerImage(holidayMarkerImageSrc, imageSize, imageOptions),    

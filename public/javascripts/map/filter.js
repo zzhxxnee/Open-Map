@@ -1,7 +1,8 @@
 //필터 선택 부분 슬라이드 효과
 $( document ).ready( function() {
     $( 'button.filter' ).click( function() {
-      $( '.category' ).slideToggle();
+        $('button.filter').toggleClass("filter-deselected")
+        $( '.category' ).slideToggle();
     } );
   } );
 

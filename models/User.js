@@ -30,15 +30,15 @@ module.exports = (sequelize, DataTypes) => {
       salt:{
         type: DataTypes.STRING,
       },
+      provider:{
+        type: DataTypes.STRING,
+        defaultValue: 'local',
+        comment: "로그인 제공 업체",
+      },
       isOwner: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
         comment: "업주 여부",
-      },
-      isActivated: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-        comment: "활성화 여부",
       },
     }, {
       charset: "utf8", // 한국어 설정

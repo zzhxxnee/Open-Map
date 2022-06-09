@@ -1,5 +1,5 @@
 require('dotenv').config();
-const db = require("../models/index");
+const db = require("../../models/index");
 const { Op } = require("sequelize");
 const Company = db.company;
 const CompanyRestaurantView = db.companyRestaurantView;
@@ -7,7 +7,7 @@ const CompanyCafeView = db.CompanyCafeView;
 const CompanyHospitalView = db.companyHospitalView;
 const Sequelize = require('sequelize');
 const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.json')[env];
+const config = require(__dirname + '/../../config/config.json')[env];
 const { QueryTypes } = require('sequelize');
 const request = require('request');
 
@@ -31,21 +31,27 @@ if(minute < 10){
 }
 let now = String(hour) + minute;
 
-// request({
-//     url: `http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo?serviceKey=${process.env.HOLIDAY_APIKEY}&solYear=${today.getFullYear()}&solMonth=0${today.getMonth()+1}&_type=json`,
-//     method: 'GET'
-// }, async function (error, response, body) {
-//     const result = JSON.parse(body).response.body.items.item;
-//     for(let i=0; i < result.length; i++){
-//         holiday_date.push(result[i].locdate%100);
-//     }
-// });
+request({
+    url: `http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo?serviceKey=${process.env.HOLIDAY_APIKEY}&solYear=${today.getFullYear()}&solMonth=0${today.getMonth()+1}&_type=json`,
+    method: 'GET'
+}, async function (error, response, body) {
+    try{
+        const result = JSON.parse(body).response.body.items.item;
+        for(let i=0; i < result.length; i++){
+            holiday_date.push(result[i].locdate%100);
+        }
+        console.log('holiday / ' + holiday_date);
+    }catch(err){
+        console.log('body / ' + body);
+        console.log('Error: ', err.message);
+    }
+});
 
 exports.getAllPositions = async (req, res) => {
     try{
         if(day == 0){
             todayClosedRestaurantPosition = await CompanyRestaurantView.findAll({
-                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
+                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restType', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
                 where:{
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
@@ -95,7 +101,7 @@ exports.getAllPositions = async (req, res) => {
             });
         }else if(day == 1){
             todayClosedRestaurantPosition = await CompanyRestaurantView.findAll({
-                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
+                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restType', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
                 where:{
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
@@ -147,7 +153,7 @@ exports.getAllPositions = async (req, res) => {
             });
         }else if(day == 2){
             todayClosedRestaurantPosition = await CompanyRestaurantView.findAll({
-                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
+                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restType', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
                 where:{
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
@@ -199,7 +205,7 @@ exports.getAllPositions = async (req, res) => {
             });
         }else if(day == 3){
             todayClosedRestaurantPosition = await CompanyRestaurantView.findAll({
-                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
+                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restType', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
                 where:{
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
@@ -251,7 +257,7 @@ exports.getAllPositions = async (req, res) => {
             });
         }else if(day == 4){
             todayClosedRestaurantPosition = await CompanyRestaurantView.findAll({
-                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
+                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restType', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
                 where:{
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
@@ -303,7 +309,7 @@ exports.getAllPositions = async (req, res) => {
             });
         }else if(day == 5){
             todayClosedRestaurantPosition = await CompanyRestaurantView.findAll({
-                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
+                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restType', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
                 where:{
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
@@ -355,7 +361,7 @@ exports.getAllPositions = async (req, res) => {
             });
         }else if(day == 6){
             todayClosedRestaurantPosition = await CompanyRestaurantView.findAll({
-                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
+                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restType', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
                 where:{
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
@@ -406,8 +412,14 @@ exports.getAllPositions = async (req, res) => {
                 }
             });
         };
+
+        todayOpenedCompId = [];
+        for(let i = 0; i < todayOpened.length; i++){
+            todayOpenedCompId.push(todayOpened[i].compId);
+        };
+
         earlyClosedRestaurantPosition = await CompanyRestaurantView.findAll({
-            attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
+            attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restType', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
             where:{
                 latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                 longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
@@ -495,20 +507,14 @@ exports.getAllPositions = async (req, res) => {
                 }
             });
         }
-        let openedCompany_R = new Array();
-        let openedCompany_C = new Array();
-        let openedCompany_H = new Array();
-        todayOpened.filter((company) => company.type == 'R').forEach((company) => openedCompany_R.push(company.compId));
-        todayOpened.filter((company) => company.type == 'C').forEach((company) => openedCompany_C.push(company.compId));
-        todayOpened.filter((company) => company.type == 'H').forEach((company) => openedCompany_H.push(company.compId));
 
         openedRestaurant = await CompanyRestaurantView.findAll({
-            attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
+            attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restType', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
             where: {
                 latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                 longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                 compId:{
-                    [Op.or]: [...openedCompany_R],
+                    [Op.in]: [...todayOpenedCompId],
                 },
                 restOpen:{
                     [Op.lte]: parseInt(now)
@@ -519,12 +525,12 @@ exports.getAllPositions = async (req, res) => {
             }
         });
         closedRestaurant = await CompanyRestaurantView.findAll({
-            attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
+            attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restType', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
             where: {
                 latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                 longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                 compId:{
-                    [Op.or]: [...openedCompany_R],
+                    [Op.in]: [...todayOpenedCompId],
                 },
                 [Op.or]: {
                     restOpen:{
@@ -543,7 +549,7 @@ exports.getAllPositions = async (req, res) => {
                 latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                 longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                 compId:{
-                    [Op.or]: [...openedCompany_C]
+                    [Op.in]: [...todayOpenedCompId]
                 },
                 cafeOpen:{
                     [Op.lte]: parseInt(now)
@@ -560,7 +566,7 @@ exports.getAllPositions = async (req, res) => {
                 latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                 longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                 compId:{
-                    [Op.or]: [...openedCompany_C],
+                    [Op.in]: [...todayOpenedCompId],
                 },
                 [Op.or]: {
                     cafeOpen:{
@@ -580,7 +586,7 @@ exports.getAllPositions = async (req, res) => {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
-                        [Op.or]: [...openedCompany_H]
+                        [Op.in]: [...todayOpenedCompId]
                     },
                     HospOpenSun:{
                         [Op.lte]: parseInt(now)
@@ -596,7 +602,7 @@ exports.getAllPositions = async (req, res) => {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
-                        [Op.or]: [...openedCompany_H],
+                        [Op.in]: [...todayOpenedCompId],
                     },
                     [Op.or]:{
                         HospOpenSun:{
@@ -615,7 +621,7 @@ exports.getAllPositions = async (req, res) => {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
-                        [Op.or]: [...openedCompany_H]
+                        [Op.in]: [...todayOpenedCompId]
                     },
                     HospOpenSun:{
                         [Op.lte]: parseInt(now)
@@ -631,7 +637,7 @@ exports.getAllPositions = async (req, res) => {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
-                        [Op.or]: [...openedCompany_H],
+                        [Op.in]: [...todayOpenedCompId],
                     },
                     [Op.or]:{
                         HospOpenSun:{
@@ -650,7 +656,7 @@ exports.getAllPositions = async (req, res) => {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
-                        [Op.or]: [...openedCompany_H]
+                        [Op.in]: [...todayOpenedCompId]
                     },
                     HospOpenMon:{
                         [Op.lte]: parseInt(now)
@@ -666,7 +672,7 @@ exports.getAllPositions = async (req, res) => {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
-                        [Op.or]: [...openedCompany_H],
+                        [Op.in]: [...todayOpenedCompId],
                     },
                     [Op.or]:{
                         HospOpenMon:{
@@ -685,7 +691,7 @@ exports.getAllPositions = async (req, res) => {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
-                        [Op.or]: [...openedCompany_H]
+                        [Op.in]: [...todayOpenedCompId]
                     },
                     HospOpenTue:{
                         [Op.lte]: parseInt(now)
@@ -701,7 +707,7 @@ exports.getAllPositions = async (req, res) => {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
-                        [Op.or]: [...openedCompany_H],
+                        [Op.in]: [...todayOpenedCompId],
                     },
                     [Op.or]:{
                         HospOpenTue:{
@@ -720,7 +726,7 @@ exports.getAllPositions = async (req, res) => {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
-                        [Op.or]: [...openedCompany_H]
+                        [Op.in]: [...todayOpenedCompId]
                     },
                     HospOpenWed:{
                         [Op.lte]: parseInt(now)
@@ -736,7 +742,7 @@ exports.getAllPositions = async (req, res) => {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
-                        [Op.or]: [...openedCompany_H],
+                        [Op.in]: [...todayOpenedCompId],
                     },
                     [Op.or]:{
                         HospOpenWed:{
@@ -755,7 +761,7 @@ exports.getAllPositions = async (req, res) => {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
-                        [Op.or]: [...openedCompany_H]
+                        [Op.in]: [...todayOpenedCompId]
                     },
                     HospOpenThu:{
                         [Op.lte]: parseInt(now)
@@ -771,7 +777,7 @@ exports.getAllPositions = async (req, res) => {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
-                        [Op.or]: [...openedCompany_H],
+                        [Op.in]: [...todayOpenedCompId],
                     },
                     [Op.or]:{
                         HospOpenThu:{
@@ -790,7 +796,7 @@ exports.getAllPositions = async (req, res) => {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
-                        [Op.or]: [...openedCompany_H]
+                        [Op.in]: [...todayOpenedCompId]
                     },
                     HospOpenFri:{
                         [Op.lte]: parseInt(now)
@@ -806,7 +812,7 @@ exports.getAllPositions = async (req, res) => {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
-                        [Op.or]: [...openedCompany_H],
+                        [Op.in]: [...todayOpenedCompId],
                     },
                     [Op.or]:{
                         HospOpenFri:{
@@ -825,7 +831,7 @@ exports.getAllPositions = async (req, res) => {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
-                        [Op.or]: [...openedCompany_H]
+                        [Op.in]: [...todayOpenedCompId]
                     },
                     HospOpenSat:{
                         [Op.lte]: parseInt(now)
@@ -841,7 +847,7 @@ exports.getAllPositions = async (req, res) => {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     compId:{
-                        [Op.or]: [...openedCompany_H],
+                        [Op.in]: [...todayOpenedCompId],
                     },
                     [Op.or]:{
                         HospOpenSat:{
@@ -854,68 +860,72 @@ exports.getAllPositions = async (req, res) => {
                 }
             });
         }
-        let myPlaces = await sequelize.query(`SELECT * FROM myplace WHERE UserId='${req.session.user_id}';`, { type: QueryTypes.SELECT });
-        let myPlaceId = [];
-        myPlaces.forEach(p => {
-            myPlaceId.push(p.CompanyCompId);
-        });
 
-    let closedRestaurantPositionTotal = new Array(earlyClosedRestaurantPosition);
-    closedRestaurantPositionTotal = [...closedRestaurant];
-    let closedCafePositionTotal = new Array(earlyClosedCafePosition);
-    closedCafePositionTotal = [...closedCafe];
-    let closedHospitalPositionTotal = new Array(earlyClosedHospitalPosition);
-    closedHospitalPositionTotal = [...closedHospital];
+        let closedRestaurantPositionTotal = new Array(earlyClosedRestaurantPosition);
+        closedRestaurantPositionTotal = [...closedRestaurant];
+        let closedCafePositionTotal = new Array(earlyClosedCafePosition);
+        closedCafePositionTotal = [...closedCafe];
+        let closedHospitalPositionTotal = new Array(earlyClosedHospitalPosition);
+        closedHospitalPositionTotal = [...closedHospital];
 
-    for(let i=0; i < todayClosedRestaurantPosition.length; i++){
-        todayClosedRestaurantPosition[i].dataValues.type = 'tcr';
-        todayClosedRestaurantPosition[i].dataValues.isMyPlace = false;
-    }
+        for(let i=0; i < todayClosedRestaurantPosition.length; i++){
+            todayClosedRestaurantPosition[i].dataValues.type = 'tcr';
+            todayClosedRestaurantPosition[i].dataValues.isMyPlace = false;
+            todayClosedRestaurantPosition[i].dataValues.image = todayClosedRestaurantPosition[i].dataValues.image ? todayClosedRestaurantPosition[i].dataValues.image.toString() : "/images/baseimg.jpg";
+        }
 
-    for(let i=0; i < todayClosedCafePosition.length; i++){
-        todayClosedCafePosition[i].dataValues.type = 'tcc';
-        todayClosedCafePosition[i].dataValues.isMyPlace = false;
-    }
+        for(let i=0; i < todayClosedCafePosition.length; i++){
+            todayClosedCafePosition[i].dataValues.type = 'tcc';
+            todayClosedCafePosition[i].dataValues.isMyPlace = false;
+            todayClosedCafePosition[i].dataValues.image = todayClosedCafePosition[i].dataValues.image ? todayClosedCafePosition[i].dataValues.image.toString() : "/images/baseimg.jpg";
+        }
 
-    for(let i=0; i < todayClosedHospitalPosition.length; i++){
-        todayClosedHospitalPosition[i].dataValues.type = 'tch';
-        todayClosedHospitalPosition[i].dataValues.isMyPlace = false;
-    }
+        for(let i=0; i < todayClosedHospitalPosition.length; i++){
+            todayClosedHospitalPosition[i].dataValues.type = 'tch';
+            todayClosedHospitalPosition[i].dataValues.isMyPlace = false;
+            todayClosedHospitalPosition[i].dataValues.image = todayClosedHospitalPosition[i].dataValues.image ? todayClosedHospitalPosition[i].dataValues.image.toString() : "/images/baseimg.jpg";
+        }
 
-    for(let i=0; i < openedRestaurant.length; i++){
-        openedRestaurant[i].dataValues.type = 'or';
-        openedRestaurant[i].dataValues.isMyPlace = false;
-    }
+        for(let i=0; i < openedRestaurant.length; i++){
+            openedRestaurant[i].dataValues.type = 'or';
+            openedRestaurant[i].dataValues.isMyPlace = false;
+            openedRestaurant[i].dataValues.image = openedRestaurant[i].dataValues.image ? openedRestaurant[i].dataValues.image.toString() : "/images/baseimg.jpg";
+        }
 
-    for(let i=0; i < openedCafe.length; i++){
-        openedCafe[i].dataValues.type = 'oc';
-        openedCafe[i].dataValues.isMyPlace = false;
-    }
+        for(let i=0; i < openedCafe.length; i++){
+            openedCafe[i].dataValues.type = 'oc';
+            openedCafe[i].dataValues.isMyPlace = false;
+            openedCafe[i].dataValues.image = openedCafe[i].dataValues.image ? openedCafe[i].dataValues.image.toString() : "/images/baseimg.jpg";
+        }
 
-    for(let i=0; i < openedHospital.length; i++){
-        openedHospital[i].dataValues.type = 'oh';
-        openedHospital[i].dataValues.isMyPlace = false;
-    }
+        for(let i=0; i < openedHospital.length; i++){
+            openedHospital[i].dataValues.type = 'oh';
+            openedHospital[i].dataValues.isMyPlace = false;
+            openedHospital[i].dataValues.image = openedHospital[i].dataValues.image ? openedHospital[i].dataValues.image.toString() : "/images/baseimg.jpg";
+        }
 
-    for(let i=0; i < closedRestaurantPositionTotal.length; i++){
-        closedRestaurantPositionTotal[i].dataValues.type = 'cr';
-        closedRestaurantPositionTotal[i].dataValues.isMyPlace = false;
-    }
+        for(let i=0; i < closedRestaurantPositionTotal.length; i++){
+            closedRestaurantPositionTotal[i].dataValues.type = 'cr';
+            closedRestaurantPositionTotal[i].dataValues.isMyPlace = false;
+            closedRestaurantPositionTotal[i].dataValues.image = closedRestaurantPositionTotal[i].dataValues.image ? closedRestaurantPositionTotal[i].dataValues.image.toString() : "/images/baseimg.jpg";
+        }
 
-    for(let i=0; i < closedCafePositionTotal.length; i++){
-        closedCafePositionTotal[i].dataValues.type = 'cc';
-        closedCafePositionTotal[i].dataValues.isMyPlace = false;
-    }
+        for(let i=0; i < closedCafePositionTotal.length; i++){
+            closedCafePositionTotal[i].dataValues.type = 'cc';
+            closedCafePositionTotal[i].dataValues.isMyPlace = false;
+            closedCafePositionTotal[i].dataValues.image = closedCafePositionTotal[i].dataValues.image ? closedCafePositionTotal[i].dataValues.image.toString() : "/images/baseimg.jpg";
+        }
 
-    for(let i=0; i < closedHospitalPositionTotal.length; i++){
-        closedHospitalPositionTotal[i].dataValues.type = 'ch';
-        closedHospitalPositionTotal[i].dataValues.isMyPlace = false;
-    }
+        for(let i=0; i < closedHospitalPositionTotal.length; i++){
+            closedHospitalPositionTotal[i].dataValues.type = 'ch';
+            closedHospitalPositionTotal[i].dataValues.isMyPlace = false;
+            closedHospitalPositionTotal[i].dataValues.image = closedHospitalPositionTotal[i].dataValues.image ? closedHospitalPositionTotal[i].dataValues.image.toString() : "/images/baseimg.jpg";
+        }
 
-    res.json({
-        todayClosedRestaurant : todayClosedRestaurantPosition, todayClosedCafe :  todayClosedCafePosition, todayClosedHospital : todayClosedHospitalPosition , 
-        openedRestaurant : openedRestaurant, openedCafe : openedCafe, openedHospital : openedHospital,
-        closedRestaurantTotal : closedRestaurantPositionTotal, closedCafeTotal : closedCafePositionTotal, closedHospitalTotal : closedHospitalPositionTotal,
+        res.json({
+            todayClosedRestaurant : todayClosedRestaurantPosition, todayClosedCafe :  todayClosedCafePosition, todayClosedHospital : todayClosedHospitalPosition , 
+            openedRestaurant : openedRestaurant, openedCafe : openedCafe, openedHospital : openedHospital,
+            closedRestaurantTotal : closedRestaurantPositionTotal, closedCafeTotal : closedCafePositionTotal, closedHospitalTotal : closedHospitalPositionTotal,
         });
 
     }catch(err){
