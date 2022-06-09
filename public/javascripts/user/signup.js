@@ -97,5 +97,5 @@ function onSubmit() {
 }
 
 function applySupplier() {
-  window.location.href='/compRegist/registComp';
+  window.location.href='/compRegist';
 }
