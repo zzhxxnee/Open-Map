@@ -1,0 +1,49 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+.findid h3{
+    font-family:'Inter';
+    font-style:normal;
+    font-weight:700;
+    font-size:20px;
+    line-height:61px;
+    color:#413E3E;
+    border-bottom : solid 1px #D9D9D9;
+    margin-left : 80px;
+    margin-top : 30px;
+}
+
+.info-findid h5{
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 16px;
+    margin-left : 78px;
+    margin-top : 15px;
+    float : left;
+}
+
+.submit-btn button{
+    margin-top : 31px;
+    margin-left:78px;
+    background-color: rgba(137, 74, 255, 1);
+    border-radius:25px;
+    border:none;
+    font-size:12px;
+    color:#fff;
+    width : 70px;
+    height : 30px;
+    box-shadow:5px 5px;
+    cursor:pointer;
+}
+
+.point{
+    margin-left : 80px;
+    margin-top : 10px;
+    font-size : 20px;
+    color : rgba(137, 74, 255, 1);
+}

@@ -1,0 +1,111 @@
+<head>
+    <script language="javascript" src="/javascripts/registRest.js"></script>
+    <link rel="stylesheet" href="/stylesheets/registCompDetail.css" />
+</head>
+
+<body>
+    <div class="step">
+        <h1>식당등록하기</h1>
+        <h2>STEP 2</h2>
+    </div>
+    <form name="restRegistForm" id="restRegistForm" action="/compRegist/registComp/finished" method="post">
+        <input type="checkbox" name="allDays" id="24hours" value="true" />24시간 영업
+        <br>
+        <br>
+        <div>
+            <div>오픈시각
+                <select name="openTime" class="runtime">오픈시각(시)
+                    <% for(var i=0; i < 24; i++){ %>
+                        <option value="<%=i%>"><%=i%></option>
+                        <% } %>
+                </select>
+                시
+                <select name="openTime" class="runtime">오픈시각(분)
+                    <% for(var i=0; i < 60; i+=10){ %>
+                        <option value="<%=i%>"><%=i%></option>
+                        <% } %>
+                </select>
+                분
+            </div>
+            <br>
+            <div>마감시각
+                <select name="closedTime" class="runtime">마감시각(시)
+                    <% for(var i=0; i < 24; i++){ %>
+                        <option value="<%=i%>"><%=i%></option>
+                        <% } %>
+                </select>
+                시
+                <select name="closedTime" class="runtime">마감시각(분)
+                    <% for(var i=0; i < 60; i+=10){ %>
+                        <option value="<%=i%>"><%=i%></option>
+                        <% } %>
+                </select>
+                분
+                <input type="checkbox" name="tomorrow" id="tomorrow" value="true" />익일
+            </div>
+        </div>
+        <br>
+        <div>
+            <div>브레이크 시작시각
+                <select name="breakStart">브레이크 시작시각(시)
+                    <% for(var i=0; i < 24; i++){ %>
+                        <option value="<%=i%>"><%=i%></option>
+                        <% } %>
+                </select>
+                시
+                <select name="breakStart">브레이크 시작시각(분)
+                    <% for(var i=0; i < 60; i+=10){ %>
+                        <option value="<%=i%>"><%=i%></option>
+                        <% } %>
+                </select>
+                분
+            </div>
+            <br>
+            <div>브레이크 마감시각
+                <select name="breakEnd">브레이크 마감시각(시)
+                    <% for(var i=0; i < 24; i++){ %>
+                        <option value="<%=i%>"><%=i%></option>
+                        <% } %>
+                </select>
+                시
+                <select name="breakEnd">브레이크 시작시각(분)
+                    <% for(var i=0; i < 60; i+=10){ %>
+                        <option value="<%=i%>"><%=i%></option>
+                        <% } %>
+                </select>
+                분
+                <input type="checkbox" name="noBreak" id="noBreak" value="true" />브레이크 타임없음
+            </div>
+        </div>
+        <br>
+        <div>
+            <label for="restType">음식 종류 (선택 필수)</label>
+            <select name="restType" , id="restType" required>
+                <option value="">음식 종류</option>
+                <option value="한식">한식</option>
+                <option value="중식">중식</option>
+                <option value="일식">일식</option>
+                <option value="경양식">경양식</option>
+                <option value="분식">분식</option>
+                <option value="고깃집">고깃집</option>
+                <option value="술집">술집</option>
+                <option value="치킨">치킨</option>
+                <option value="기타">기타</option>
+            </select>
+        </div>
+        <br>
+        <div>
+            <label for="menu">주요메뉴</label>
+            <input type="button" id="menubtn" value="+" onclick="addMenu()">
+            <br>
+            <div id="menuBox">
+                <input type="text" class="input_text" name="menu" id="menu" placeholder="메뉴명" required/>
+                <input type="number" class="input_text" name="price" id="price" placeholder="가격" required/>원
+                <input type="button" class="btn" value="삭제" onclick="removeMenu(this)">
+            </div>
+            <div id="field"></div>
+        </div>
+        <br>
+        <input type="submit" class="btn" id="endbtn" value="업체등록하기" />
+    </form>
+</body>

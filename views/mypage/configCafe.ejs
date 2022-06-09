@@ -1,0 +1,266 @@
+<head>
+    <title>openMap</title>
+    <meta charset="utf-8">
+</head>
+
+<body>
+        <div class="config">
+            <form action = "/mypage/config/cafe"  method="post" enctype="multipart/form-data">
+                <div class="controlbar">
+                    <h1>업체 정보 수정</h1>
+                    <input type="hidden" name="comp_id" value="<%= myCafe.compId %>" >
+                    <div class="compinfo">
+                        <label for="compName">업체이름</label>
+                        <br>
+                        <input name="compName" id="compName" type="text" value = "<%= myCafe.compName %>" disabled >
+                        <br>
+                        <label for="addr">도로명주소</label>
+                        <br>
+                        <input name="addr" id="addr" type="text" required placeholder="<%= myCafe.address %>" disabled >
+                        <br>
+                        <label for="telNum">전화번호</label>
+                        <br>
+                        <input name="telNum" id="telNum" type="tel" placeholder="<%= myCafe.tel %>" >
+                    </div>
+                    <br>
+                        <label for="picture">업체사진</label>
+                        <br>
+                        <input name="picture" id="picture" type="file" accept="image/png, image/jpeg">
+                        <br>
+                        <p>외부사진 혹은 내부사진을 업로드 해주세요.</p>
+                    <div class="leave">
+                        <input type='checkbox' name="todayClosed" id="todayClosed" value="true" <% if(myCafe.todayClosed){ %> checked <% } %> />오늘휴무
+                        <input type='checkbox' name="earlyClosed" id="earlyClosed" value="true" <% if(myCafe.earlyClosed){ %> checked <% } %> />조기마감
+                        <input type='checkbox' name="vacation" id="vacation" value="true" <% if(myCafe.vacation){ %> checked <% } %> />단기휴무
+                    </div>
+                    <br>
+                    <div class="closeDay">
+                        <label>정기휴무</label>
+                        <br>
+                        <input type='checkbox' name="mon" id="mon" value="true" <% if(myCafe.mon){ %> checked <% } %> />월요일
+                        <input type='checkbox' name="tue" id="tue" value="true" <% if(myCafe.tue){ %> checked <% } %> />화요일
+                        <input type='checkbox' name="wed" id="wed" value="true" <% if(myCafe.wed){ %> checked <% } %> />수요일
+                        <input type='checkbox' name="thu" id="thu" value="true" <% if(myCafe.thu){ %> checked <% } %> />목요일
+                        <input type='checkbox' name="fri" id="fri" value="true" <% if(myCafe.fri){ %> checked <% } %> />금요일
+                        <input type='checkbox' name="sat" id="sat" value="true" <% if(myCafe.sat){ %> checked <% } %> />토요일
+                        <input type='checkbox' name="sun" id="sun" value="true" <% if(myCafe.sun){ %> checked <% } %> />일요일
+                        <br>
+                    </div>
+                    <br>
+                    <div class="open_close">
+                        <span style="display:inline-block">
+                            <label for="openTime" style="display:block">오픈시각</label>
+                            <input type="time" class="timepicker" name="openTime" id="openTime" min="00:00" max="23:59" value=<%= myCafe.cafeOpen %> />
+                        </span>
+                        <span style="display:inline-block">
+                            <label for="openTime" style="display:block">마감시각</label>
+                            <input type="time" class="timepicker" name="closedTime" id="closedTime" min="00:00" max="23:59" value=<%= myCafe.cafeClosed %> />
+                        </span>
+                        <input type="checkbox" name="tomorrow" id="tomorrow" value="true" />익일
+                        <input type="checkbox" name="_24hours" id="24hours" value="true" onclick='get24hoursValue(event)' />24시간 영업
+                    </div>
+                    <div class="typeSelect">
+                        <label for="cafeType">업종(선택 필수)</label>
+                        <select name="cafeType" , id="restType" required>
+                            <option value="">업종</option>
+                            <option value="커피숍" <% if(myCafe.cafeType == '커피숍'){ %> selected <% } %> >커피숍  </option>
+                            <option value="편의점"  <% if(myCafe.cafeType == '편의점'){ %> selected <% } %> >편의점 </option>
+                            <option value="패스트푸드" <% if(myCafe.cafeType == '패스트푸드'){ %> selected <% } %> >패스트푸드 </option>
+                        </select>
+                    </div>
+            
+                    <div class="menuList">
+                        <label for="menu">주요메뉴</label>
+                        <input type="button" class="addmenu" value="+" onclick="addMenu()">
+
+                        <br>
+                        <br>
+                        <div id="menuBox">
+                            <% menu.forEach(m => { %> 
+                            <div class="onemenu">
+                                <input type="text" name="menu" id="menu" placeholder="메뉴명" value=<%= m.menuName%>>
+                                <input type="number" name="price" id="price" placeholder="가격" value=<%= m.price%>>원
+                                <input type="button" class = "delete_row"value="삭제" onclick="removeMenu(this)">
+                            </div>
+                            <div id="field"></div>
+                            <% }); %>
+                        </div>
+                        <div id="field"></div>
+                    </div>
+                </div>
+                <div class="submit">
+                    <input type="submit" value="업체 정보 수정하기" />
+                </div>
+            </form>
+        </div>
+</body>
+
+
+<script>
+    function get24hoursValue(event) {
+    const openForm = document.getElementById('openTime');
+    const closedForm = document.getElementById('closedTime');
+    const tomorrowForm = document.getElementById('tomorrow');
+
+        if (event.target.checked) {
+            openForm.disabled = true;
+            closedForm.disabled = true;
+            tomorrowForm.disabled = true;
+            tomorrowForm.checked = false;
+            document.getElementById('openTime').value="00:00";
+            document.getElementById('closedTime').value="23:59";
+        } else {
+            openForm.disabled = false;
+            closedForm.disabled = false;
+            tomorrowForm.disabled = false;
+        }
+    };
+
+    function addMenu(){
+    var newMenu = document.createElement('div');
+    newMenu.classList.add('onemenu');
+    newMenu.innerHTML = `<input type="text" name="menu" id="menu" placeholder="메뉴명">
+                        <input type="number" name="price" id="price" placeholder="가격">원
+                        <input type="button" value="삭제" class="delete_row" onclick="removeMenu(this)">`;
+    document.getElementById('menuBox').append(newMenu);
+    };
+
+    (function (){
+    var newMenu = document.createElement('div');
+    newMenu.classList.add('onemenu');
+    newMenu.innerHTML = `<input type="text" name="menu" id="menu" placeholder="메뉴명">
+                        <input type="number" name="price" id="price" placeholder="가격">원`;
+    document.getElementById('menuBox').append(newMenu);
+    })();
+    (function (){
+    var newMenu = document.createElement('div');
+    newMenu.classList.add('onemenu');
+    newMenu.innerHTML = `<input type="text" name="menu" id="menu" placeholder="메뉴명">
+                        <input type="number" name="price" id="price" placeholder="가격">원`;
+    document.getElementById('menuBox').append(newMenu);
+    })();
+
+    function removeMenu(obj){
+    obj.parentElement.remove();
+    }
+
+</script>
+
+<style>
+        :root {
+        --main-bg-color: #FBF9FC;
+        --text-color: rgb(165, 165, 165);
+        --openmap-orange: #FE8201;
+        --openmap-orange-light: #ffcf9d;
+        --openmap-purple: #894AFF;
+        --openmap-green: #77C3CA;
+    }
+    .config{
+        padding-left: 80px;
+        padding-top: 30px;
+    }
+    .controlbar{
+        overflow-y: scroll;
+        width: 780px;
+        height: 700px;
+    }
+   .compinfo input{
+       background-color: #F0F0F0;
+       width: 620px;
+       height:30px;
+       padding:5px; 
+       border: none;
+       cursor: pointer;
+       border-radius: 20px;
+   }
+
+   .leave{
+       padding-top: 30px;
+   }
+
+   .closeDay{
+       padding-top: 30px;
+   }
+
+   .open_close{
+       padding-top:30px;
+   }
+
+   .open_close input[type=time] {
+       background-color: #F0F0F0;
+       width: 150px;
+       height:30px;
+       padding:5px; 
+       border: none;
+       cursor: pointer;
+       border-radius: 20px;
+       font-size: 16px;
+   }
+
+   .typeSelect{
+    padding-top:30px;
+   }
+    select {
+        width: 150px;
+        padding: .8em .5em;
+        border: none;
+        background-color: #F0F0F0;
+        font-family: inherit; 
+        border-radius: 20px;
+    }
+
+    .menuList input{
+        background-color: #F0F0F0;
+       width: 150px;
+       height:30px;
+       padding:5px; 
+       border: none;
+       cursor: pointer;
+       border-radius: 20px;
+       font-size: 16px;
+    }
+
+    .menuList{
+        padding-top: 30px;
+    }
+
+    .menuList input.addmenu{
+        background-color:#F0F0F0;
+        color:black;
+        width: 30px;
+        height:30px;
+        font-size: 20px;
+        font-weight: bold;
+        padding:0;
+    }
+
+    input.delete_row{
+        width:50px;
+    }
+
+    .onemenu{
+        padding-bottom: 10px;
+        font-size: 15px;
+    }
+
+    .submit{
+        padding-top: 30px;
+    }
+
+    .submit input{
+        background-color: var(--openmap-purple);
+        color:white;
+       width: 200px;
+       height:34px;
+       padding:5px; 
+       border: none;
+       cursor: pointer;
+       border-radius: 20px;
+       font-size: 16px;
+       box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
+    }
+    label{
+        font-weight: bold;
+    }
+</style>

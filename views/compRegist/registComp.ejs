@@ -1,0 +1,89 @@
+<head>
+    <title>openMap</title>
+    <link rel="stylesheet" href="/stylesheets/registComp.css" />
+    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+    <script>const compservicekey = "<%= compkey %>"</script>
+    <script language="javascript" src="/javascripts/checkCompInfo.js"></script>
+    <script language="javascript" src="/javascripts/address.js"></script>
+    <script language="javascript" src="/javascripts/registComp.js"></script>
+</head>
+
+
+<body>
+    <div class="step">
+        <h1>업체등록하기</h1>
+        <h2>STEP 1</h2>
+    </div>
+
+        <div class="compRegist">
+            <form name="compRegistForm" id="compRegistForm" method="post" enctype="multipart/form-data">
+                <label for="name">대표자명</label>
+                <br>
+                <input type="text" class="input_text" name="name" id="name" placeholder="사업자등록증에 적힌 성명을 입력해주세요." />
+                <br />
+                <br>
+                <label for="compNum">사업자 등록번호</label>
+                <br>
+                <input type="text" class="input_text" name="compNum" id="compNum" placeholder="- 없이 10자리 숫자만 입력해주세요." />
+                <br />
+                <br>
+                <label for="openDate">개업일자</label>
+                <br>
+                <input type="text" class="input_text" name="openDate" id="openDate" placeholder="YYYYMMDD 형식으로 입력해주세요. (예: 20220514)" />
+                <input type="button" class="btn" value="사업자 등록정보 확인" onclick="gocheckComp()" />
+                <br>
+                <br>
+
+                <label for="compType">업체 종류 (선택 필수)</label>
+                <br>
+                <select name="compType" id="compType" required>
+                    <option value="">업체종류</option>
+                    <option value="R">식당</option>
+                    <option value="C">휴게음식점</option>
+                    <option value="H">병원</option>
+                </select>
+                <br/>
+                <br>
+                <label for="compName">업체이름 (필수)</label>
+                <br>
+                <input name="compName" class="input_text" id="compName" type="text" required placeholder="오픈맵에 표시할 업체의 이름을 입력해주세요" />
+                <br>
+                <br>
+                <label for="addr">도로명주소 (필수)</label>
+                <br>
+                <input name="addr" class="input_text" id="addr" type="text" required placeholder="도로명주소" readonly/>
+                <input type="button" class="btn" value="주소검색" onclick="goPopup()" />
+                <br>
+                <br>
+                <label for="telNum">전화번호</label>
+                <br>
+                <input name="telNum" class="input_text" id="telNum" type="text" />
+                <br>
+                <br>
+                <label for="picture">업체사진</label>
+                <br>
+                <input name="picture" id="picture" type="file" accept="image/png, image/jpeg" />
+                <br>
+                <p>외부사진 혹은 내부사진을 업로드 해주세요.</p>
+                <br>
+                <br>
+                <label for="name">정기휴무</label>
+                <br>
+                <div class="closeDay">
+                    <input type='checkbox' name="mon" id="mon" value="true"/>월요일
+                    <input type='checkbox' name="tue" id="tue" value="true"/>화요일
+                    <input type='checkbox' name="wed" id="wed" value="true"/>수요일
+                    <input type='checkbox' name="thu" id="thu" value="true"/>목요일
+                    <input type='checkbox' name="fri" id="fri" value="true"/>금요일
+                    <input type='checkbox' name="sat" id="sat" value="true"/>토요일
+                    <input type='checkbox' name="sun" id="sun" value="true"/>일요일
+                    <br>
+                    <p>업체 등록이 완료되면 실시간으로 매장 운영 상황을 반영할 수 있습니다.<br>
+                        고정적으로 휴무인 요일만 체크해주세요.</p>
+                </div>
+                <br>
+
+                <input type="button" class="btn" id="endbtn" value="NEXT" onclick="goNext()"/>
+            </form>
+        </div>
+</body>
