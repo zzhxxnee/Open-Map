@@ -1,5 +1,5 @@
 require("dotenv").config();
-const db = require("../models/index"),
+const db = require("../../models/index"),
     Company = db.company,
     User = db.users,
     Rest = db.restaurant,
@@ -96,12 +96,12 @@ exports.checkExistComp = (req, res) => {
     if (!req.session.user_id) {
         res.redirect("/users/login");
     } else {
-        res.render("checkExistComp");
+        res.render("compRegist/checkExistComp");
     }
 };
 
 // 업체 검색해서 데이터 불러오기
-exports.searchExistComp = (req, res, next) => {
+exports.searchExistComp = async (req, res, next) => {
     let searchWord = req.body.compName;
     Company.findAll({
         where: {
@@ -113,7 +113,7 @@ exports.searchExistComp = (req, res, next) => {
     })
         .then((result) => {
             // console.log(result);
-            res.render("searchExistComp", { searchComp: result });
+            res.render("compRegist/searchExistComp", { searchComp: result });
         })
         .catch((err) => {
             console.log(err);
@@ -141,15 +141,47 @@ exports.existCompRegist = async (req, res) => {
         },
     })
         .then((result) => {
-            res.render("registExistComp", { compInfo: result });
+            res.render("compRegist/registExistComp", { compInfo: result, compkey: process.env.COMPANY_CHECK_KEY });
         })
         .catch((err) => {
             console.log(err);
         });
 }
 
-
-
+exports.existCompNext = async (req, res, next) => {
+    if (await req.file) {
+        imagepath = `/${req.file.filename}`;
+        console.log(imagepath);
+    }
+    else {
+        imagepath = "/images/baseimg.jpg";
+        console.log(imagepath);
+    }
+    await User.update({ isOwner: 1 }, { where: { id: req.session.user_id } })
+        .then(() => {
+            Company.update({
+                bNo: req.body.compNum,
+                openDate: req.body.openDate,
+                image: imagepath,
+                UserId: req.session.user_id,
+                tel: req.body.tel,
+                mon: req.body.mon,
+                tue: req.body.tue,
+                wed: req.body.wed,
+                thu: req.body.thu,
+                fri: req.body.fri,
+                sat: req.body.sat,
+                sun: req.body.sun,
+            },
+                {
+                    where: {
+                        compName: req.body.compName,
+                        address: req.body.addr
+                    }
+                })
+        }).then(() => { res.render("compRegist/registExistCompEnd", { compInfo: req.body }); })
+        .catch((err) => { console.log(err); });
+}
 
 // 일단 업체 공통 정보 입력 페이지
 exports.registComp = (req, res) => {
@@ -157,7 +189,7 @@ exports.registComp = (req, res) => {
         res.redirect("/users/login");
     } else {
         compInfo.userId = req.session.user_id;
-        res.render("registComp", { compkey: process.env.COMPANY_CHECK_KEY });
+        res.render("compRegist/registComp", { compkey: process.env.COMPANY_CHECK_KEY });
     }
 };
 
@@ -178,7 +210,7 @@ exports.registCompNext = async (req, res) => {
     }
 
     compInfo.address = req.body.addr;
-    // compInfo.userId = req.session.user_id; //로그인 구현되면 수정하기
+    //compInfo.userId = req.session.user_id; //로그인 구현되면 수정하기 --> 공통정보 입력페이지에서 저장해둠
     compInfo.image = imagepath;
     compInfo.compName = req.body.compName; //not null
     compInfo.bNo = req.body.compNum;
@@ -195,20 +227,20 @@ exports.registCompNext = async (req, res) => {
     compInfo.sun = req.body.sun;
 
     if (compInfo.type == "R") {
-        res.render("registRest");
+        res.render("compRegist/registRest");
     } else if (compInfo.type == "C") {
-        res.render("registCafe");
+        res.render("compRegist/registCafe");
     }
     else if (compInfo.type == "H") {
-        res.render("registHospital")
+        res.render("compRegist/registHospital")
     }
     else {
-        res.send("뭔가 잘못됨...!");
+        res.send("업체 타입 오류");
     }
 };
 
 exports.registFinished = async (req, res) => {
-    res.render("registExistCompEnd");
+    res.render("compRegist/registExistCompEnd");
     Company.create({
         image: compInfo.image,
         compName: compInfo.compName,
