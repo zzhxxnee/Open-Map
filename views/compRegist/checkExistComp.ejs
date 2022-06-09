@@ -1,11 +1,55 @@
+<head>
+    <style>
+        body {
+            margin-top: 200px;
+            text-align: center;
+        }
+
+        .input_text {
+            width: 500px;
+            height: 32px;
+            font-size: 15px;
+            border: 0;
+            border-radius: 15px;
+            outline: none;
+            padding-left: 10px;
+            background-color: rgb(233, 233, 233);
+        }
+
+        .btn {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            margin: 0;
+            padding: 0.5rem 1rem;
+            font-size: 12px;
+            text-align: center;
+            text-decoration: none;
+
+            display: inline-block;
+            width: auto;
+            background-color: #8b00ff;
+            color: white;
+
+            border: none;
+            border-radius: 15px;
+        }
+        .btn:hover{
+            cursor: pointer; 
+            background-color: #e9ceff;
+            color:black;
+        }
+    </style>
+</head>
+
 <body>
-    <h1>이미 오픈맵에 내 업체가 등록되어 있는지 확인해보세요!</h1>
+    <h2>이미 오픈맵에 내 업체가 등록되어 있는지 확인해보세요!</h2>
 
     <form name="checkExistForm" id="checkExistForm" action="/compRegist/search" method="post">
         <label for="compName"></label>
         <br>
-        <input type="text" name="compName" id="compName" placeholder="업체명을 검색해주세요." required/>
-        <input type="submit" value="검색하기" />
+        <input type="text" class="input_text" name="compName" id="compName" placeholder="업체명을 검색해주세요." required />
+        <input type="submit" class="btn" value="검색하기" />
     </form>
     </div>
 </body>
