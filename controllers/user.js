@@ -136,7 +136,7 @@ exports.getLogout = (req, res, next)=>{ // 로그아웃
     req.session.destroy();
     res.clearCookie('sid');
   
-    res.redirect('/users');
+    res.redirect('/');
   }
 
 exports.getFindID =  (req, res, next) =>{
