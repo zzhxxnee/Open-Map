@@ -65,6 +65,7 @@
     height:35px;
     margin-left:20px;
     width : 100%;
+    cursor:pointer;
 }
 
 .input-password{
@@ -136,4 +137,6 @@
     font-weight:normal;
     border:none;
     border-radius:25px;
+    cursor:pointer;
 }
+
