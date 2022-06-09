@@ -18,7 +18,6 @@
     "express-ejs-layouts": "^2.5.1",
     "express-session": "^1.17.3",
     "google-geocoder": "^0.2.1",
-    "holidays-kr": "^1.0.3",
     "http-errors": "~1.6.3",
     "jquery": "^3.6.0",
     "jquery-timepicker": "^1.3.3",
