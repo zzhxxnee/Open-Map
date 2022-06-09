@@ -1,0 +1,130 @@
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.js"
+        integrity="sha256-HwWONEZrpuoh951cQD1ov2HUK5zA5DwJ1DNUXaM6FsY=" crossorigin="anonymous"></script>
+    <style>
+        body {
+            margin-top: 200px;
+            text-align: center;
+        }
+
+        table {
+            margin-left:auto; 
+            margin-right:auto;
+            width: 700px;
+        }
+        
+        table, td, th {
+            border-collapse : collapse;
+            background-color: white;
+            border-top: 1px solid #444444;
+            border-bottom: 1px solid #444444;
+            margin-top: 10px;
+            padding:10px;
+        }
+        td:hover{
+            background-color: #f1f1f1;
+            cursor: pointer; 
+        }
+
+        .input_text {
+            width: 500px;
+            height: 32px;
+            font-size: 15px;
+            border: 0;
+            border-radius: 15px;
+            outline: none;
+            padding-left: 10px;
+            background-color: rgb(233, 233, 233);
+        }
+
+        .btn {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            margin: 0;
+            padding: 0.5rem 1rem;
+            font-size: 12px;
+            text-align: center;
+            text-decoration: none;
+
+            display: inline-block;
+            width: auto;
+            background-color: #8b00ff;
+            color: white;
+
+            border: none;
+            border-radius: 15px;
+        }
+        .btn:hover{
+            cursor: pointer; 
+            background-color: #e9ceff;
+            color:black;
+        }
+
+        #noExist{
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>이미 오픈맵에 내 업체가 등록되어 있는지 확인해보세요!</h2>
+
+    <form name="checkExistForm" id="checkExistForm" action="/compRegist/search" method="post">
+        <label for="compName"></label>
+        <br>
+        <input type="text" class="input_text" name="compName" id="compName" placeholder="업체명을 검색해주세요." required />
+        <input type="submit" class="btn" value="검색하기" />
+    </form>
+
+    <div>
+        <form name="searchForm" action="/compRegist/existCompRegist" method="post">
+            <table id="example-table-1">
+                <tr class="tabletitle">
+                    <td onclick="event.stopPropagation()"  style="pointer-events: none;">업체명</td>
+                    <td onclick="event.stopPropagation()" style="pointer-events: none;">주소</td>
+                </tr>
+                <% for(let post of searchComp) { %>
+                    <tr class="clickedComp">
+                        <td>
+                            <%= post.compName %>
+                        </td>
+                        <td>
+                            <%= post.address %>
+                        </td>
+                        <script>
+                            // 테이블의 Row 클릭시 값 가져오기
+                            $("#example-table-1 tr").click(function () {
+
+                                var str = ""
+
+                                // 현재 클릭된 Row(<tr>)
+                                var tr = $(this);
+                                var td = tr.children();
+                                cname = td.eq(0).text().trim();
+                                caddr = td.eq(1).text().trim();
+                                console.log(cname);
+                                console.log(caddr);
+                                document.getElementById("searchCompName").value = cname;
+                                document.getElementById("searchCompAddr").value = caddr;
+
+
+                                var form = document.searchForm;
+                                form.submit();
+                            });
+                        </script>
+
+                        <input type="hidden" id="searchCompName" name="searchCompName">
+                        <input type="hidden" id="searchCompAddr" name="searchCompAddr">
+                    </tr>
+                    <% } %>
+            </table>
+        </form>
+    </div>
+
+
+    <div>
+        <input type="button" class="btn" id="noExist" value="내 업체가 없어요" onclick="location.href='/compRegist/registComp'" />
+    </div>
+</body>

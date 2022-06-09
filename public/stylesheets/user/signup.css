@@ -65,6 +65,7 @@
     height:35px;
     margin-left:20px;
     width : 100%;
+    cursor:pointer;
 }
 
 .input-password{
@@ -111,7 +112,6 @@
 .input-email input{
     text-decoration-color: rgba(225, 224, 224, 1);
     text-decoration: none;
-    width:15.7%;
     height:35px;
     border-style: thin;
     border-color: rgba(225, 224, 224, 1);
@@ -136,4 +136,6 @@
     font-weight:normal;
     border:none;
     border-radius:25px;
+    cursor:pointer;
 }
+
